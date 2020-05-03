@@ -25,3 +25,5 @@ jobs:
       run: |
           export PATH=$PATH:$(go env GOPATH)/bin
           make build
+      env:
+        GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}

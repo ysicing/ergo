@@ -37,16 +37,16 @@ build: ## 构建
                     -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
                     -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
 
-release: all ## github release
+release: build ## github release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} dist
 
-pre-release: all ## github pre-release
+pre-release: build ## github pre-release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate -prerelease --debug ${BUILD_VERSION} dist
 
 clean: ## clean
 	rm -rf dist
 
-.PHONY : all release pre-release clean
+.PHONY : build release clean
 
 .EXPORT_ALL_VARIABLES:
 
