@@ -4,6 +4,26 @@
 
 ### 安装
 
-可直接从 [release](https://github.com/ysicing/ergo/releases) 页下载预编译的二进制文件，然后执行 `ergo wang` (需要root 权限，自动请求 `sudo`)即可；
-卸载直接执行 `ergo gnaw`，卸载命令不会删除 `~/.doge` 配置目录。
+可直接从 [release](https://github.com/ysicing/ergo/releases) 页下载预编译的二进制文件
+
+### 命令支持
+
+#### 信息类
+
+```bash
+ergo info
+```
+
+#### 初始化类
+
+```bash
+ergo init vm # 创建vm虚拟机
+ergo init debian # 初始化debian
+```
+
+#### 安装类
+
+```bash
+ergo install docker # 安装docker
+```
 
