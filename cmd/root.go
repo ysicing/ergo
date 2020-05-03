@@ -14,25 +14,26 @@ import (
 var cfgFile string
 
 var rootCmd = &cobra.Command{
-	Use: "ergo",
-	Short: "ysicing tools",
+	Use:   "ergo",
+	Short: "An awesome tool",
 }
 
-func Execute()  {
+// Execute execute
+func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		klog.Error(err)
 		os.Exit(1)
 	}
 }
 
-func init()  {
+func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ysicing/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.doge/config.yaml)")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.DisableSuggestions = false
 }
 
-func initConfig()  {
+func initConfig() {
 	if cfgFile == "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
@@ -42,7 +43,7 @@ func initConfig()  {
 			os.Exit(1)
 		}
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".ysicing")
+		viper.SetConfigName(".doge")
 	}
 
 	viper.AutomaticEnv()

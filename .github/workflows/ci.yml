@@ -1,0 +1,27 @@
+name: build ergo tools
+on:
+  push:
+jobs:
+  build:
+    name: build ergo tools
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.14.x
+    - name: install gox
+      run: |
+          echo "install gox"
+          go get -u github.com/mitchellh/gox
+    - name: install ghr
+      run: |
+          echo "install ghr"
+          go get -u github.com/tcnksm/ghr
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: build ergo
+      run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          make build

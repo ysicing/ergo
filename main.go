@@ -5,6 +5,6 @@ package main
 
 import "github.com/ysicing/ergo/cmd"
 
-func main()  {
+func main() {
 	cmd.Execute()
 }

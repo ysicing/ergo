@@ -5,7 +5,6 @@ package network
 
 import "k8s.io/klog"
 
-// ActiveHosts 存活hosts
-func ActiveHosts() {
-	klog.Info("hahah")
+func LocalNetwork() {
+	klog.Info("local network")
 }
