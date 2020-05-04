@@ -133,6 +133,6 @@ func WarningOs() {
 	}
 }
 
-func WarningDocker()  {
+func WarningDocker() {
 	Cmd("which", "docker")
 }
