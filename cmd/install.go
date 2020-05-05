@@ -40,6 +40,15 @@ var installNfs = &cobra.Command{
 	},
 }
 
+var installTools = &cobra.Command{
+	Use:   "tools",
+	Short: "tools",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装 tools")
+		install.ToolsInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -57,5 +66,5 @@ func init() {
 	installNfs.PersistentFlags().StringVar(&install.NfsPath, "nfspath", "/k8sdata", "nfs路径")
 	installNfs.PersistentFlags().StringVar(&install.DefaultSc, "nfssc", "nfs-data", "默认nfs storageclass")
 
-	installCmd.AddCommand(installDocker, installK8s, installNfs)
+	installCmd.AddCommand(installDocker, installTools, installK8s, installNfs)
 }
