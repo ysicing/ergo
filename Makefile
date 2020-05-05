@@ -46,7 +46,13 @@ pre-release: build ## github pre-release
 clean: ## clean
 	rm -rf dist
 
-.PHONY : build release clean
+install: clean ## install
+	go install \
+		-ldflags   "-X 'github.com/ysicing/ergo/cmd.Version=${BUILD_VERSION}' \
+                            -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
+                            -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
+
+.PHONY : build release clean install
 
 .EXPORT_ALL_VARIABLES:
 
