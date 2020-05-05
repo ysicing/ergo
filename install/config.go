@@ -11,6 +11,7 @@ var (
 	ExtendNfsAddr string
 	NfsPath       string
 	DefaultSc     string
+	EnableIngress bool
 	SSHConfig     sshutil.SSH
 )
 
@@ -18,6 +19,7 @@ var (
 type InstallConfig struct {
 	Hosts         []string
 	EnableNfs     bool
+	EnableIngress bool
 	ExtendNfsAddr string
 	NfsPath       string
 	DefaultSc     string

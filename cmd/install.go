@@ -52,10 +52,11 @@ var installTools = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
-	installCmd.PersistentFlags().StringVar(&install.SSHConfig.Password, "pass", "", "管理员密码")
+	installCmd.PersistentFlags().StringVar(&install.SSHConfig.Password, "pass", "vagrant", "管理员密码")
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.PkFile, "pk", "", "管理员私钥")
-	installCmd.PersistentFlags().StringSliceVar(&install.Hosts, "ip", []string{}, "需要安装节点ip")
+	installCmd.PersistentFlags().StringSliceVar(&install.Hosts, "ip", []string{"192.168.100.101"}, "需要安装节点ip")
 
+	installK8s.PersistentFlags().BoolVar(&install.EnableIngress, "enableingress", true, "k8s启用ingress")
 	installK8s.PersistentFlags().BoolVar(&install.EnableNfs, "enablenfs", false, "k8s启用nfs sc")
 	installK8s.PersistentFlags().StringVar(&install.ExtendNfsAddr, "exnfs", "", "外部nfs地址, 若无则为空")
 	installK8s.PersistentFlags().StringVar(&install.NfsPath, "nfspath", "/k8sdata", "nfs路径")
