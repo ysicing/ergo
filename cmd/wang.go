@@ -27,9 +27,9 @@ var gnawCmd = &cobra.Command{
 }
 
 func init() {
-	wangCmd.PersistentFlags().StringVar(&installDir, "path", "/usr/local/bin", "安装目录")
-	gnawCmd.PersistentFlags().StringVar(&installDir, "path", "/usr/local/bin", "卸载目录")
-	rootCmd.AddCommand(wangCmd, gnawCmd)
+	//wangCmd.PersistentFlags().StringVar(&installDir, "path", "/usr/local/bin", "安装目录")
+	//gnawCmd.PersistentFlags().StringVar(&installDir, "path", "/usr/local/bin", "卸载目录")
+	//rootCmd.AddCommand(wangCmd, gnawCmd)
 }
 
 func Install(path string) {
