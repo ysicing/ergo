@@ -27,8 +27,8 @@ fmt:
 
 default: fmt ## fmt code
 
-build: ## 构建
-	@echo "build bin ${version} ${tagversion} ${commit_sha1}"
+build: clean ## 构建二进制
+	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${COMMIT_SHA1}"
 	#@bash hack/docker/build.sh ${version} ${tagversion} ${commit_sha1}
 	# go get github.com/mitchellh/gox
 	@gox -osarch="darwin/amd64 linux/amd64" \
@@ -37,10 +37,19 @@ build: ## 构建
                     -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
                     -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
 
-release: build ## github release
+docker: build ## 构建镜像
+	@echo "build docker images ${BUILD_VERSION}"
+	@docker build -t ysicing/ergo .
+	@docker build -t ysicing/ergo:${BUILD_VERSION} .
+
+dpush: docker
+	@docker push ysicing/ergo
+    @docker push ysicing/ergo:${BUILD_VERSION}
+
+release: build dpush ## github release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} dist
 
-pre-release: build ## github pre-release
+pre-release: build dpush ## github pre-release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate -prerelease --debug ${BUILD_VERSION} dist
 
 clean: ## clean
