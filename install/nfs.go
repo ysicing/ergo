@@ -5,8 +5,14 @@ package install
 
 func NfsInstall() {
 	i := &InstallConfig{
-		Hosts: Hosts,
+		Hosts:         Hosts,
+		EnableNfs:     EnableNfs,
+		ExtendNfsAddr: ExtendNfsAddr,
+		NfsPath:       NfsPath,
+		DefaultSc:     DefaultSc,
 	}
-	i.K8sInstall()
-
+	if i.EnableNfs {
+		i.NfsInstall()
+		i.NfsDeploy()
+	}
 }

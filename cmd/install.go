@@ -22,6 +22,14 @@ var installDocker = &cobra.Command{
 	},
 }
 
+var installGo = &cobra.Command{
+	Use:   "go",
+	Short: "安装go",
+	Run: func(cmd *cobra.Command, args []string) {
+		install.GoInstall()
+	},
+}
+
 var installK8s = &cobra.Command{
 	Use:   "k8s",
 	Short: "安装k8s",
@@ -67,5 +75,5 @@ func init() {
 	installNfs.PersistentFlags().StringVar(&install.NfsPath, "nfspath", "/k8sdata", "nfs路径")
 	installNfs.PersistentFlags().StringVar(&install.DefaultSc, "nfssc", "nfs-data", "默认nfs storageclass")
 
-	installCmd.AddCommand(installDocker, installTools, installK8s, installNfs)
+	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs)
 }

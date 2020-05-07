@@ -21,7 +21,6 @@ func K8sInstall() {
 	if i.EnableIngress {
 		i.IngressInstall()
 	}
-	klog.Info(i.EnableNfs)
 	if i.EnableNfs {
 		i.NfsInstall()
 		i.NfsDeploy()
