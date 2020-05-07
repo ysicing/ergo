@@ -6,11 +6,14 @@ package install
 import (
 	"fmt"
 	"k8s.io/klog"
+	"strings"
 )
 
 func K8sInstall() {
 	i := &InstallConfig{
 		Hosts:         Hosts,
+		Masters:       Masters,
+		Wokers:        Wokers,
 		EnableIngress: EnableIngress,
 		EnableNfs:     EnableNfs,
 		ExtendNfsAddr: ExtendNfsAddr,
@@ -28,12 +31,18 @@ func K8sInstall() {
 }
 
 func (i *InstallConfig) K8sInstall() {
-	for _, ip := range i.Hosts {
-		k8scmd := fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e PASS=%s  ysicing/k7s", ip, SSHConfig.Password)
-		SSHConfig.Cmd(ip, k8scmd)
-		SSHConfig.Cmd(ip, "kubectl taint nodes --all node-role.kubernetes.io/master-") // 允许master节点调度
-		SSHConfig.Cmd(ip, "helminit")
+
+	var k8scmd string
+	if len(Wokers) == 0 {
+		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e PASS=%s  ysicing/k7s", Masters, SSHConfig.Password)
+	} else {
+		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s", Masters, Wokers, SSHConfig.Password)
 	}
+	ip := strings.Split(Masters, "-")[0]
+	SSHConfig.Cmd(ip, k8scmd)
+	SSHConfig.Cmd(ip, "kubectl taint nodes --all node-role.kubernetes.io/master-") // 允许master节点调度
+	SSHConfig.Cmd(ip, "helminit")
+
 }
 
 func (i *InstallConfig) IngressInstall() {

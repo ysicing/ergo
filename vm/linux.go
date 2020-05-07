@@ -124,8 +124,11 @@ func (v *Vm) VmStartUP() {
 		vagrant.Destroy()
 		utils.ErgoExit("启动虚拟机失败，清理失败数据")
 	}
-	for i := 1; i <= utils.String2Int(Instance); i++ {
-		logger.Info("ip: 192.168.199.%v, root/vagrant", 100+i)
+	if utils.String2Int(Instance) == 1 {
+		logger.Info("ip: 11.11.11.%v, root/vagrant", 111)
+	} else {
+		logger.Info("ip: 11.11.11.%v-11.11.11.%v, root/vagrant", 111, 110+utils.String2Int(Instance))
 	}
+
 	logger.Info("销毁方式: cd %s, vagrant destroy -f", Path)
 }

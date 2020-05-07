@@ -52,9 +52,10 @@ Vagrant.configure("2") do |config|
     config.vm.define "{{.Name}}#{i}" do |node|
       node.vm.box = "ysicing/debian"
       node.vm.hostname = "{{.Name}}#{i}"
-      ip = "192.168.100.#{i+100}"
       node.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: 'en0: Wi-Fi (Wireless)'
-      node.vm.network "private_network", ip: ip
+      # node.vm.provision "shell", run: "always", inline: "ntpdate ntp.api.bz"
+      node.vm.network "private_network", ip: "11.11.11.11#{i}"
+      node.vm.provision "shell", run: "always", inline: "echo hello from {{.Name}}#{i}"
       node.vm.provider "virtualbox" do |vb|
         vb.gui = false
         vb.memory = {{.Memory}}

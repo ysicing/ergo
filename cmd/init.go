@@ -36,7 +36,7 @@ var initvm = &cobra.Command{
 func init() {
 	initCmd.AddCommand(initSystem, initvm)
 
-	initSystem.PersistentFlags().StringVar(&vm.Host, "ip", "192.168.100.101", "ssh ip")
+	initSystem.PersistentFlags().StringSliceVar(&vm.Hosts, "ip", []string{"11.11.11.111"}, "ssh ip")
 	initSystem.PersistentFlags().StringVar(&vm.Port, "port", "22", "ssh端口")
 	initSystem.PersistentFlags().StringVar(&vm.User, "user", "root", "管理员用户")
 	initSystem.PersistentFlags().StringVar(&vm.Pass, "pass", "vagrant", "管理员密码")

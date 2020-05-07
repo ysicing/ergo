@@ -11,6 +11,8 @@ import (
 
 var (
 	Hosts         []string
+	Masters       string
+	Wokers        string
 	EnableNfs     bool
 	ExtendNfsAddr string
 	NfsPath       string
@@ -22,6 +24,8 @@ var (
 // InstallConfig 安装配置
 type InstallConfig struct {
 	Hosts         []string
+	Masters       string
+	Wokers        string
 	EnableNfs     bool
 	EnableIngress bool
 	ExtendNfsAddr string
