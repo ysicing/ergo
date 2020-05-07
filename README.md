@@ -2,7 +2,13 @@
 
 > 一个使用 Go 编写的运维工具.
 
-### 安装
+### 镜像使用
+
+```bash
+ysicing/ergo
+```
+
+### 二进制安装
 
 可直接从 [release](https://github.com/ysicing/ergo/releases) 页下载预编译的二进制文件
 
@@ -24,6 +30,8 @@ ergo init debian # 初始化debian
 #### 安装类
 
 ```bash
-ergo install docker # 安装docker
+ergo install docker/go/tools # 安装docker,go,tools
+ergo install k8s
 ```
 
+具体参数可以参考docs部分
