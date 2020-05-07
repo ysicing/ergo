@@ -46,7 +46,7 @@ dpush: docker
 	@docker push ysicing/ergo
     @docker push ysicing/ergo:${BUILD_VERSION}
 
-release: build dpush ## github release
+release:  dpush ## github release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} dist
 
 pre-release: build dpush ## github pre-release
