@@ -27,6 +27,11 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           make dpush
           docker logout
+          pushd dist
+          sha256sum ergo_darwin_amd64 > ergo_darwin_amd64.sha256sum
+          sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
+          popd
+          make pre-release
       env:
         GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
