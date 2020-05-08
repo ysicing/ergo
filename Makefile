@@ -42,14 +42,14 @@ docker: build ## 构建镜像
 	@docker build -t ysicing/ergo .
 	@docker build -t ysicing/ergo:${BUILD_VERSION} .
 
-dpush: docker
+dpush:
 	@docker push ysicing/ergo
     @docker push ysicing/ergo:${BUILD_VERSION}
 
 release:  dpush ## github release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} dist
 
-pre-release: build dpush ## github pre-release
+pre-release: dpush ## github pre-release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate -prerelease --debug ${BUILD_VERSION} dist
 
 clean: ## clean
