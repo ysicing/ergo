@@ -50,7 +50,7 @@ release:  ## github release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} dist
 
 pre-release:  ## github pre-release
-	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate -prerelease --debug ${BUILD_VERSION} dist
+	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -soft -prerelease --debug ${BUILD_VERSION} dist
 
 clean: ## clean
 	rm -rf dist

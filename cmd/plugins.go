@@ -21,10 +21,20 @@ var k8snodeshell = &cobra.Command{
 	},
 }
 
+var k8snodedns = &cobra.Command{
+	Use:   "kdns",
+	Short: "Node dns",
+	Run: func(cmd *cobra.Command, args []string) {
+		plugins.NodeDns()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(pluginsCmd)
 	k8snodeshell.PersistentFlags().StringVar(&plugins.NodeName, "node", "", "node name 节点名")
 	k8snodeshell.PersistentFlags().StringVar(&plugins.ImageName, "image", plugins.DefaultImageName, "")
 	k8snodeshell.PersistentFlags().StringVar(&plugins.Kubeconfig, "cfg", plugins.DefaultKubeconfig, "")
-	pluginsCmd.AddCommand(k8snodeshell)
+
+	k8snodedns.PersistentFlags().StringSliceVar(&plugins.DnsName, "dns", []string{"ergo.local-127.0.0.1"}, "dns解析")
+	pluginsCmd.AddCommand(k8snodeshell, k8snodedns)
 }

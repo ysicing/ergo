@@ -1,6 +1,10 @@
 name: build ergo tools
 on:
   push:
+    branches:
+    - master
+  schedule:
+    - cron: '0 */12 * * *'
 jobs:
   build:
     name: build ergo tools
