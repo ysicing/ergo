@@ -23,6 +23,7 @@ jobs:
         fetch-depth: 1
     - name: build ergo
       run: |
+          export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           make dpush
