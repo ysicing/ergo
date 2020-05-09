@@ -38,7 +38,7 @@ func (i *InstallConfig) K8sInstall() {
 	} else {
 		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s", Masters, Wokers, SSHConfig.Password)
 	}
-	ip := strings.Split(Masters, "-")[0]
+	ip := strings.Split(i.Masters, "-")[0]
 	SSHConfig.Cmd(ip, k8scmd)
 	SSHConfig.Cmd(ip, "kubectl taint nodes --all node-role.kubernetes.io/master-") // 允许master节点调度
 	SSHConfig.Cmd(ip, "helminit")
@@ -47,12 +47,14 @@ func (i *InstallConfig) K8sInstall() {
 
 func (i *InstallConfig) IngressInstall() {
 	ncingcmd := fmt.Sprintf(`echo '%s' | kubectl apply -f -`, NcIngress)
-	SSHConfig.Cmd(i.Hosts[0], ncingcmd)
+	SSHConfig.Cmd(strings.Split(i.Masters, "-")[0], ncingcmd)
 }
 
 func (i *InstallConfig) NfsInstall() {
+	// TODO
 	if i.Hosts[0] == i.ExtendNfsAddr || len(i.ExtendNfsAddr) == 0 {
-		ip := i.Hosts[0]
+		// ip := i.Hosts[0]
+		ip := strings.Split(i.Masters, "-")[0]
 		klog.Info("install nfs on ", ip)
 		nfsinstallprecmd := fmt.Sprintf(`echo '%s' > /tmp/nfs.install`, i.Template(installnfs))
 		SSHConfig.Cmd(ip, nfsinstallprecmd)
@@ -62,7 +64,9 @@ func (i *InstallConfig) NfsInstall() {
 }
 
 func (i *InstallConfig) NfsDeploy() {
-	ip := i.Hosts[0]
+	// TODO
+	// ip := i.Hosts[0]
+	ip := strings.Split(i.Masters, "-")[0]
 	klog.Info("deploy nfs to k8s ", ip)
 	scingcmd := fmt.Sprintf(`echo '%s' | kubectl apply -f -`, i.Template(ScDefault))
 	SSHConfig.Cmd(i.Hosts[0], scingcmd)
