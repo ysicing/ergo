@@ -19,7 +19,7 @@ func K8sInstall() {
 		ExtendNfsAddr: ExtendNfsAddr,
 		NfsPath:       NfsPath,
 		DefaultSc:     DefaultSc,
-		Master0: strings.Split(Masters, "-")[0],
+		Master0:       strings.Split(Masters, "-")[0],
 	}
 	i.K8sInstall()
 	if i.EnableIngress {

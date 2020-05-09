@@ -31,7 +31,7 @@ type InstallConfig struct {
 	ExtendNfsAddr string
 	NfsPath       string
 	DefaultSc     string
-	Master0 string
+	Master0       string
 }
 
 func (i *InstallConfig) Template(tpl string) string {
