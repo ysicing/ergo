@@ -6,7 +6,6 @@ package install
 import (
 	"bytes"
 	"github.com/cuisongliu/sshcmd/pkg/sshutil"
-	"strings"
 	"text/template"
 )
 
@@ -32,6 +31,7 @@ type InstallConfig struct {
 	ExtendNfsAddr string
 	NfsPath       string
 	DefaultSc     string
+	Master0 string
 }
 
 func (i *InstallConfig) Template(tpl string) string {
@@ -41,7 +41,7 @@ func (i *InstallConfig) Template(tpl string) string {
 		i.DefaultSc = "nfs-data"
 	}
 	if len(i.ExtendNfsAddr) == 0 {
-		i.ExtendNfsAddr = strings.Split(i.Masters, "-")[0]
+		i.ExtendNfsAddr = i.Master0
 	}
 
 	t := template.Must(template.New("code").Parse(tpl))

@@ -19,6 +19,7 @@ func K8sInstall() {
 		ExtendNfsAddr: ExtendNfsAddr,
 		NfsPath:       NfsPath,
 		DefaultSc:     DefaultSc,
+		Master0: strings.Split(Masters, "-")[0],
 	}
 	i.K8sInstall()
 	if i.EnableIngress {
@@ -38,38 +39,32 @@ func (i *InstallConfig) K8sInstall() {
 	} else {
 		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s", Masters, Wokers, SSHConfig.Password)
 	}
-	ip := strings.Split(i.Masters, "-")[0]
-	SSHConfig.Cmd(ip, k8scmd)
-	SSHConfig.Cmd(ip, "kubectl taint nodes --all node-role.kubernetes.io/master-") // 允许master节点调度
-	SSHConfig.Cmd(ip, "helminit")
+
+	SSHConfig.Cmd(i.Master0, k8scmd)
+	SSHConfig.Cmd(i.Master0, "kubectl taint nodes --all node-role.kubernetes.io/master- || sleep 1") // 允许master节点调度
+	SSHConfig.Cmd(i.Master0, "helminit")
 
 }
 
 func (i *InstallConfig) IngressInstall() {
 	ncingcmd := fmt.Sprintf(`echo '%s' | kubectl apply -f -`, NcIngress)
-	SSHConfig.Cmd(strings.Split(i.Masters, "-")[0], ncingcmd)
+	SSHConfig.Cmd(i.Master0, ncingcmd)
 }
 
 func (i *InstallConfig) NfsInstall() {
-	// TODO
-	if i.Hosts[0] == i.ExtendNfsAddr || len(i.ExtendNfsAddr) == 0 {
-		// ip := i.Hosts[0]
-		ip := strings.Split(i.Masters, "-")[0]
-		klog.Info("install nfs on ", ip)
+	if i.Master0 == i.ExtendNfsAddr || len(i.ExtendNfsAddr) == 0 {
+		klog.Info("install nfs on ", i.Master0)
 		nfsinstallprecmd := fmt.Sprintf(`echo '%s' > /tmp/nfs.install`, i.Template(installnfs))
-		SSHConfig.Cmd(ip, nfsinstallprecmd)
+		SSHConfig.Cmd(i.Master0, nfsinstallprecmd)
 		nfsinstallcmd := fmt.Sprintf("bash -x /tmp/nfs.install")
-		SSHConfig.Cmd(ip, nfsinstallcmd)
+		SSHConfig.Cmd(i.Master0, nfsinstallcmd)
 	}
 }
 
 func (i *InstallConfig) NfsDeploy() {
-	// TODO
-	// ip := i.Hosts[0]
-	ip := strings.Split(i.Masters, "-")[0]
-	klog.Info("deploy nfs to k8s ", ip)
+	klog.Info("deploy nfs to k8s ", i.Master0)
 	scingcmd := fmt.Sprintf(`echo '%s' | kubectl apply -f -`, i.Template(ScDefault))
-	SSHConfig.Cmd(i.Hosts[0], scingcmd)
+	SSHConfig.Cmd(i.Master0, scingcmd)
 }
 
 const installnfs = `
