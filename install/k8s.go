@@ -51,8 +51,10 @@ func (i *InstallConfig) IngressInstall() {
 }
 
 func (i *InstallConfig) NfsInstall() {
+	// TODO
 	if i.Hosts[0] == i.ExtendNfsAddr || len(i.ExtendNfsAddr) == 0 {
-		ip := i.Hosts[0]
+		// ip := i.Hosts[0]
+		ip := strings.Split(i.Masters, "-")[0]
 		klog.Info("install nfs on ", ip)
 		nfsinstallprecmd := fmt.Sprintf(`echo '%s' > /tmp/nfs.install`, i.Template(installnfs))
 		SSHConfig.Cmd(ip, nfsinstallprecmd)
