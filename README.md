@@ -1,6 +1,6 @@
 # ergo
 
-> 一个使用 Go 编写的运维工具.
+> 一个使用 Go 编写运维工具,尽量减少重复工作，同时降低维护脚本的成本
 
 ### 镜像使用
 
@@ -13,12 +13,6 @@ ysicing/ergo
 可直接从 [release](https://github.com/ysicing/ergo/releases) 页下载预编译的二进制文件
 
 ### 命令支持
-
-#### 信息类
-
-```bash
-ergo info
-```
 
 #### 初始化类
 

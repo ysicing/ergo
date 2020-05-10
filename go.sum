@@ -1,4 +1,8 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
+github.com/BeidouCloudPlatform/sshcmd v1.5.3-0.20200510021541-274389f3837b h1:rGgyy4/tgDQqLw1E38lGOD6wrepDuxlHrobrXiRkQB8=
+github.com/BeidouCloudPlatform/sshcmd v1.5.3-0.20200510021541-274389f3837b/go.mod h1:JCpoRuiXC79BUb6gy2pfQde72yWwIdl/viUURf2kCt4=
+github.com/BeidouCloudPlatform/sshcmd v1.5.3-0.20200510022329-6f5e4e5d8f05 h1:LuTpFTn+KZny8Il1m1QVtjV5CtrRnIoF9EgpK5v78YI=
+github.com/BeidouCloudPlatform/sshcmd v1.5.3-0.20200510022329-6f5e4e5d8f05/go.mod h1:JCpoRuiXC79BUb6gy2pfQde72yWwIdl/viUURf2kCt4=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
@@ -79,6 +83,10 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/kunnos/sshcmd v1.5.3-0.20200510023206-6aaaa27f5ef9 h1:E/C6SBTnXWiiX6P2EQYbVpFybKZZQuHKEQ1hl5cKHC0=
+github.com/kunnos/sshcmd v1.5.3-0.20200510023206-6aaaa27f5ef9/go.mod h1:JCpoRuiXC79BUb6gy2pfQde72yWwIdl/viUURf2kCt4=
+github.com/kunnos/sshcmd v1.6.0 h1:t843EVQI4eD5XkyKMPRkwGJIxv8ikJ7eeW5dytETXVE=
+github.com/kunnos/sshcmd v1.6.0/go.mod h1:JCpoRuiXC79BUb6gy2pfQde72yWwIdl/viUURf2kCt4=
 github.com/magiconair/properties v1.8.0 h1:LLgXmsheXeRoUOBOjtwPQCWIYqM/LU1ayDtDePerRcY=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=

@@ -17,3 +17,5 @@ require (
 	github.com/wonderivan/logger v1.0.0
 	k8s.io/klog v1.0.0
 )
+
+replace github.com/cuisongliu/sshcmd v1.5.2 => github.com/kunnos/sshcmd v1.6.0
