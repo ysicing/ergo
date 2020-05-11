@@ -24,8 +24,8 @@ var sscmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(composeCmd)
 	composeCmd.PersistentFlags().StringVar(&compose.SSHConfig.User, "user", "root", "管理员")
-	composeCmd.PersistentFlags().StringVar(&compose.SSHConfig.Password, "pass", "vagrant", "管理员密码")
-	composeCmd.PersistentFlags().StringVar(&compose.SSHConfig.PkFile, "pk", "~/.ssh/id_rsa", "管理员私钥")
+	composeCmd.PersistentFlags().StringVar(&compose.SSHConfig.Password, "pass", "", "管理员密码")
+	composeCmd.PersistentFlags().StringVar(&compose.SSHConfig.PkFile, "pk", "", "管理员私钥")
 	composeCmd.PersistentFlags().StringSliceVar(&compose.Hosts, "ip", []string{"11.11.11.111"}, "需要执行shell的ip")
 	composeCmd.PersistentFlags().BoolVar(&compose.DeployLocal, "local", false, "本地部署")
 	composeCmd.PersistentFlags().StringVar(&compose.ServicePath, "path", "/opt/ergo", "compose路径")

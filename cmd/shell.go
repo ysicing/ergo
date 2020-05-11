@@ -19,7 +19,7 @@ var shellCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(shellCmd)
 	shellCmd.PersistentFlags().StringVar(&shell.SSHConfig.User, "user", "root", "管理员")
-	shellCmd.PersistentFlags().StringVar(&shell.SSHConfig.Password, "pass", "vagrant", "管理员密码")
+	shellCmd.PersistentFlags().StringVar(&shell.SSHConfig.Password, "pass", "", "管理员密码")
 	shellCmd.PersistentFlags().StringVar(&shell.SSHConfig.PkFile, "pk", "", "管理员私钥")
 	shellCmd.PersistentFlags().StringVar(&shell.Cmd, "cmd", "whoami", "shell命令")
 	shellCmd.PersistentFlags().StringSliceVar(&shell.Hosts, "ip", []string{"11.11.11.111"}, "需要执行shell的ip")
