@@ -10,28 +10,32 @@ import (
 )
 
 var (
-	Hosts         []string
-	Masters       string
-	Wokers        string
-	EnableNfs     bool
-	ExtendNfsAddr string
-	NfsPath       string
-	DefaultSc     string
-	EnableIngress bool
-	SSHConfig     sshutil.SSH
+	Hosts               []string
+	Masters             string
+	Wokers              string
+	EnableNfs           bool
+	ExtendNfsAddr       string
+	NfsPath             string
+	DefaultSc           string
+	EnableIngress       bool
+	EnableKuboard       bool
+	EnableMetricsServer bool
+	SSHConfig           sshutil.SSH
 )
 
 // InstallConfig 安装配置
 type InstallConfig struct {
-	Hosts         []string
-	Masters       string
-	Wokers        string
-	EnableNfs     bool
-	EnableIngress bool
-	ExtendNfsAddr string
-	NfsPath       string
-	DefaultSc     string
-	Master0       string
+	Hosts               []string
+	Masters             string
+	Wokers              string
+	EnableNfs           bool
+	EnableIngress       bool
+	EnableKuboard       bool
+	EnableMetricsServer bool
+	ExtendNfsAddr       string
+	NfsPath             string
+	DefaultSc           string
+	Master0             string
 }
 
 func (i *InstallConfig) Template(tpl string) string {

@@ -5,7 +5,7 @@ package install
 
 func NfsInstall() {
 	i := &InstallConfig{
-		Hosts:         Hosts,
+		Master0:       Hosts[0],
 		EnableNfs:     EnableNfs,
 		ExtendNfsAddr: ExtendNfsAddr,
 		NfsPath:       NfsPath,

@@ -57,6 +57,15 @@ var installTools = &cobra.Command{
 	},
 }
 
+var installKuboard = &cobra.Command{
+	Use:   "kuboard",
+	Short: "kuboard",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装 Kuboard")
+		install.KuboardInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -71,11 +80,13 @@ func init() {
 	installK8s.PersistentFlags().StringVar(&install.DefaultSc, "nfssc", "nfs-data", "默认nfs storageclass")
 	installK8s.PersistentFlags().StringVar(&install.Masters, "mip", "11.11.11.111", "管理节点ip,eg ip或者ip-ip")
 	installK8s.PersistentFlags().StringVar(&install.Wokers, "wip", "", "计算节点ip,eg ip或者ip-ip")
+	installK8s.PersistentFlags().BoolVar(&install.EnableKuboard, "enablekuboard", false, "启用kuboard")
+	installK8s.PersistentFlags().BoolVar(&install.EnableMetricsServer, "enablems", true, "启用MetricsServer")
 
 	installNfs.PersistentFlags().BoolVar(&install.EnableNfs, "enablenfs", false, "k8s启用nfs sc")
 	installNfs.PersistentFlags().StringVar(&install.ExtendNfsAddr, "exnfs", "", "外部nfs地址, 若无则为空")
 	installNfs.PersistentFlags().StringVar(&install.NfsPath, "nfspath", "/k8sdata", "nfs路径")
 	installNfs.PersistentFlags().StringVar(&install.DefaultSc, "nfssc", "nfs-data", "默认nfs storageclass")
 
-	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs)
+	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs, installKuboard)
 }

@@ -11,15 +11,17 @@ import (
 
 func K8sInstall() {
 	i := &InstallConfig{
-		Hosts:         Hosts,
-		Masters:       Masters,
-		Wokers:        Wokers,
-		EnableIngress: EnableIngress,
-		EnableNfs:     EnableNfs,
-		ExtendNfsAddr: ExtendNfsAddr,
-		NfsPath:       NfsPath,
-		DefaultSc:     DefaultSc,
-		Master0:       strings.Split(Masters, "-")[0],
+		Hosts:               Hosts,
+		Masters:             Masters,
+		Wokers:              Wokers,
+		EnableIngress:       EnableIngress,
+		EnableNfs:           EnableNfs,
+		ExtendNfsAddr:       ExtendNfsAddr,
+		EnableKuboard:       EnableKuboard,
+		EnableMetricsServer: EnableMetricsServer,
+		NfsPath:             NfsPath,
+		DefaultSc:           DefaultSc,
+		Master0:             strings.Split(Masters, "-")[0],
 	}
 	i.K8sInstall()
 	if i.EnableIngress {
@@ -28,6 +30,15 @@ func K8sInstall() {
 	if i.EnableNfs {
 		i.NfsInstall()
 		i.NfsDeploy()
+	}
+
+	if i.EnableMetricsServer {
+		i.MetricsServerDeploy()
+	}
+
+	if i.EnableKuboard {
+		i.KuboardInstall()
+		i.KuboardDone()
 	}
 }
 
