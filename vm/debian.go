@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"github.com/ysicing/ergo/utils"
 	"html/template"
-	"strings"
 )
 
 type Debian struct {
@@ -27,7 +26,7 @@ func (d Debian) Osmode() string {
 		d.metadata.Instance = DefaultInstance
 	}
 	if d.metadata.Name == "" {
-		d.metadata.Name = strings.ToLower(utils.RandomString(5))
+		d.metadata.Name = utils.RandomStringv2()
 	}
 	t := template.Must(template.New("debian").Parse(tpl))
 	t.Execute(&b, &d.metadata)

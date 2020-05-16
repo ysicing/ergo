@@ -36,3 +36,7 @@ func (s Ss) Up() {
 func (s Ss) Down() {
 	logger.Debug("down docker-compose")
 }
+
+const sscompose = `
+
+`

@@ -4,6 +4,8 @@
 package utils
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"k8s.io/klog"
@@ -13,6 +15,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //DirIsEmpty 验证目录是否为空
@@ -107,6 +110,13 @@ func RandomString(lenstr int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func RandomStringv2() string {
+	t := time.Now().Format("2020010215")
+	h := md5.New()
+	h.Write([]byte(t))
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 func String2Int(s string) (i int) {
