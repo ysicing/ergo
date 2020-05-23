@@ -29,7 +29,7 @@ func K8sInstall() {
 		if i.IngressType == "nginx-ingress" {
 			logger.Info("nginx 官方ingress nginx-ingress")
 			i.NginxIngressInstall()
-		} else if i.IngressType == "traefik " {
+		} else if i.IngressType == "traefik" {
 			logger.Info("traefik ingress")
 			i.TraefikIngressInstall()
 		} else {

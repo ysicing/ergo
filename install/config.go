@@ -22,6 +22,7 @@ var (
 	EnableMetricsServer bool
 	IngressType         string
 	SSHConfig           sshutil.SSH
+	RegionCn            bool
 )
 
 // InstallConfig 安装配置
@@ -38,6 +39,7 @@ type InstallConfig struct {
 	DefaultSc           string
 	Master0             string
 	IngressType         string
+	RegionCn            bool
 }
 
 func (i *InstallConfig) Template(tpl string) string {

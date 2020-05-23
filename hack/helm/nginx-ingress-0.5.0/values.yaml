@@ -4,7 +4,7 @@ controller:
   # name: nginx-ingress
 
   ## The kind of the Ingress controller installation - deployment or daemonset.
-  kind: deployment
+  kind: daemonset
 
   ## Deploys the Ingress controller for NGINX Plus.
   nginxplus: false

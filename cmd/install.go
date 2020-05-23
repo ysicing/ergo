@@ -81,6 +81,7 @@ func init() {
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.Password, "pass", "", "管理员密码")
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.PkFile, "pk", "", "管理员私钥")
 	installCmd.PersistentFlags().StringSliceVar(&install.Hosts, "ip", []string{"11.11.11.111"}, "需要安装节点ip")
+	installCmd.PersistentFlags().BoolVar(&install.RegionCn, "regioncn", true, "默认使用gitee源")
 
 	installK8s.PersistentFlags().BoolVar(&install.EnableIngress, "enableingress", true, "k8s启用ingress")
 	installK8s.PersistentFlags().StringVar(&install.IngressType, "ingresstype", "ingress-nginx", "ingress: nginx-ingress, traefik, ingress-nginx")
