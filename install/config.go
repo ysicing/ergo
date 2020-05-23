@@ -20,6 +20,7 @@ var (
 	EnableIngress       bool
 	EnableKuboard       bool
 	EnableMetricsServer bool
+	IngressType         string
 	SSHConfig           sshutil.SSH
 )
 
@@ -36,6 +37,7 @@ type InstallConfig struct {
 	NfsPath             string
 	DefaultSc           string
 	Master0             string
+	IngressType         string
 }
 
 func (i *InstallConfig) Template(tpl string) string {

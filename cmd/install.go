@@ -66,6 +66,15 @@ var installKuboard = &cobra.Command{
 	},
 }
 
+var installIngress = &cobra.Command{
+	Use:   "ingress",
+	Short: "ingress",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装 ingress")
+		install.IngressInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -74,6 +83,7 @@ func init() {
 	installCmd.PersistentFlags().StringSliceVar(&install.Hosts, "ip", []string{"11.11.11.111"}, "需要安装节点ip")
 
 	installK8s.PersistentFlags().BoolVar(&install.EnableIngress, "enableingress", true, "k8s启用ingress")
+	installK8s.PersistentFlags().StringVar(&install.IngressType, "ingresstype", "ingress-nginx", "ingress: nginx-ingress, traefik, ingress-nginx")
 	installK8s.PersistentFlags().BoolVar(&install.EnableNfs, "enablenfs", false, "k8s启用nfs sc")
 	installK8s.PersistentFlags().StringVar(&install.ExtendNfsAddr, "exnfs", "", "外部nfs地址, 若无则为空")
 	installK8s.PersistentFlags().StringVar(&install.NfsPath, "nfspath", "/k8sdata", "nfs路径")
@@ -88,5 +98,7 @@ func init() {
 	installNfs.PersistentFlags().StringVar(&install.NfsPath, "nfspath", "/k8sdata", "nfs路径")
 	installNfs.PersistentFlags().StringVar(&install.DefaultSc, "nfssc", "nfs-data", "默认nfs storageclass")
 
-	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs, installKuboard)
+	installIngress.PersistentFlags().StringVar(&install.IngressType, "ingresstype", "ingress-nginx", "ingress: nginx-ingress, traefik, ingress-nginx")
+
+	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs, installKuboard, installIngress)
 }
