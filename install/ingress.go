@@ -26,18 +26,18 @@ func IngressInstall() {
 }
 
 func (i *InstallConfig) NginxIngressInstall() {
-	ngingcmd := fmt.Sprintf(`echo '%s' | kubectl apply -f -`, NginxIngress)
+	ngingcmd := fmt.Sprintf(`echo '%s' | kubectl apply -f -`, NginxIngressHelm)
 	SSHConfig.Cmd(i.Master0, ngingcmd)
 }
 
 func (i *InstallConfig) TraefikIngressInstall() {
-	traefikingcmd := fmt.Sprintf(`echo '%s' > /tmp/traefikingress.installl`, TraefikIngress)
+	traefikingcmd := fmt.Sprintf(`echo '%s' > /tmp/traefikingress.installl`, TraefikIngressHelm)
 	SSHConfig.Cmd(i.Master0, traefikingcmd)
 	SSHConfig.Cmd(i.Master0, "bash -x /tmp/traefikingress.installl")
 }
 
 func (i *InstallConfig) IngressNginxInstall() {
-	ingngcmd := fmt.Sprintf(`echo '%s' > /tmp/ingressnginx.install`, IngressNginxv2)
+	ingngcmd := fmt.Sprintf(`echo '%s' > /tmp/ingressnginx.install`, IngressNginxHelm)
 	SSHConfig.Cmd(i.Master0, ingngcmd)
 	SSHConfig.Cmd(i.Master0, "bash -x /tmp/ingressnginx.install")
 }
