@@ -276,6 +276,7 @@ spec:
       # mount in tmp so we can safely use from-scratch images and/or read-only containers
       - name: tmp-dir
         emptyDir: {}
+      hostNetwork: true
       containers:
       - name: metrics-server
         image: registry.cn-hangzhou.aliyuncs.com/google_containers/metrics-server-amd64:v0.3.6
@@ -287,7 +288,7 @@ spec:
           - --cert-dir=/tmp
           - --secure-port=4443
           - --kubelet-insecure-tls=true
-          - --kubelet-preferred-address-types=InternalIP
+          - --kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,externalDNS
         ports:
         - name: main-port
           containerPort: 4443
