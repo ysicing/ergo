@@ -66,7 +66,7 @@ const NginxIngressHelm = `
 kubectl create ns nginx-ingress
 
 helminit
-
+helm repo update
 helm install nginx-ingress -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/nginx-ingress-0.5.0/values.yaml nginx-stable/nginx-ingress -n nginx-ingress
 `
 
@@ -76,7 +76,7 @@ const NginxIngressHelmCn = `
 kubectl create ns nginx-ingress
 
 helminit
-
+helm repo update
 helm install nginx-ingress -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/nginx-ingress-0.5.0/values.yaml nginx-stable/nginx-ingress -n nginx-ingress
 
 `
@@ -87,7 +87,7 @@ const TraefikIngressHelm = `
 kubectl create ns traefik-v2
 
 helminit
-
+helm repo update
 helm install traefik -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/traefik-8.2.0/values.yaml traefik/traefik -n traefik-v2
 `
 
@@ -97,7 +97,7 @@ const TraefikIngressHelmCn = `
 kubectl create ns traefik-v2
 
 helminit
-
+helm repo update
 helm install traefik -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/traefik-8.2.0/values.yaml traefik/traefik -n traefik-v2
 `
 
@@ -107,7 +107,7 @@ const IngressNginxHelm = `
 kubectl create ns ingress-nginx
 
 helminit
-
+helm repo update
 helm install ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.3.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
 `
 
@@ -117,7 +117,7 @@ const IngressNginxHelmCn = `
 kubectl create ns ingress-nginx
 
 helminit
-
+helm repo update
 helm install ingress-nginx -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/ingress-nginx-2.3.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
 `
 
