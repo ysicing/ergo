@@ -12,6 +12,7 @@ require (
 	github.com/koding/vagrantutil v0.0.0-20180710063911-70827343f116
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/shirou/gopsutil v2.20.3+incompatible
+	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.4.0
 	github.com/wonderivan/logger v1.0.0

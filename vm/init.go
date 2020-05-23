@@ -10,14 +10,6 @@ import (
 	"strings"
 )
 
-var (
-	User          string
-	Pass          string
-	Port          string
-	Hosts         []string
-	DockerInstall bool
-)
-
 func InitDebian() {
 	for _, host := range Hosts {
 		logger.Info("init debian: %s", host)
