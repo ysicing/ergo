@@ -42,7 +42,36 @@ func (i *InstallConfig) IngressNginxInstall() {
 	SSHConfig.Cmd(i.Master0, "bash -x /tmp/ingressnginx.install")
 }
 
-const NginxIngress = `
+const NginxIngressHelm = `
+#/bin/bash
+
+kubectl create ns nginx-ingress
+
+helminit
+
+helm install nginx-ingress -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/nginx-ingress-0.5.0/values.yaml nginx-stable/nginx-ingress -n nginx-ingress
+`
+
+const TraefikIngressHelm = `
+#/bin/bash
+
+kubectl create ns traefik-v2
+
+helminit
+
+helm install traefik -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/traefik-8.2.0/values.yaml traefik/traefik -n traefik-v2
+`
+
+const IngressNginxHelm = `
+#/bin/bash
+
+kubectl create ns ingress-nginx
+
+helminit
+
+helm install ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.3.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
+`
+const NginxIngressv1 = `
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -217,16 +246,6 @@ spec:
          #- -enable-leader-election
           - -enable-prometheus-metrics
          #- -enable-custom-resources
-`
-
-const TraefikIngress = `
-#/bin/bash
-
-kubectl create ns traefik-v2
-
-helminit
-
-helm install traefik traefik/traefik -n traefik-v2 --set service.type=NodePort --set ports.traefik.expose=true
 `
 
 const IngressNginxv1 = `
@@ -548,14 +567,4 @@ spec:
       memory: 90Mi
       cpu: 100m
     type: Container
-`
-
-const IngressNginxv2 = `
-#/bin/bash
-
-kubectl create ns ingress-nginx
-
-helminit
-
-helm install ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.3.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
 `
