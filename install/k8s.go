@@ -23,6 +23,7 @@ func K8sInstall() {
 		DefaultSc:           DefaultSc,
 		Master0:             strings.Split(Masters, "-")[0],
 		IngressType:         IngressType,
+		RegionCn:            RegionCn,
 	}
 	i.K8sInstall()
 	if i.EnableIngress {
