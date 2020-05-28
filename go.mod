@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.174 // indirect
+	github.com/aliyun/aliyun-oss-go-sdk v2.1.0+incompatible
 	github.com/cuisongliu/sshcmd v1.5.2
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
