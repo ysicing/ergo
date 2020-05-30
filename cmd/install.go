@@ -75,6 +75,15 @@ var installIngress = &cobra.Command{
 	},
 }
 
+var installPrometheus = &cobra.Command{
+	Use:   "prom",
+	Short: "promethues",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装 promethues")
+		install.PrometheusInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -101,5 +110,5 @@ func init() {
 
 	installIngress.PersistentFlags().StringVar(&install.IngressType, "ingresstype", "ingress-nginx", "ingress: nginx-ingress, traefik, ingress-nginx")
 
-	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs, installKuboard, installIngress)
+	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs, installKuboard, installIngress, installPrometheus)
 }

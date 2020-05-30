@@ -23,6 +23,7 @@ var (
 	IngressType         string
 	SSHConfig           sshutil.SSH
 	RegionCn            bool
+	//Domain string
 )
 
 // InstallConfig 安装配置
@@ -40,6 +41,7 @@ type InstallConfig struct {
 	Master0             string
 	IngressType         string
 	RegionCn            bool
+	//Domain string
 }
 
 func (i *InstallConfig) Template(tpl string) string {
