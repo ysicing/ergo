@@ -84,6 +84,15 @@ var installPrometheus = &cobra.Command{
 	},
 }
 
+var installZeux = &cobra.Command{
+	Use:   "zeux",
+	Short: "负载均衡",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装 牛逼的负载均衡")
+		install.ZeuxInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -110,5 +119,9 @@ func init() {
 
 	installIngress.PersistentFlags().StringVar(&install.IngressType, "ingresstype", "ingress-nginx", "ingress: nginx-ingress, traefik, ingress-nginx")
 
-	installCmd.AddCommand(installDocker, installGo, installTools, installK8s, installNfs, installKuboard, installIngress, installPrometheus)
+	installPrometheus.PersistentFlags().StringVar(&install.Domain, "domain", "k7s.xyz", "默认域名")
+	installPrometheus.PersistentFlags().BoolVar(&install.EnableIngress, "enableingress", true, "prom启用ingress")
+
+	installCmd.AddCommand(installDocker, installGo, installTools,
+		installK8s, installNfs, installKuboard, installIngress, installPrometheus, installZeux)
 }

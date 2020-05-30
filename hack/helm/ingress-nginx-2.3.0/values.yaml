@@ -343,7 +343,7 @@ controller:
   #   command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
 
   admissionWebhooks:
-    enabled: true
+    enabled: false
     failurePolicy: Fail
     port: 8443
 
