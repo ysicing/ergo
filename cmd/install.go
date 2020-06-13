@@ -93,6 +93,15 @@ var installZeux = &cobra.Command{
 	},
 }
 
+var installMlb = &cobra.Command{
+	Use:   "mlb",
+	Short: "Service LoadBalancer负载均衡",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装支持LoadBalancer负载均衡")
+		install.MlbInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -123,5 +132,5 @@ func init() {
 	installPrometheus.PersistentFlags().BoolVar(&install.EnableIngress, "enableingress", true, "prom启用ingress")
 
 	installCmd.AddCommand(installDocker, installGo, installTools,
-		installK8s, installNfs, installKuboard, installIngress, installPrometheus, installZeux)
+		installK8s, installNfs, installKuboard, installIngress, installPrometheus, installZeux, installMlb)
 }
