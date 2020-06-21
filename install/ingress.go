@@ -108,7 +108,7 @@ kubectl create ns ingress-nginx
 
 helminit
 helm repo update
-helm install ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.3.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
+helm install ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.7.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
 `
 
 const IngressNginxHelmCn = `
@@ -118,7 +118,7 @@ kubectl create ns ingress-nginx
 
 helminit
 helm repo update
-helm install ingress-nginx -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/ingress-nginx-2.3.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
+helm install ingress-nginx -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/ingress-nginx-2.7.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
 `
 
 const NginxIngressv1 = `

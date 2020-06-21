@@ -24,6 +24,7 @@ func K8sInstall() {
 		Master0:             strings.Split(Masters, "-")[0],
 		IngressType:         IngressType,
 		RegionCn:            RegionCn,
+		Mtu:                 Mtu,
 	}
 	i.K8sInstall()
 	if i.EnableIngress {
@@ -55,11 +56,15 @@ func K8sInstall() {
 
 func (i *InstallConfig) K8sInstall() {
 
+	if i.Mtu == 0 {
+		i.Mtu = 1440
+	}
+
 	var k8scmd string
 	if len(Wokers) == 0 {
-		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e PASS=%s  ysicing/k7s", Masters, SSHConfig.Password)
+		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MTU=%s -e MASTER_IP=%s -e PASS=%s  ysicing/k7s", i.Mtu, Masters, SSHConfig.Password)
 	} else {
-		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s", Masters, Wokers, SSHConfig.Password)
+		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MTU=%s -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s", i.Mtu, Masters, Wokers, SSHConfig.Password)
 	}
 
 	SSHConfig.Cmd(i.Master0, k8scmd)

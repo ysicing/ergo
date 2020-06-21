@@ -120,6 +120,7 @@ func init() {
 	installK8s.PersistentFlags().StringVar(&install.Wokers, "wip", "", "计算节点ip,eg ip或者ip-ip")
 	installK8s.PersistentFlags().BoolVar(&install.EnableKuboard, "enablekuboard", false, "启用kuboard")
 	installK8s.PersistentFlags().BoolVar(&install.EnableMetricsServer, "enablems", true, "启用MetricsServer")
+	installK8s.PersistentFlags().IntVar(&install.Mtu, "mtu", 1440, "mtu默认1440, ucloud推荐1404")
 
 	installNfs.PersistentFlags().BoolVar(&install.EnableNfs, "enablenfs", false, "k8s启用nfs sc")
 	installNfs.PersistentFlags().StringVar(&install.ExtendNfsAddr, "exnfs", "", "外部nfs地址, 若无则为空")
