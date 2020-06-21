@@ -49,7 +49,7 @@ rm -rf prometheus || sleep 1
 
 git clone https://gitee.com/ysicing/prometheus.git --depth 1
 cd prometheus
-grep 'k7s.xyz' * -R | awk -F: '{print \$1}' | uniq | xargs -I {} sed -i 's#k7s.xyz#{{.Domain}}#g' {}
+grep 'k7s.local' * -R | awk -F: '{print \$1}' | uniq | xargs -I {} sed -i 's#k7s.local#{{.Domain}}#g' {}
 ./deploy.sh
 
 if [ '{{.EnableIngress}}'x == 'true'x ];then
@@ -66,7 +66,7 @@ rm -rf prometheus || sleep 1
 
 git clone https://github.com/ysicing/prometheus.git --depth 1
 cd prometheus
-grep 'k7s.xyz' * -R | awk -F: '{print \$1}' | uniq | xargs -I {} sed -i 's#k7s.xyz#{{.Domain}}#g' {}
+grep 'k7s.local' * -R | awk -F: '{print \$1}' | uniq | xargs -I {} sed -i 's#k7s.local#{{.Domain}}#g' {}
 ./deploy.sh
 
 if [ '{{.EnableIngress}}'x == 'true'x ];then
