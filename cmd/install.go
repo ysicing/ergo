@@ -102,6 +102,15 @@ var installMlb = &cobra.Command{
 	},
 }
 
+var installKd = &cobra.Command{
+	Use:   "kd",
+	Short: "kubernetes dashboard",
+	Run: func(cmd *cobra.Command, args []string) {
+		klog.Info("🎉 安装kubernetes dashboard")
+		install.KDInstall()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.PersistentFlags().StringVar(&install.SSHConfig.User, "user", "root", "管理员")
@@ -121,6 +130,7 @@ func init() {
 	installK8s.PersistentFlags().BoolVar(&install.EnableKuboard, "enablekuboard", false, "启用kuboard")
 	installK8s.PersistentFlags().BoolVar(&install.EnableMetricsServer, "enablems", true, "启用MetricsServer")
 	installK8s.PersistentFlags().IntVar(&install.Mtu, "mtu", 1440, "mtu默认1440, ucloud推荐1404")
+	installK8s.PersistentFlags().StringVar(&install.K8sVersion, "version", "latest", "默认最新, 额外支持1.16.11")
 
 	installNfs.PersistentFlags().BoolVar(&install.EnableNfs, "enablenfs", false, "k8s启用nfs sc")
 	installNfs.PersistentFlags().StringVar(&install.ExtendNfsAddr, "exnfs", "", "外部nfs地址, 若无则为空")
@@ -133,5 +143,5 @@ func init() {
 	installPrometheus.PersistentFlags().BoolVar(&install.EnableIngress, "enableingress", true, "prom启用ingress")
 
 	installCmd.AddCommand(installDocker, installGo, installTools,
-		installK8s, installNfs, installKuboard, installIngress, installPrometheus, installZeux, installMlb)
+		installK8s, installNfs, installKuboard, installIngress, installPrometheus, installZeux, installMlb, installKd)
 }

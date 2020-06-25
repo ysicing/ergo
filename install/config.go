@@ -25,6 +25,7 @@ var (
 	RegionCn            bool
 	Domain              string
 	Mtu                 int
+	K8sVersion          string
 )
 
 // InstallConfig 安装配置
@@ -44,6 +45,7 @@ type InstallConfig struct {
 	RegionCn            bool
 	Domain              string
 	Mtu                 int
+	K8sVersion          string
 }
 
 func (i *InstallConfig) Template(tpl string) string {

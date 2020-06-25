@@ -25,6 +25,7 @@ func K8sInstall() {
 		IngressType:         IngressType,
 		RegionCn:            RegionCn,
 		Mtu:                 Mtu,
+		K8sVersion:          K8sVersion,
 	}
 	i.K8sInstall()
 	if i.EnableIngress {
@@ -46,6 +47,7 @@ func K8sInstall() {
 
 	if i.EnableMetricsServer {
 		i.MetricsServerDeploy()
+		i.KDInstall()
 	}
 
 	if i.EnableKuboard {
@@ -62,9 +64,9 @@ func (i *InstallConfig) K8sInstall() {
 
 	var k8scmd string
 	if len(Wokers) == 0 {
-		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MTU=%v -e MASTER_IP=%s -e PASS=%s  ysicing/k7s", i.Mtu, Masters, SSHConfig.Password)
+		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e K8sVersion=%v -e MTU=%v -e MASTER_IP=%s -e PASS=%s  ysicing/k7s:%v", i.K8sVersion, i.Mtu, Masters, SSHConfig.Password, i.K8sVersion)
 	} else {
-		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e MTU=%v -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s", i.Mtu, Masters, Wokers, SSHConfig.Password)
+		k8scmd = fmt.Sprintf("docker run -v /root:/root -v /etc/kubernetes:/etc/kubernetes --rm -e K8sVersion=%v -e MTU=%v -e MASTER_IP=%s -e NODE_IP=%s -e PASS=%s  ysicing/k7s:%v", i.K8sVersion, i.Mtu, Masters, Wokers, SSHConfig.Password, i.K8sVersion)
 	}
 
 	SSHConfig.Cmd(i.Master0, k8scmd)
