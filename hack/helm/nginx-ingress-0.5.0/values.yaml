@@ -143,7 +143,7 @@ controller:
     create: true
 
     ## The type of service to create for the Ingress controller.
-    type: NodePort
+    type: LoadBalancer
 
     ## The externalTrafficPolicy of the service. The value Local preserves the client source IP.
     externalTrafficPolicy: Local

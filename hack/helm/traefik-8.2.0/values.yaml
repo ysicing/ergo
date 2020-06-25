@@ -113,7 +113,7 @@ ports:
 # from.
 service:
   enabled: true
-  type: NodePort
+  type: LoadBalancer
   # Additional annotations (e.g. for cloud provider specific config)
   annotations: {}
   # Additional entries here will be added to the service spec. Cannot contains

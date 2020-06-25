@@ -3,7 +3,7 @@
 ## Current available global Docker image parameters: imageRegistry and imagePullSecrets
 ##
 global:
-  # imageRegistry: myRegistryName
+  # imageRegistry: registry.cn-beijing.aliyuncs.com
   # imagePullSecrets:
   #   - myRegistryKeySecretName
   # storageClass: myStorageClass
@@ -530,7 +530,7 @@ slave:
 ## Prometheus Exporter / Metrics
 ##
 metrics:
-  enabled: false
+  enabled: true
 
   image:
     registry: docker.io
