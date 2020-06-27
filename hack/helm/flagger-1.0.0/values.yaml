@@ -1,0 +1,134 @@
+# Default values for flagger.
+
+image:
+  repository: registry.cn-beijing.aliyuncs.com/k7scn/flagger
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+  pullSecret:
+
+# accepted values are debug, info, warning, error (defaults to info)
+logLevel: info
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  appmesh.k8s.aws/sidecarInjectorWebhook: disabled
+
+metricsServer: "http://prometheus-k8s.monitoring.svc:9090"
+
+# accepted values are kubernetes, istio, linkerd, appmesh, nginx, gloo or supergloo:mesh.namespace (defaults to istio)
+meshProvider: "nginx"
+
+# single namespace restriction
+namespace: "ingress-nginx"
+
+# list of pod labels that Flagger uses to create pod selectors
+# defaults to: app,name,app.kubernetes.io/name
+selectorLabels: ""
+
+# when enabled, flagger will track changes in Secrets and ConfigMaps referenced in the target deployment (enabled by default)
+configTracking:
+  enabled: true
+
+# annotations prefix for NGINX ingresses
+ingressAnnotationsPrefix: ""
+
+# ingress class used for annotating HTTPProxy objects
+ingressClass: ""
+
+# when enabled, it will add a security context for the flagger pod. You may
+# need to disable this if you are running flagger on OpenShift
+securityContext:
+  enabled: true
+  context:
+    readOnlyRootFilesystem: true
+    runAsUser: 10001
+
+# when specified, flagger will publish events to the provided webhook
+eventWebhook: ""
+
+slack:
+  user: flagger
+  channel:
+  # incoming webhook https://api.slack.com/incoming-webhooks
+  url:
+
+msteams:
+  # MS Teams incoming webhook URL
+  url:
+
+podMonitor:
+  enabled: true
+  namespace:
+  interval: 15s
+  additionalLabels: {}
+
+#env:
+#- name: SLACK_URL
+#  valueFrom:
+#    secretKeyRef:
+#      name: slack
+#      key: url
+#- name: MSTEAMS_URL
+#  valueFrom:
+#    secretKeyRef:
+#      name: msteams
+#      key: url
+#- name: EVENT_WEBHOOK_URL
+#  valueFrom:
+#    secretKeyRef:
+#      name: eventwebhook
+#      key: url
+env: []
+
+leaderElection:
+  enabled: false
+  replicaCount: 1
+
+serviceAccount:
+  # serviceAccount.create: Whether to create a service account or not
+  create: true
+  # serviceAccount.name: The name of the service account to create or use
+  name: ""
+  # serviceAccount.annotations: Annotations for service account
+  annotations: {}
+
+rbac:
+  # rbac.create: `true` if rbac resources should be created
+  create: true
+  # rbac.pspEnabled: `true` if PodSecurityPolicy resources should be created
+  pspEnabled: false
+
+crd:
+  # crd.create: `true` if custom resource definitions should be created
+  create: false
+
+nameOverride: ""
+fullnameOverride: ""
+
+resources:
+  limits:
+    memory: "512Mi"
+    cpu: "1000m"
+  requests:
+    memory: "32Mi"
+    cpu: "10m"
+
+nodeSelector: {}
+
+tolerations: []
+
+prometheus:
+  # to be used with ingress controllers
+  install: false
+  image: registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0
+  retention: 2h
+
+#  Istio multi-cluster service mesh (shared control plane single-network)
+# https://istio.io/docs/setup/install/multicluster/shared-vpn/
+istio:
+  kubeconfig:
+    # istio.kubeconfig.secretName: The name of the secret containing the Istio control plane kubeconfig
+    secretName: ""
+    # istio.kubeconfig.key: The name of secret data key that contains the Istio control plane kubeconfig
+    key: "kubeconfig"
