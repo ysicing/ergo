@@ -108,7 +108,11 @@ kubectl create ns ingress-nginx
 
 helminit
 helm repo update
-helm install ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.7.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
+helm upgrade -i ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/master/hack/helm/ingress-nginx-2.7.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx --version 2.7.0
+
+helm upgrade -i flagger flagger/flagger --namespace ingress-nginx --set prometheus.install=true --set meshProvider=nginx \
+	--set image.repository=registry.cn-beijing.aliyuncs.com/k7scn/flagger \
+	--set prometheus.image=registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0
 `
 
 const IngressNginxHelmCn = `
@@ -118,7 +122,11 @@ kubectl create ns ingress-nginx
 
 helminit
 helm repo update
-helm install ingress-nginx -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/ingress-nginx-2.7.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx
+helm upgrade -i ingress-nginx -f https://gitee.com/ysicing/ergo/raw/master/hack/helm/ingress-nginx-2.7.0/values.yaml ingress-nginx/ingress-nginx -n ingress-nginx --version 2.7.0
+
+helm upgrade -i flagger flagger/flagger --namespace ingress-nginx --set prometheus.install=true --set meshProvider=nginx \
+	--set image.repository=registry.cn-beijing.aliyuncs.com/k7scn/flagger \
+	--set prometheus.image=registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0
 `
 
 const NginxIngressv1 = `

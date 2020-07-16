@@ -15,6 +15,29 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns-upstream
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/name: "KubeDNSUpstream"
+spec:
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+    targetPort: 53
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+    targetPort: 53
+  selector:
+    k8s-app: kube-dns
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: node-local-dns
@@ -31,8 +54,8 @@ data:
         }
         reload
         loop
-        bind $localDnsIp
-        forward . $upstreanDnsIp {
+        bind $localDnsIp __PILLAR__DNS__SERVER__
+        forward . __PILLAR__CLUSTER__DNS__ {
                 force_tcp
         }
         prometheus :9253
@@ -43,8 +66,8 @@ data:
         cache 30
         reload
         loop
-        bind $localDnsIp
-        forward . $upstreanDnsIp {
+        bind $localDnsIp __PILLAR__DNS__SERVER__
+        forward . __PILLAR__CLUSTER__DNS__ {
                 force_tcp
         }
         prometheus :9253
@@ -54,8 +77,8 @@ data:
         cache 30
         reload
         loop
-        bind $localDnsIp
-        forward . $upstreanDnsIp {
+        bind $localDnsIp __PILLAR__DNS__SERVER__
+        forward . __PILLAR__CLUSTER__DNS__ {
                 force_tcp
         }
         prometheus :9253
@@ -65,8 +88,8 @@ data:
         cache 30
         reload
         loop
-        bind $localDnsIp
-        forward . /etc/resolv.conf {
+        bind $localDnsIp __PILLAR__DNS__SERVER__
+        forward . __PILLAR__UPSTREAM__SERVERS__ {
                 force_tcp
         }
         prometheus :9253
@@ -90,8 +113,11 @@ spec:
       k8s-app: node-local-dns
   template:
     metadata:
-       labels:
-          k8s-app: node-local-dns
+      labels:
+        k8s-app: node-local-dns
+      annotations:
+        prometheus.io/port: "9253"
+        prometheus.io/scrape: "true"
     spec:
       priorityClassName: system-node-critical
       serviceAccountName: node-local-dns
@@ -100,18 +126,18 @@ spec:
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
-      nodeSelector:
-        beta.kubernetes.io/os: linux
+      - effect: "NoExecute"
+        operator: "Exists"
+      - effect: "NoSchedule"
+        operator: "Exists"
       containers:
       - name: node-cache
-        image: registry.cn-hangzhou.aliyuncs.com/acs/k8s-dns-node-cache:coredns-1.5.0
+        image: registry.cn-beijing.aliyuncs.com/k7scn/k8s-dns-node-cache:1.15.13
         resources:
-          limits:
-            memory: 30Mi
           requests:
             cpu: 25m
             memory: 5Mi
-        args: [ "-localip", "$localDnsIp", "-conf", "/etc/coredns/Corefile" ]
+        args: [ "-localip", "$localDnsIp,__PILLAR__DNS__SERVER__", "-conf", "/etc/Corefile", "-upstreamsvc", "kube-dns-upstream" ]
         securityContext:
           privileged: true
         ports:
@@ -137,17 +163,24 @@ spec:
           readOnly: false
         - name: config-volume
           mountPath: /etc/coredns
+        - name: kube-dns-config
+          mountPath: /etc/kube-dns
       volumes:
       - name: xtables-lock
         hostPath:
           path: /run/xtables.lock
           type: FileOrCreate
+      - name: kube-dns-config
+        configMap:
+          name: kube-dns
+          optional: true
       - name: config-volume
         configMap:
           name: node-local-dns
           items:
             - key: Corefile
-              path: Corefile
+              path: Corefile.base
+
 END
 )
 
