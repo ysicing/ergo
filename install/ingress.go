@@ -112,7 +112,7 @@ helm upgrade -i ingress-nginx -f https://raw.githubusercontent.com/ysicing/ergo/
 
 helm upgrade -i flagger flagger/flagger --namespace ingress-nginx --set prometheus.install=true --set meshProvider=nginx \
 	--set image.repository=registry.cn-beijing.aliyuncs.com/k7scn/flagger \
-	--set prometheus.image=registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0
+	--set prometheus.image=registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0 --version 1.0.1
 `
 
 const IngressNginxHelmCn = `
@@ -126,7 +126,7 @@ helm upgrade -i ingress-nginx -f https://gitee.com/ysicing/ergo/raw/master/hack/
 
 helm upgrade -i flagger flagger/flagger --namespace ingress-nginx --set prometheus.install=true --set meshProvider=nginx \
 	--set image.repository=registry.cn-beijing.aliyuncs.com/k7scn/flagger \
-	--set prometheus.image=registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0
+	--set prometheus.image=registry.cn-beijing.aliyuncs.com/k7scn/prometheus:v2.19.0 --version 1.0.1
 `
 
 const NginxIngressv1 = `
