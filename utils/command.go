@@ -50,3 +50,12 @@ func Cmdv2(name string, arg []string) {
 		ErgoExit(fmt.Sprintf("[os]命令执行错误: %s", err))
 	}
 }
+
+func CmdResv2(name string, arg ...string) bool {
+	cmd := exec.Command(name, arg[:]...)
+	err := cmd.Run()
+	if err != nil {
+		return false
+	}
+	return true
+}

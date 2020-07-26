@@ -8,15 +8,19 @@ require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.0+incompatible
 	github.com/cuisongliu/sshcmd v1.5.2
 	github.com/ghodss/yaml v1.0.0
+	github.com/gin-gonic/gin v1.6.3
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/koding/logging v0.0.0-20160720134017-8b5a689ed69b // indirect
 	github.com/koding/vagrantutil v0.0.0-20180710063911-70827343f116
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/prometheus/client_golang v1.7.1
 	github.com/shirou/gopsutil v2.20.3+incompatible
-	github.com/sirupsen/logrus v1.2.0
+	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.4.0
 	github.com/wonderivan/logger v1.0.0
+	github.com/ysicing/ginmid v0.2.1
+	github.com/ysicing/go-utils v0.2.3
 	k8s.io/klog v1.0.0
 )
 
