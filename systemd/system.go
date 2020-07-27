@@ -30,7 +30,7 @@ func (m SystemdMeta) PreCheck() bool {
 		logger.Info("%s service exist: /etc/systemd/system/multi-user.target.wants/%v.service", m.Name, m.Name)
 		return false
 	}
-	if !utils.CmdResv2("systemctl", "cat", m.Name) {
+	if utils.CmdResv2("systemctl", "cat", m.Name) {
 		return false
 	}
 	return true
