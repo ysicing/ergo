@@ -1,7 +1,7 @@
 # Default values for Traefik
 image:
   name: registry.cn-beijing.aliyuncs.com/k7scn/traefik
-  tag: 2.2.1
+  tag: 2.2.5
 
 #
 # Configure the deployment
@@ -14,6 +14,24 @@ deployment:
   annotations: {}
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
+  # Additional containers (e.g. for metric offloading sidecars)
+  additionalContainers: []
+  # Additional initContainers (e.g. for setting file permission as shown below)
+  initContainers: []
+    # The "volume-permissions" init container is required if you run into permission issues.
+    # Related issue: https://github.com/containous/traefik/issues/6972
+    # - name: volume-permissions
+    #   image: busybox:1.31.1
+    #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
+    #   volumeMounts:
+    #     - name: data
+    #       mountPath: /data
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  # maxUnavailable: 1
+  # minAvailable: 0
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
@@ -27,6 +45,16 @@ ingressRoute:
 rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
+
+
+#
+# Configure providers
+#
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: true
 
 #
 # Add volumes to the traefik pod.
@@ -50,9 +78,9 @@ globalArguments:
 # Configure Traefik static configuration
 # Additional arguments to be passed at Traefik's binary
 # All available options available on https://docs.traefik.io/reference/static-configuration/cli/
-## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--log.level=DEBUG}"`
-additionalArguments:
-  - "--providers.kubernetesingress.ingressClass=traefik-ingress"
+## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
+additionalArguments: []
+  - "--providers.kubernetesingress.ingressclass=traefik-ingress"
   - "--log.level=DEBUG"
 
 # Environment variables to be passed to Traefik's binary
@@ -91,14 +119,18 @@ ports:
     # You SHOULD NOT expose the traefik port on production deployments.
     # If you want to access it from outside of your cluster,
     # use `kubectl proxy` or create a secure ingress
-    expose: true
+    expose: false
     # The exposed port for this service
     exposedPort: 9000
+    # The port protocol (TCP/UDP)
+    protocol: TCP
   web:
     port: 8000
     # hostPort: 8000
     expose: true
     exposedPort: 80
+    # The port protocol (TCP/UDP)
+    protocol: TCP
     # Use nodeport if set. This is useful if you have configured Traefik in a
     # LoadBalancer
     # nodePort: 32080
@@ -107,6 +139,8 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
+    # The port protocol (TCP/UDP)
+    protocol: TCP
     # nodePort: 32443
 
 # Options for the main traefik service, where the entrypoints traffic comes
@@ -152,6 +186,7 @@ autoscaling:
 # It will persist TLS certificates.
 persistence:
   enabled: false
+#  existingClaim: ""
   accessMode: ReadWriteOnce
   size: 128Mi
   # storageClass: ""
@@ -164,6 +199,20 @@ persistence:
 # and replicas>1, a pod anti-affinity is recommended and will be set if the
 # affinity is left as default.
 hostNetwork: false
+
+# Whether Role Based Access Control objects like roles and rolebindings should be created
+rbac:
+  enabled: true
+
+  # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
+  # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
+  namespaced: false
+
+# The service account the pods will use to interact with the Kubernetes API
+serviceAccount:
+  # If set, an existing service account is used
+  # If not set, a service account is created automatically using the fullname template
+  name: ""
 
 # Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}
