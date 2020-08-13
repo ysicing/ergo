@@ -4,11 +4,13 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/ysicing/ergo/config"
+	"github.com/ysicing/go-utils/exfile"
 	"k8s.io/klog"
-	"os"
 )
 
 var cfgFile string
@@ -21,8 +23,7 @@ var rootCmd = &cobra.Command{
 // Execute execute
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		klog.Error(err)
-		os.Exit(1)
+		klog.Exit(err)
 	}
 }
 
@@ -35,19 +36,16 @@ func init() {
 
 func initConfig() {
 	if cfgFile == "" {
-		viper.SetConfigFile(cfgFile)
-	} else {
 		home, err := homedir.Dir()
 		if err != nil {
-			klog.Error(err)
-			os.Exit(1)
+			klog.Exit(err)
 		}
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".doge")
+		cfgFile = fmt.Sprintf("%v/%v/%v", home, ".doge", "config.yaml")
 	}
-
+	if !exfile.CheckFileExistsv2(cfgFile) {
+		config.WriteDefaultCfg(cfgFile)
+	}
+	viper.SetConfigFile(cfgFile)
 	viper.AutomaticEnv()
-	if err := viper.ReadInConfig(); err != nil {
-		klog.Info("Using config file:", viper.ConfigFileUsed())
-	}
+	viper.ReadInConfig()
 }

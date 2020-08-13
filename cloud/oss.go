@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"k8s.io/klog"
-	"os"
 	"strings"
 )
 
@@ -18,17 +17,14 @@ func (ali CloudConfig) AliOss() {
 	}
 	client, err := oss.New(ali.AliRegionID[0], ali.AliKey, ali.AliSecret)
 	if err != nil {
-		klog.Error("create oss client err: ", err)
-		os.Exit(-1)
+		klog.Exit("create oss client err: ", err)
 	}
 	bucket, err := client.Bucket(ali.OssBucket.Bucket)
 	if err != nil {
-		klog.Error("get bucket err:", err)
-		os.Exit(-1)
+		klog.Exit("get bucket err:", err)
 	}
 	if err = bucket.PutObjectFromFile(ali.OssBucket.Remote, ali.OssBucket.Local); err != nil {
-		klog.Error("upload file err:", err)
-		os.Exit(-1)
+		klog.Exit("upload file err:", err)
 	}
 	klog.Info("upload done")
 }

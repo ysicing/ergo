@@ -18,6 +18,7 @@ Version: %s
 Arch: %s
 BuildDate: %s
 CommitID: %s
+Repo: https://github.com/ysicing/ergo
 `
 
 var (
@@ -39,6 +40,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "show version",
 	Long:  "show version.",
+	Aliases: []string{"v"},
 	Run: func(cmd *cobra.Command, args []string) {
 		banner, _ := base64.StdEncoding.DecodeString(bannerBase64)
 		if len(Version) == 0 {

@@ -6,7 +6,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cloud"
-	"os"
+	"k8s.io/klog"
 )
 
 var cloudCmd = &cobra.Command{
@@ -32,7 +32,7 @@ var alioss = &cobra.Command{
 	Short: "阿里云对象存储",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(cloud.OssBucket) == 0 || len(cloud.OssRemote) == 0 || len(cloud.OssLocal) == 0 {
-			os.Exit(-1)
+			klog.Exit("参数不全,请使用--help")
 		}
 		cloud.AliOssUpload()
 	},

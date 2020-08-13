@@ -7,6 +7,7 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.174 // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.0+incompatible
 	github.com/cuisongliu/sshcmd v1.5.2
+	github.com/drone/drone-go v1.3.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
@@ -28,6 +29,7 @@ require (
 	github.com/wonderivan/logger v1.0.0
 	github.com/ysicing/ginmid v0.2.1
 	github.com/ysicing/go-utils v0.2.5
+	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	golang.org/x/sys v0.0.0-20200803210538-64077c9b5642 // indirect
 	golang.org/x/text v0.3.3 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

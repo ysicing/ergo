@@ -5,7 +5,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wonderivan/logger"
+	"k8s.io/klog"
 )
 
 var installDir string
@@ -34,10 +34,10 @@ func init() {
 
 func Install(path string) {
 	// TODO
-	logger.Debug("安装ergo到%v", path)
+	klog.Warning("安装ergo到%v", path)
 }
 
 func Uninstall(path string) {
 	// TODO
-	logger.Debug("从%v卸载ergo成功", path)
+	klog.Warning("从%v卸载ergo成功", path)
 }
