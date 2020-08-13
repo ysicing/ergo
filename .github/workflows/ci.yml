@@ -39,7 +39,7 @@ jobs:
           popd
           ./gen.sh
           docker logout
-          make pre-release
+          make release
       env:
         GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
