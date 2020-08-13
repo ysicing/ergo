@@ -477,7 +477,7 @@ maxmindLicenseKey: ""
 ##
 defaultBackend:
   ##
-  enabled: false
+  enabled: true
 
   image:
     repository: registry.cn-beijing.aliyuncs.com/k7scn/defaultbackend
