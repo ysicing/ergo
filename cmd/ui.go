@@ -14,9 +14,10 @@ import (
 
 var webport int
 
-var webCmd = &cobra.Command{
-	Use:   "web",
-	Short: "简单web页面",
+var dashboardCmd = &cobra.Command{
+	Use:     "dashboard",
+	Aliases: []string{"ui"},
+	Short:   "Simple web UIs",
 	Run: func(cmd *cobra.Command, args []string) {
 		simpleweb := gin.Default()
 		simpleweb.Use(mid.RequestID(), mid.PromMiddleware(nil))
@@ -37,6 +38,6 @@ var webCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(webCmd)
-	webCmd.PersistentFlags().IntVar(&webport, "port", 12306, "端口")
+	rootCmd.AddCommand(dashboardCmd)
+	dashboardCmd.PersistentFlags().IntVar(&webport, "port", 12306, "端口")
 }

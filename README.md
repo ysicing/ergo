@@ -19,25 +19,18 @@ brew tap ysicing/tap
 brew install ergo
 ```
 
-## 命令支持
+## 命令支持 TODO
 
-#### 初始化类
+分类: 传统运维cli, 云原生运维cli, 云服务商cli
 
-```bash
-ergo init vm # 创建vm虚拟机
-ergo init debian # 初始化debian
-```
+#### 传统运维cli
 
-#### 安装类
+- [ ] debian系
 
-```bash
-ergo install docker/go/tools # 安装docker,go,tools
-ergo install k8s
-```
+#### 云原生运维cli
 
-具体参数可以参考docs部分
+- [ ] 安装k8s 1.16.14
 
+#### 云服务商cli
 
-## 1.x 版本计划
-
-- [ ] 优化分类子命令
+- [ ] 阿里云镜像仓库, ucloud镜像仓库

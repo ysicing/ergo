@@ -12,10 +12,9 @@ import (
 	"runtime"
 )
 
-var upgradeCmd = &cobra.Command{
+var upCmd = &cobra.Command{
 	Use:   "upgrade",
 	Short: "升级ergo版本",
-	Aliases: []string{"up"},
 	Run: func(cmd *cobra.Command, args []string) {
 		var pkg = repos.Pkg{"ysicing", "ergo"}
 		lastag, _ := pkg.LastTag()
@@ -30,18 +29,24 @@ var upgradeCmd = &cobra.Command{
 	},
 }
 
-//var uninstallCmd = &cobra.Command{
-//	Use:   "uninstall",
-//	Short: "卸载ergo",
-//	Run: func(cmd *cobra.Command, args []string) {
-//		if runtime.GOOS != "linux" {
-//			klog.Info(excmd.RunCmdRes("/bin/zsh", "-c", "brew uninstall ysicing/tap/ergo"))
-//		} else {
-//			klog.Info("not support. which ergo then delete it.")
-//		}
-//	},
-//}
+var ucCmd = &cobra.Command{
+	Use:   "update-check",
+	Short: "检查是否有ergo最新版本",
+	Run: func(cmd *cobra.Command, args []string) {
+		var pkg = repos.Pkg{"ysicing", "ergo"}
+		lastag, _ := pkg.LastTag()
+		var cv, lv string
+		if lastag.Name != Version {
+			cv = fmt.Sprintf("当前版本: %v (可升级)", Version)
+		} else {
+			cv = fmt.Sprintf("当前版本: %v", Version)
+		}
+		lv = fmt.Sprintf("最新版本: %v", lastag.Name)
+		fmt.Println(cv)
+		fmt.Println(lv)
+	},
+}
 
 func init() {
-	rootCmd.AddCommand(upgradeCmd)
+	rootCmd.AddCommand(upCmd, ucCmd)
 }

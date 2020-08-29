@@ -37,9 +37,9 @@ const (
 )
 
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "show version",
-	Long:  "show version.",
+	Use:     "version",
+	Short:   "show version",
+	Long:    "show version.",
 	Aliases: []string{"v"},
 	Run: func(cmd *cobra.Command, args []string) {
 		banner, _ := base64.StdEncoding.DecodeString(bannerBase64)

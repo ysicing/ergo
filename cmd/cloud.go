@@ -39,7 +39,7 @@ var alioss = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(cloudCmd)
+	//rootCmd.AddCommand(cloudCmd)
 	// 云服务商级别
 	cloudCmd.AddCommand(aliCloud)
 	aliCloud.PersistentFlags().StringSliceVar(&cloud.AliRegionID, "regionid", []string{"cn-hangzhou"}, "数据中心")
