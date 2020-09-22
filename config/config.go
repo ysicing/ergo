@@ -4,27 +4,24 @@
 package config
 
 import (
-	"github.com/ghodss/yaml"
-	"github.com/ysicing/go-utils/exfile"
+	"github.com/ysicing/ext/utils/exfile"
+	"gopkg.in/yaml.v3"
 )
 
+//Config 配置文件
 type Config struct {
-	Drone DroneConfig `yaml:"drone"`
+	global Global `yaml:"global"`
 }
 
-type DroneConfig struct {
-	Host  string `yaml:"host"`
-	Token string `yaml:"token"`
-}
+// Global 全局
+type Global struct{}
 
 func exampleConfig() Config {
-	return Config{DroneConfig{
-		Host:  "http://drone.company.com",
-		Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-	}}
+	return Config{global: Global{}}
 }
 
-func WriteDefaultCfg(path string) {
+// WriteDefaultConfig 生成默认配置文件
+func WriteDefaultConfig(path string) {
 	cfg, _ := yaml.Marshal(exampleConfig())
 	exfile.WriteFile(path, string(cfg))
 }

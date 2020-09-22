@@ -1,5 +1,5 @@
 // MIT License
-// Copyright (c) 2019 ysicing <i@ysicing.me>
+// Copyright (c) 2020 ysicing <i@ysicing.me>
 
 package cmd
 
@@ -9,27 +9,23 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/ysicing/ergo/config"
-	"github.com/ysicing/go-utils/exfile"
-	"k8s.io/klog"
+	"github.com/ysicing/ergo/utils/common"
+	"github.com/ysicing/ergo/version"
+	"github.com/ysicing/ext/logger"
+	"github.com/ysicing/ext/utils/exfile"
 )
 
 var cfgFile string
 
 var rootCmd = &cobra.Command{
-	Use:   "ergo",
-	Short: "An awesome tool",
-}
-
-// Execute execute
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		klog.Exit(err)
-	}
+	Use:  "ergo",
+	Long: version.UsageTpl,
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.doge/config.yaml)")
+	cfg := logger.LogConfig{Simple: true}
+	logger.InitLogger(&cfg)
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/doge/config.yaml)")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.DisableSuggestions = false
 }
@@ -37,15 +33,17 @@ func init() {
 func initConfig() {
 	if cfgFile == "" {
 		home, err := homedir.Dir()
-		if err != nil {
-			klog.Exit(err)
-		}
-		cfgFile = fmt.Sprintf("%v/%v/%v", home, ".doge", "config.yaml")
+		common.CheckErr(err)
+		cfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/doge/", "config.yaml")
 	}
 	if !exfile.CheckFileExistsv2(cfgFile) {
-		config.WriteDefaultCfg(cfgFile)
+		config.WriteDefaultConfig(cfgFile)
 	}
 	viper.SetConfigFile(cfgFile)
 	viper.AutomaticEnv()
 	viper.ReadInConfig()
+}
+
+func Execute() {
+	common.CheckErr(rootCmd.Execute())
 }

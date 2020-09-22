@@ -3,8 +3,8 @@ on:
   push:
     branches:
     - develop
-  schedule:
-    - cron: '0 */12 * * *'
+      #  schedule:
+      #- cron: '0 */12 * * *'
 jobs:
   build:
     name: build ergo tools
@@ -13,7 +13,7 @@ jobs:
     - name: Install Go
       uses: actions/setup-go@v1
       with:
-        go-version: 1.14.x
+        go-version: 1.15.x
     - name: install gox
       run: |
           echo "install gox"
