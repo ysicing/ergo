@@ -8,42 +8,59 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/ysicing/ergo/cmd/command"
 	"github.com/ysicing/ergo/config"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ergo/version"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exfile"
 )
 
-var cfgFile string
+const (
+	cliName        = "ergo"
+	cliDescription = "A simple command line client for devops"
+)
 
-var rootCmd = &cobra.Command{
-	Use:  "ergo",
-	Long: version.UsageTpl,
-}
+var (
+	globalFlags = command.GlobalFlags{}
+)
+
+var (
+	rootCmd = &cobra.Command{
+		Use:        cliName,
+		Short:      cliDescription,
+		SuggestFor: []string{"ergo"},
+	}
+)
 
 func init() {
+	cobra.OnInitialize(initConfig)
 	cfg := logger.LogConfig{Simple: true}
 	logger.InitLogger(&cfg)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/doge/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/doge/config.yaml)")
+	rootCmd.PersistentFlags().BoolVar(&globalFlags.Debug, "debug", true, "enable client-side debug logging")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.DisableSuggestions = false
+	rootCmd.AddCommand(
+		command.NewVersionCommand(),
+		command.NewUpgradeCommand(),
+		command.NewVMCommand())
 }
 
 func initConfig() {
-	if cfgFile == "" {
+	if globalFlags.CfgFile == "" {
 		home, err := homedir.Dir()
 		common.CheckErr(err)
-		cfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/doge/", "config.yaml")
+		globalFlags.CfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/doge/", "config.yaml")
 	}
-	if !exfile.CheckFileExistsv2(cfgFile) {
-		config.WriteDefaultConfig(cfgFile)
+	if !exfile.CheckFileExistsv2(globalFlags.CfgFile) {
+		config.WriteDefaultConfig(globalFlags.CfgFile)
 	}
-	viper.SetConfigFile(cfgFile)
+	viper.SetConfigFile(globalFlags.CfgFile)
 	viper.AutomaticEnv()
 	viper.ReadInConfig()
 }
 
-func Execute() {
-	common.CheckErr(rootCmd.Execute())
+func Execute() error {
+	// rootCmd.SetUsageFunc(usageFunc)
+	return rootCmd.Execute()
 }

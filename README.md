@@ -27,6 +27,17 @@ brew install ergo
 
 - [ ] debian系
 
+```
+# 新建debian vm
+ergo vm new --mem 4096 --cpu 2 --num 2 --ip 10.0.0.0/24 # 内存，CPU，副本数, 默认IP端，建议使用默认的
+# 初始化debian vm
+ergo vm init --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12
+# 安装常用工具
+ergo vm install --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker
+# 执行shell
+ergo vm exec --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker ps
+```
+
 #### 云原生运维cli
 
 - [ ] 安装k8s 1.16.14

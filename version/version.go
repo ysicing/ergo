@@ -5,7 +5,6 @@ package version
 
 import (
 	"fmt"
-	"github.com/ysicing/ergo/pkg/cmd"
 	"github.com/ysicing/ergo/pkg/githubapi/repos"
 	"github.com/ysicing/ext/utils/excmd"
 	"github.com/ysicing/ext/utils/exmisc"
@@ -74,7 +73,7 @@ func Upgrade() {
 		return
 	}
 	if runtime.GOOS != "linux" {
-		cmd.Cmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo")
+		excmd.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo")
 	} else {
 		newbin := fmt.Sprintf("https://github.com/ysicing/ergo/releases/download/%v/ergo_linux_amd64", *lastversion)
 		excmd.DownloadFile(newbin, "/usr/local/bin/ergo")
