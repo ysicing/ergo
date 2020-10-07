@@ -28,6 +28,7 @@ var (
 	vmIP       string
 	vmPath     string
 	IPs        []string
+	IsLocal    bool
 )
 
 // NewVMCommand() vm of ergo
@@ -84,6 +85,7 @@ func NewVmInstallCommand() *cobra.Command {
 	vmins.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
 	vmins.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
 	vmins.PersistentFlags().StringSliceVar(&IPs, "ips", nil, "机器IP")
+	vmins.PersistentFlags().BoolVar(&IsLocal, "local", false, "本地模式")
 	return vmins
 }
 
@@ -194,16 +196,23 @@ func vminitfunc(cmd *cobra.Command, args []string) {
 
 func vmpreinstallfunc(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
-		fmt.Println("目前支持如下工具包安装: ")
+		fmt.Println("目前支持如下工具包安装: redis, mysql, etcd, adminer, docker(不支持local)")
 		os.Exit(0)
 	}
 	skipkey := []string{"docker", "go", "golang", "w"}
 	if !convert.StringArrayContains(skipkey, args[0]) {
 		// check docker
 		var num int
-		for _, ip := range IPs {
-			if !vm.CheckCmd(SSHConfig, ip, "docker") {
-				logger.Slog.Error(ip, " 需要安装docker")
+		if !IsLocal {
+			for _, ip := range IPs {
+				if !vm.CheckCmd(SSHConfig, ip, "docker") {
+					logger.Slog.Error(ip, " 需要安装docker")
+					num++
+				}
+			}
+		} else {
+			if err := common.RunCmd("which", "docker"); err != nil {
+				logger.Slog.Error("本机", " 需要安装docker")
 				num++
 			}
 		}
@@ -215,9 +224,14 @@ func vmpreinstallfunc(cmd *cobra.Command, args []string) {
 
 func vminstallfunc(cmd *cobra.Command, args []string) {
 	var wg sync.WaitGroup
-	for _, ip := range IPs {
+	if IsLocal {
 		wg.Add(1)
-		go vm.InstallPackage(SSHConfig, ip, args[0], &wg)
+		go vm.InstallPackage(SSHConfig, "", args[0], &wg, true)
+	} else {
+		for _, ip := range IPs {
+			wg.Add(1)
+			go vm.InstallPackage(SSHConfig, ip, args[0], &wg, false)
+		}
 	}
 	wg.Wait()
 }
