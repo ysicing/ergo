@@ -33,7 +33,7 @@ func (d Debian) Template() string {
 	if d.md.Name == "" {
 		d.md.Name = exhash.GenMd5(extime.NowUnixString())
 	}
-	if exos.IsMacOS() {
+	if exos.IsMacOS() && exos.GetUserName() == "ysicing" {
 		d.md.Box = "file://builds/virtualbox-debian.10.6.0.box"
 	} else {
 		d.md.Box = DefaultBox

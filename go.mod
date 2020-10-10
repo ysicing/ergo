@@ -21,7 +21,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
-	github.com/ysicing/ext v0.0.0-20201006083949-adf2bbb1a9b4
+	github.com/ysicing/ext v0.0.0-20201010085501-a7b54c11a4be
 	golang.org/x/sys v0.0.0-20201005065044-765f4ea38db3 // indirect
 	golang.org/x/text v0.3.3 // indirect
 	gopkg.in/ini.v1 v1.61.0 // indirect
