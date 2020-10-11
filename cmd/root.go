@@ -43,7 +43,9 @@ func init() {
 	rootCmd.AddCommand(
 		command.NewVersionCommand(),
 		command.NewUpgradeCommand(),
-		command.NewVMCommand())
+		command.NewVMCommand(),
+		command.NewK8sCommand(),
+		command.NewHelmCommand())
 }
 
 func initConfig() {
