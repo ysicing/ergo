@@ -25,6 +25,7 @@ systemctl daemon-reload
 systemctl start docker
 systemctl restart docker 
 docker info -f "{{json .ServerVersion }}"
+docker pull registry.cn-beijing.aliyuncs.com/k7scn/tools
 docker run --rm -v /usr/local/bin:/sysdir registry.cn-beijing.aliyuncs.com/k7scn/tools tar zxf /pkg.tgz -C /sysdir
 `
 
