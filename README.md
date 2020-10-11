@@ -40,7 +40,19 @@ ergo vm exec --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker ps
 
 #### 云原生运维cli
 
-- [ ] 安装k8s 1.16.14
+- [ ] 安装k8s 1.19.2
+
+```
+# 基于sealos 进行安装，只需要传master ip和worker ip以及节点password
+ergo k8s --km 11.11.11.11
+```
+
+- [ ] helm安装
+
+```
+ergo helm install nginx-ingress
+ergo helm uninstall nginx-ingress
+```
 
 #### 云服务商cli
 
