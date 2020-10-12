@@ -13,16 +13,22 @@ import (
 	"github.com/ysicing/ext/utils/extime"
 )
 
-const k8ssh = `docker run -it --rm -v %v:/root registry.cn-beijing.aliyuncs.com/k7scn/k7s:1.19.2 %v`
+const (
+	k8ssh = `docker run -it --rm -v %v:/root registry.cn-beijing.aliyuncs.com/k7scn/k7s:1.19.2 %v %v`
+)
 
 // 安装k8s
-func InstallK8s(ssh sshutil.SSH, ip string, local bool, args string) {
-	var sealcfgpath string
+func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args string) {
+	var sealcfgpath, runk8s string
 	sealcfgpath = "/root"
 	if local {
 		sealcfgpath = exos.GetUser().HomeDir
 	}
-	runk8s := fmt.Sprintf(k8ssh, sealcfgpath, args)
+	if init {
+		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, "init", args)
+	} else {
+		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, "join", args)
+	}
 	logger.Slog.Debug(runk8s)
 	if !local {
 		if err := ssh.CmdAsync(ip, runk8s); err != nil {
