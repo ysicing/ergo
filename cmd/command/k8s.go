@@ -14,6 +14,7 @@ var (
 	kw     []string
 	kpass  string
 	klocal bool
+	kinit  bool
 )
 
 // NewK8sCommand() helm of ergo
@@ -33,6 +34,7 @@ func NewK8sCommand() *cobra.Command {
 	k8s.PersistentFlags().StringSliceVar(&km, "km", []string{}, "k8s master")
 	k8s.PersistentFlags().StringSliceVar(&kw, "kw", []string{}, "k8s worker")
 	k8s.PersistentFlags().StringVar(&kpass, "kpass", "", "k8s节点密码")
+	k8s.PersistentFlags().BoolVar(&kinit, "init", true, "初始化节点")
 	return k8s
 }
 
@@ -43,7 +45,7 @@ func k8spre(cmd *cobra.Command, args []string) {
 }
 
 func k8sfunc(cmd *cobra.Command, args []string) {
-	var kms, kws, kpassword string
+	var kms, kws, kpassword, kargs string
 	for _, m := range km {
 		kms = kms + fmt.Sprintf(" --master %v ", m)
 	}
@@ -58,6 +60,11 @@ func k8sfunc(cmd *cobra.Command, args []string) {
 	} else if len(SSHConfig.Password) != 0 {
 		kpassword = fmt.Sprintf(" --passwd %v ", SSHConfig.Password)
 	}
-	kargs := kms + kws + kpassword
-	k8s.InstallK8s(SSHConfig, ip, klocal, kargs)
+	if kinit {
+		kargs = kms + kws + kpassword
+	} else {
+		kargs = kms + kws
+	}
+
+	k8s.InstallK8s(SSHConfig, ip, klocal, kinit, kargs)
 }
