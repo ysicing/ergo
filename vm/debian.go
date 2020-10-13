@@ -1,46 +1,52 @@
 // MIT License
-// Copyright (c) 2019 ysicing <i@ysicing.me>
+// Copyright (c) 2020 ysicing <i@ysicing.me>
 
 package vm
 
 import (
 	"bytes"
-	"github.com/ysicing/ergo/utils"
+	"fmt"
+	"github.com/ysicing/ergo/utils/common"
+	"github.com/ysicing/ext/utils/exhash"
+	"github.com/ysicing/ext/utils/exos"
+	"github.com/ysicing/ext/utils/extime"
 	"html/template"
 )
 
 type Debian struct {
-	metadata MetaData
-}
-
-func (d Debian) Osmode() string {
-	var b bytes.Buffer
-	tpl := d.Template()
-	if d.metadata.Cpus == "" {
-		d.metadata.Cpus = DefaultCpus
-	}
-	if d.metadata.Memory == "" {
-		d.metadata.Memory = DefaultMemory
-	}
-	if d.metadata.Instance == "" {
-		d.metadata.Instance = DefaultInstance
-	}
-	if d.metadata.Name == "" {
-		d.metadata.Name = utils.RandomStringv2()
-	}
-	t := template.Must(template.New("debian").Parse(tpl))
-	t.Execute(&b, &d.metadata)
-	return b.String()
+	md MetaData
 }
 
 func (d Debian) Template() string {
-	return DebianVagrantfile
+	var b bytes.Buffer
+	tpl := DefaultDebianTpl
+
+	if d.md.Cpus == "" {
+		d.md.Cpus = DefaultCpus
+	}
+	if d.md.Memory == "" {
+		d.md.Memory = DefaultMemory
+	}
+	if d.md.Instance == "" {
+		d.md.Instance = DefaultInstance
+	}
+	if d.md.Name == "" {
+		d.md.Name = exhash.GenMd5(extime.NowUnixString())
+	}
+	if exos.IsMacOS() && exos.GetUserName() == "ysicing" {
+		d.md.Box = "file://builds/virtualbox-debian.10.6.0.box"
+	} else {
+		d.md.Box = DefaultBox
+	}
+	d.md.IP = fmt.Sprintf("%v.1", common.GetIpPre(d.md.IP))
+	t := template.Must(template.New("debian").Parse(tpl))
+	t.Execute(&b, &d.md)
+	return b.String()
 }
 
-const DebianVagrantfile = `
+const DefaultDebianTpl = `
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-
 Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
   config.vm.provider 'virtualbox' do |vb|
@@ -49,11 +55,11 @@ Vagrant.configure("2") do |config|
   $num_instances = {{.Instance}}
   (1..$num_instances).each do |i|
     config.vm.define "{{.Name}}#{i}" do |node|
-      node.vm.box = "ysicing/debian"
+      node.vm.box = "{{.Box}}"
       node.vm.hostname = "{{.Name}}#{i}"
       node.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: 'en0: Wi-Fi (Wireless)'
       # node.vm.provision "shell", run: "always", inline: "ntpdate ntp.api.bz"
-      node.vm.network "private_network", ip: "11.11.11.11#{i}"
+      node.vm.network "private_network", ip: "{{.IP}}#{i}"
       node.vm.provision "shell", run: "always", inline: "echo hello from {{.Name}}#{i}"
       node.vm.provider "virtualbox" do |vb|
         vb.gui = false

@@ -1,20 +1,113 @@
 // MIT License
-// Copyright (c) 2019 ysicing <i@ysicing.me>
+// Copyright (c) 2020 ysicing <i@ysicing.me>
 
 package vm
 
 import (
-	"fmt"
-	"github.com/wonderivan/logger"
-	"github.com/ysicing/ergo/utils"
-	"strings"
+	"github.com/ysicing/ext/logger"
+	"github.com/ysicing/ext/sshutil"
+	"sync"
 )
 
-func InitDebian() {
-	for _, host := range Hosts {
-		logger.Info("init debian: %s", host)
-		initcmd := fmt.Sprintf("run --rm -e IP=%s -e PORT=%s -e USER=%s -e PASS=%s -e ENABLEDOCKER=%v ysicing/ansible",
-			host, Port, User, Pass, DockerInstall)
-		utils.Cmdv2("docker", strings.Split(initcmd, " "))
+const InitSH = `
+
+[ -f "/.initdone" ] && exit 0
+
+apt remove -y ufw lxd lxd-client lxcfs lxc-common
+
+apt update
+apt install -y nfs-common conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
+
+mkdir -pv /etc/systemd/journald.conf.d /var/log/journal 
+
+cat > /etc/systemd/journald.conf.d/95-k8s-journald.conf <<EOF
+[Journal]
+# 持久化保存到磁盘
+Storage=persistent
+
+# 最大占用空间 2G
+SystemMaxUse=2G
+
+# 单日志文件最大 200M
+SystemMaxFileSize=200M
+
+# 日志保存时间 2 周
+MaxRetentionSec=2week
+
+# 禁止转发
+ForwardToSyslog=no
+ForwardToWall=no
+EOF
+
+systemctl daemon-reload
+systemctl restart systemd-journald
+
+swapoff -a && sysctl -w vm.swappiness=0
+
+cat > /etc/modules-load.d/10-k8s-modules.conf <<EOF
+br_netfilter
+ip_vs
+ip_vs_rr
+ip_vs_wrr
+ip_vs_sh
+nf_conntrack
+EOF
+
+systemctl daemon-reload
+systemctl restart systemd-modules-load
+
+cat > /etc/sysctl.d/95-k8s-sysctl.conf <<EOF
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-arptables = 1
+net.ipv4.tcp_tw_reuse = 0
+net.netfilter.nf_conntrack_max = 1000000
+vm.swappiness = 0
+vm.max_map_count = 655360
+fs.file-max = 6553600
+
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_keepalive_probes = 10
+
+net.core.somaxconn = 32768
+net.ipv4.tcp_syncookies = 0
+
+net.ipv4.conf.all.rp_filter = 2
+net.ipv4.conf.default.rp_filter = 2
+EOF
+
+sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf
+
+mkdir -pv /etc/systemd/system.conf.d
+
+cat > /etc/systemd/system.conf.d/30-k8s-ulimits.conf <<EOF
+[Manager]
+DefaultLimitCORE=infinity
+DefaultLimitNOFILE=100000
+DefaultLimitNPROC=100000
+EOF
+
+cat /etc/security/limits.conf | grep -vE "(^#|^$)" | wc | grep 0 && (
+	cat > /etc/security/limits.conf <<EOF
+* soft nofile 1000000
+* hard nofile 1000000
+* soft stack 10240
+* soft nproc 65536
+* hard nproc 65536
+EOF
+)
+
+# ulimit -SHn 65535
+
+touch /.initdone
+`
+
+func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	err := ssh.CmdAsync(ip, InitSH)
+	if err != nil {
+		logger.Slog.Exit0(ip, err.Error())
 	}
 }

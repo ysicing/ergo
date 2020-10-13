@@ -33,9 +33,10 @@ build: clean ## 构建二进制
 	# go get github.com/mitchellh/gox
 	@gox -osarch="darwin/amd64 linux/amd64 windows/amd64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
-    	-ldflags   "-X 'github.com/ysicing/ergo/cmd.Version=${BUILD_VERSION}' \
-                    -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
-                    -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
+    	-ldflags   "-w -s \
+    				-X 'github.com/ysicing/ergo/version.Version=${BUILD_VERSION}' \
+                    -X 'github.com/ysicing/ergo/version.BuildDate=${BUILD_DATE}' \
+                    -X 'github.com/ysicing/ergo/version.GitCommitHash=${COMMIT_SHA1}'"
 
 docker: build ## 构建镜像
 	@echo "build docker images ${BUILD_VERSION}"
@@ -57,9 +58,10 @@ clean: ## clean
 
 install: clean ## install
 	go install \
-		-ldflags   "-X 'github.com/ysicing/ergo/cmd.Version=${BUILD_VERSION}' \
-                            -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
-                            -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
+		-ldflags   "-w -s \
+						-X 'github.com/ysicing/ergo/cmd.Version=${BUILD_VERSION}' \
+                        -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
+                        -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
 
 .PHONY : build release clean install
 
