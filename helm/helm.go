@@ -43,17 +43,29 @@ helminit
 `
 )
 
-func gethelm(packagename string) (string, error) {
+func gethelm(packagename string, uninstall ...bool) (string, error) {
+	var xinstall bool
+	if len(uninstall) > 0 && uninstall[0] {
+		xinstall = true
+	}
 	switch packagename {
 	case "nginx-ingress-controller":
+		if xinstall {
+			return xnginxIngressController, nil
+		}
 		return nginxIngressController, nil
+	case "lb", "slb", "metallb":
+		if xinstall {
+			return xmetallb, nil
+		}
+		return metallb, nil
 	default:
 		return "", errors.New(fmt.Sprintf("不支持", packagename))
 	}
 }
 
-func HelmInstall(ssh sshutil.SSH, ip string, packagename string, local bool) {
-	helm, err := gethelm(packagename)
+func HelmInstall(ssh sshutil.SSH, ip string, packagename string, local bool, isinstall bool) {
+	helm, err := gethelm(packagename, isinstall)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

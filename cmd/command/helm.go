@@ -11,7 +11,7 @@ import (
 	"github.com/ysicing/ext/utils/exmisc"
 )
 
-var isinstall bool
+var isuninstall bool
 var ip string
 
 // NewHelmCommand() helm of ergo
@@ -23,7 +23,6 @@ func NewHelmCommand() *cobra.Command {
 	helm.AddCommand(NewHelmInitCommand())
 	helm.AddCommand(NewHelmInstallCommand())
 	helm.AddCommand(NewHelmListCommand())
-	helm.PersistentFlags().BoolVarP(&isinstall, "install", "i", true, "安装")
 	helm.PersistentFlags().StringVar(&SSHConfig.User, "user", "root", "用户")
 	helm.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
 	helm.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
@@ -46,7 +45,15 @@ func NewHelmListCommand() *cobra.Command {
 		Use:   "list",
 		Short: "支持helm",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(exmisc.SGreen("nginx-ingress-controller"))
+			fmt.Println("目前支持如下: ")
+			list := []string{"nginx-ingress-controller", "metallb"}
+			for _, l := range list {
+				if l == "metallb" {
+					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("slb"))
+				} else {
+					fmt.Println("ergo helm install ", exmisc.SGreen(l))
+				}
+			}
 		},
 	}
 	return helminit
@@ -59,6 +66,7 @@ func NewHelmInstallCommand() *cobra.Command {
 		Short:   "helm安装或者卸载",
 		Run:     helmfunc,
 	}
+	helmin.PersistentFlags().BoolVarP(&isuninstall, "uninstall", "x", false, "卸载")
 	return helmin
 }
 
@@ -70,5 +78,5 @@ func helmfunc(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
 		logger.Slog.Exit0("参数不全, 命令类似: ergo helm nginx-ingress-controller")
 	}
-	helm.HelmInstall(SSHConfig, ip, args[0], IsLocal)
+	helm.HelmInstall(SSHConfig, ip, args[0], IsLocal, isuninstall)
 }

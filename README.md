@@ -57,6 +57,8 @@ ergo.go k8s --kw 11.11.11.12 --init=false
 ergo helm init --ip 11.11.11.11 
 # 安装
 ergo helm install nginx-ingress-controller --ip 11.11.11.11 --pass vagrant
+# 卸载
+ergo helm install slb --ip 11.11.11.11 --pass vagrant -x
 ```
 
 #### 云服务商cli
