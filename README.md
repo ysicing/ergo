@@ -40,7 +40,7 @@ ergo vm exec --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker ps
 
 #### 云原生运维cli
 
-- [ ] 安装k8s 1.19.2
+- [ ] 安装k8s 1.19.3
 
 ```
 # 基于sealos 进行安装，只需要传master ip和worker ip以及节点password

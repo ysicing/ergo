@@ -45,7 +45,8 @@ func init() {
 		command.NewUpgradeCommand(),
 		command.NewVMCommand(),
 		command.NewK8sCommand(),
-		command.NewHelmCommand())
+		command.NewHelmCommand(),
+		command.NewComposeCommand())
 }
 
 func initConfig() {

@@ -12,7 +12,7 @@ helminit
 
 kubectl create ns nginx-ingress
 
-helm upgrade -i nginx-ingress-controller -f https://gitee.com/godu/helminit/raw/master/nginx-ingress-controller.5.6.11.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 5.6.11
+helm upgrade -i nginx-ingress-controller -f https://gitee.com/godu/helminit/raw/master/nginx-ingress-controller.5.6.12.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 5.6.12
 `
 
 const xnginxIngressController = `

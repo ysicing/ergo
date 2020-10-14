@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	k8ssh = `docker run -it --rm -v %v:/root registry.cn-beijing.aliyuncs.com/k7scn/k7s:1.19.2 %v %v`
+	k8ssh = `docker run -it --rm -v %v:/root registry.cn-beijing.aliyuncs.com/k7scn/k7s:1.19.3 %v %v`
 )
 
 // 安装k8s
