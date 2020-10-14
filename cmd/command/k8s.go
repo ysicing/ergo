@@ -23,8 +23,10 @@ func NewK8sCommand() *cobra.Command {
 		Use:    "k8s",
 		Short:  "k8s安装",
 		PreRun: k8spre,
-		Run:    k8sfunc,
+		// Run:    k8sfunc,
 	}
+	k8s.AddCommand(NewK8sInitCommand())
+	k8s.AddCommand(NewK8sJoinCommand())
 	// k8s.PersistentFlags().BoolVarP(&isinstall, "install", "i", true, "安装")
 	k8s.PersistentFlags().StringVar(&SSHConfig.User, "user", "root", "用户")
 	k8s.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
@@ -34,8 +36,31 @@ func NewK8sCommand() *cobra.Command {
 	k8s.PersistentFlags().StringSliceVar(&km, "km", []string{}, "k8s master")
 	k8s.PersistentFlags().StringSliceVar(&kw, "kw", []string{}, "k8s worker")
 	k8s.PersistentFlags().StringVar(&kpass, "kpass", "", "k8s节点密码")
-	k8s.PersistentFlags().BoolVar(&kinit, "init", true, "初始化节点")
+	// k8s.PersistentFlags().BoolVar(&kinit, "init", true, "初始化节点")
 	return k8s
+}
+
+// NewK8sInitCommand() k8s init of ergo
+func NewK8sInitCommand() *cobra.Command {
+	k8sinit := &cobra.Command{
+		Use:   "init",
+		Short: "初始化集群",
+		Run:   k8sfunc,
+	}
+	k8sinit.PersistentFlags().BoolVar(&kinit, "init", true, "初始化节点")
+	return k8sinit
+}
+
+// NewK8sJoinCommand() k8s init of ergo
+func NewK8sJoinCommand() *cobra.Command {
+	k8sjoin := &cobra.Command{
+		Use:   "join",
+		Short: "扩容集群",
+		Run:   k8sfunc,
+	}
+	k8sjoin.PersistentFlags().BoolVar(&kinit, "init", false, "初始化节点")
+	k8sjoin.PersistentFlags().MarkHidden("init")
+	return k8sjoin
 }
 
 func k8spre(cmd *cobra.Command, args []string) {
@@ -65,6 +90,5 @@ func k8sfunc(cmd *cobra.Command, args []string) {
 	} else {
 		kargs = kms + kws
 	}
-
 	k8s.InstallK8s(SSHConfig, ip, klocal, kinit, kargs)
 }

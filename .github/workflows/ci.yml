@@ -2,7 +2,7 @@ name: build ergo tools
 on:
   push:
     branches:
-    - master
+    - develop
       #  schedule:
       #- cron: '0 */12 * * *'
 jobs:
@@ -39,7 +39,7 @@ jobs:
           popd
           ./gen.sh
           docker logout
-          make release
+          make pre-release
       env:
         GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
