@@ -45,9 +45,9 @@ ergo vm exec --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker ps
 ```
 # 基于sealos 进行安装，只需要传master ip和worker ip以及节点password
 # 初始化集群
-ergo k8s init --km 11.11.11.11
+ergo k8s init --km 11.11.11.11 --kv 1.18.9
 # 添加节点
-ergo.go k8s join --kw 11.11.11.12
+ergo.go k8s join --kw 11.11.11.12 --kv 1.18.9
 ```
 
 - [ ] helm安装

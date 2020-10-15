@@ -14,20 +14,20 @@ import (
 )
 
 const (
-	k8ssh = `docker run -it --rm -v %v:/root registry.cn-beijing.aliyuncs.com/k7scn/k7s:1.19.3 %v %v`
+	k8ssh = `docker run -it --net=host --rm -v %v:/root registry.cn-beijing.aliyuncs.com/k7scn/k7s:%v %v %v`
 )
 
 // 安装k8s
-func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args string) {
+func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args, kv string) {
 	var sealcfgpath, runk8s string
 	sealcfgpath = "/root"
 	if local {
 		sealcfgpath = exos.GetUser().HomeDir
 	}
 	if init {
-		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, "init", args)
+		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, kv, "init", args)
 	} else {
-		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, "join", args)
+		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, kv, "join", args)
 	}
 	logger.Slog.Debug(runk8s)
 	if !local {

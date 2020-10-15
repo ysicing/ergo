@@ -11,8 +11,8 @@ import (
 
 func NewComposeCommand() *cobra.Command {
 	compose := &cobra.Command{
-		Use: "compose",
-		Short: "docker-compose部署维护",
+		Use:     "compose",
+		Short:   "docker-compose部署维护",
 		Aliases: []string{"dc", "docker-compose"},
 	}
 	compose.AddCommand(NewComposeList())
@@ -27,10 +27,10 @@ func NewComposeCommand() *cobra.Command {
 
 func NewComposeList() *cobra.Command {
 	list := &cobra.Command{
-		Use: "list",
+		Use:   "list",
 		Short: "列出支持项目",
 		Run: func(cmd *cobra.Command, args []string) {
-			
+
 		},
 	}
 	return list
@@ -38,7 +38,7 @@ func NewComposeList() *cobra.Command {
 
 func NewComposeNew() *cobra.Command {
 	list := &cobra.Command{
-		Use: "new",
+		Use:   "new",
 		Short: "部署服务",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
