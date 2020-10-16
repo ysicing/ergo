@@ -46,12 +46,14 @@ func NewHelmListCommand() *cobra.Command {
 		Short: "支持helm",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("目前支持如下: ")
-			list := []string{"nginx-ingress-controller", "metallb"}
+			list := []string{"nginx-ingress-controller", "metallb", "cronhpa"}
 			for _, l := range list {
 				if l == "metallb" {
 					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("slb"))
 				} else if l == "nginx-ingress-controller" {
 					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("default-ingress"))
+				} else {
+					fmt.Println("ergo helm install ", exmisc.SGreen(l))
 				}
 			}
 		},

@@ -29,30 +29,32 @@ brew install ergo
 
 ```
 # 新建debian vm
-ergo vm new --mem 4096 --cpu 2 --num 2 --ip 10.0.0.0/24 # 内存，CPU，副本数, 默认IP端，建议使用默认的
+ergo vm new --mem 4096 --cpu 2 --num 2 --ip 11.11.11.0/24 # 内存，CPU，副本数, 默认IP端，建议使用默认的
 # 初始化debian vm
-ergo vm init --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12
+ergo vm init --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12
 # 安装常用工具
-ergo vm install --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker
+ergo vm install --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12 docker
 # 执行shell
-ergo vm exec --pass vagrant --ips 10.0.0.11 --ips 10.0.0.12 docker ps
+ergo vm exec --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12 docker ps
 ```
 
 #### 云原生运维cli
 
-- [ ] 安装k8s 1.19.3
+- [ ] 安装k8s 1.19.2/1.19.3
 
 ```
 # 基于sealos 进行安装，只需要传master ip和worker ip以及节点password
 # 初始化集群
-ergo k8s init --km 11.11.11.11 --kv 1.18.9
+ergo k8s init --km 11.11.11.11 --kv 1.19.3
 # 添加节点
-ergo.go k8s join --kw 11.11.11.12 --kv 1.18.9
+ergo.go k8s join --kw 11.11.11.12 --kv 1.19.3
 ```
 
 - [ ] helm安装
 
 ```
+# 列表
+ergo helm list
 # 初始化
 ergo helm init --ip 11.11.11.11 
 # 安装

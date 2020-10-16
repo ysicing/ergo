@@ -7,8 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ysicing/ergo/utils/common"
+	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
+	"github.com/ysicing/ext/utils/exmisc"
 	"github.com/ysicing/ext/utils/extime"
 )
 
@@ -59,8 +61,14 @@ func gethelm(packagename string, uninstall ...bool) (string, error) {
 			return xmetallb, nil
 		}
 		return metallb, nil
+	case "cronhpa", "ali-cronhpa", "kubernetes-cronhpa-controller":
+		if xinstall {
+			logger.Slog.Debug(exmisc.SRed("不支持卸载"))
+			return "w", nil
+		}
+		return ali_kubernetes_cronhpa_controller, nil
 	default:
-		return "", errors.New(fmt.Sprintf("不支持", packagename))
+		return "", errors.New(fmt.Sprintf("%v 不支持哟", exmisc.SRed(packagename)))
 	}
 }
 
