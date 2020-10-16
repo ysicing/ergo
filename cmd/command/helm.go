@@ -50,8 +50,8 @@ func NewHelmListCommand() *cobra.Command {
 			for _, l := range list {
 				if l == "metallb" {
 					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("slb"))
-				} else {
-					fmt.Println("ergo helm install ", exmisc.SGreen(l))
+				} else if l == "nginx-ingress-controller" {
+					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("default-ingress"))
 				}
 			}
 		},

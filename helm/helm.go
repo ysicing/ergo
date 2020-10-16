@@ -49,7 +49,7 @@ func gethelm(packagename string, uninstall ...bool) (string, error) {
 		xinstall = true
 	}
 	switch packagename {
-	case "nginx-ingress-controller":
+	case "nginx-ingress-controller", "default-ingress":
 		if xinstall {
 			return xnginxIngressController, nil
 		}

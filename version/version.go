@@ -5,7 +5,7 @@ package version
 
 import (
 	"fmt"
-	"github.com/ysicing/ergo/pkg/githubapi/repos"
+	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ext/utils/excmd"
 	"github.com/ysicing/ext/utils/exmisc"
 	"runtime"
