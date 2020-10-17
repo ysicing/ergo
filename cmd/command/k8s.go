@@ -6,6 +6,7 @@ package command
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/ysicing/ergo/helm"
 	"github.com/ysicing/ergo/k8s"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
@@ -19,6 +20,7 @@ var (
 	kv     string
 	klocal bool
 	kinit  bool
+	kms bool
 )
 
 // NewK8sCommand() helm of ergo
@@ -49,6 +51,7 @@ func NewK8sInitCommand() *cobra.Command {
 		PreRun: k8spre,
 		Run:    k8sinitfunc,
 	}
+	k8sinit.PersistentFlags().BoolVar(&kms, "metrics-server", true, "启用metrics-server")
 	return k8sinit
 }
 
@@ -118,7 +121,10 @@ func k8sinitfunc(cmd *cobra.Command, args []string) {
 	}
 
 	kargs = kms + kws + kpassword + " --lvscare-image registry.cn-beijing.aliyuncs.com/k7scn/lvscare "
-	k8s.InstallK8s(SSHConfig, ip, klocal, true, kargs, kv)
+	if err := k8s.InstallK8s(SSHConfig, ip, klocal, true, kargs, kv); err != nil {
+		helm.HelmInstall(SSHConfig, ip, args[0], false, false)
+	}
+
 }
 
 func k8sjoinfunc(cmd *cobra.Command, args []string) {

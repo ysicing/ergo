@@ -18,7 +18,7 @@ const (
 )
 
 // 安装k8s
-func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args, kv string) {
+func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args, kv string) error {
 	var sealcfgpath, runk8s string
 	sealcfgpath = "/root"
 	if local {
@@ -33,14 +33,15 @@ func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args, kv stri
 	if !local {
 		if err := ssh.CmdAsync(ip, runk8s); err != nil {
 			fmt.Println(err.Error())
-			return
+			return err
 		}
 	} else {
 		tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", extime.NowUnix())
 		exfile.WriteFile(tempfile, runk8s)
 		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
-			return
+			return err
 		}
 	}
+	return nil
 }
