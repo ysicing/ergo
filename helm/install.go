@@ -70,6 +70,11 @@ func gethelm(packagename string, uninstall ...bool) (string, error) {
 			return xtekton, nil
 		}
 		return tekton, nil
+	case "kubernetes_dashboard", "kd":
+		if xinstall {
+			return xkubernetes_dashboard, nil
+		}
+		return kubernetes_dashboard, nil
 	case "metrics-server", "ms", "kms":
 		if xinstall {
 			return xmetrics_server, nil

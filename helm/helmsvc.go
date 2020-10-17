@@ -54,4 +54,3 @@ const xetcd = `
 
 helm delete etcd -n ops
 `
-

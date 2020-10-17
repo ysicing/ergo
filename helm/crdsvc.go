@@ -38,3 +38,19 @@ const xmetrics_server = `
 
 kubectl delete -f https://gitee.com/godu/helminit/raw/master/metrics-server-0.3.7.yaml
 `
+
+const kubernetes_dashboard = `
+#!/bin/bash
+
+kubectl apply -f https://gitee.com/godu/helminit/raw/master/k8s-dashboard.2.0.4.yaml
+
+echo "登录节点使用kdtoken获取token"
+echo "访问使用kubectl port-forward --namespace kubernetes-dashboard service/kubernetes-dashboard  10443:443"
+`
+
+const xkubernetes_dashboard = `
+#!/bin/bash
+
+kubectl delete -f https://gitee.com/godu/helminit/raw/master/k8s-dashboard.2.0.4.yaml
+
+`

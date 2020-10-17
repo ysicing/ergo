@@ -20,7 +20,8 @@ var (
 	kv     string
 	klocal bool
 	kinit  bool
-	kms bool
+	kakms  bool
+	kakd   bool
 )
 
 // NewK8sCommand() helm of ergo
@@ -51,7 +52,8 @@ func NewK8sInitCommand() *cobra.Command {
 		PreRun: k8spre,
 		Run:    k8sinitfunc,
 	}
-	k8sinit.PersistentFlags().BoolVar(&kms, "metrics-server", true, "启用metrics-server")
+	k8sinit.PersistentFlags().BoolVar(&kakms, "metrics-server", true, "启用metrics-server")
+	k8sinit.PersistentFlags().BoolVar(&kakd, "kubernetes_dashboard", true, "启用kubernetes_dashboard")
 	return k8sinit
 }
 
@@ -121,10 +123,25 @@ func k8sinitfunc(cmd *cobra.Command, args []string) {
 	}
 
 	kargs = kms + kws + kpassword + " --lvscare-image registry.cn-beijing.aliyuncs.com/k7scn/lvscare "
-	if err := k8s.InstallK8s(SSHConfig, ip, klocal, true, kargs, kv); err != nil {
-		helm.HelmInstall(SSHConfig, ip, args[0], false, false)
+	if err := k8s.InstallK8s(SSHConfig, ip, klocal, true, kargs, kv); err == nil {
+		if len(ip) == 0 {
+			ip = km[0]
+		}
+		if len(SSHConfig.Password) == 0 {
+			if len(kpass) != 0 {
+				SSHConfig.Password = kpass
+			} else {
+				SSHConfig.Password = "vagrant"
+			}
+			SSHConfig.User = "root"
+		}
+		if kakms {
+			helm.HelmInstall(SSHConfig, ip, "kms", false, false)
+		}
+		if kakd {
+			helm.HelmInstall(SSHConfig, ip, "kd", false, false)
+		}
 	}
-
 }
 
 func k8sjoinfunc(cmd *cobra.Command, args []string) {
