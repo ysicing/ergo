@@ -66,3 +66,8 @@ ergo helm install slb --ip 11.11.11.11 --pass vagrant -x
 #### 云服务商cli
 
 - [ ] 阿里云镜像仓库, ucloud镜像仓库
+
+#### 🎉🎉 参考其他开源项目
+
+- [sealos](https://github.com/fanux/sealos) `k8s基于sealos安装部分`
+- [zzz](https://github.com/sohaha/zzz) `codegen参考zzz init部分`
