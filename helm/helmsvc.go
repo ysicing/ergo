@@ -12,13 +12,16 @@ helminit
 
 kubectl create ns nginx-ingress
 
-helm upgrade -i nginx-ingress-controller -f https://gitee.com/godu/helminit/raw/master/nginx-ingress-controller.5.6.12.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 5.6.12
+helm upgrade -i nginx-ingress-controller -f https://gitee.com/godu/helminit/raw/master/nginx-ingress-controller.5.6.14.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 5.6.14
+
+helm upgrade -i flagger -f https://gitee.com/godu/helminit/raw/master/flagger-1.2.0.yaml  flagger/flagger -n nginx-ingress --version 1.2.0
 `
 
 const xnginxIngressController = `
 #!/bin/bash
 
 helm delete nginx-ingress-controller -n nginx-ingress
+helm delete flagger -n nginx-ingress
 `
 
 // https://github.com/bitnami/charts/tree/master/bitnami/metallb
@@ -30,7 +33,7 @@ helminit
 
 kubectl create ns metallb-system
 
-helm upgrade -i metallb -f https://gitee.com/godu/helminit/raw/master/metallb.0.1.24.yaml -n metallb-system bitnami/metallb --version 0.1.24
+helm upgrade -i metallb -f https://gitee.com/godu/helminit/raw/master/metallb.0.1.27.yaml -n metallb-system bitnami/metallb --version 0.1.27
 `
 
 const xmetallb = `
