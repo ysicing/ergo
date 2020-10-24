@@ -69,7 +69,7 @@ func ShowVersion() {
 func Upgrade() {
 	lastversion := PreCheckVersion()
 	if lastversion == nil {
-		fmt.Printf("当前已经是最新版本了: %v", *lastversion)
+		fmt.Printf("当前已经是最新版本了: %v", defaultVersion)
 		return
 	}
 	if runtime.GOOS != "linux" {

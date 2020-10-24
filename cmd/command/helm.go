@@ -27,7 +27,7 @@ func NewHelmCommand() *cobra.Command {
 	helm.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
 	helm.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
 	helm.PersistentFlags().StringVar(&ip, "ip", "", "机器IP")
-	helm.PersistentFlags().BoolVar(&IsLocal, "local", false, "本地模式")
+	helm.PersistentFlags().BoolVar(&RunLocal, "local", false, "本地模式")
 	return helm
 }
 
@@ -73,12 +73,12 @@ func NewHelmInstallCommand() *cobra.Command {
 }
 
 func helminitfunc(cmd *cobra.Command, args []string) {
-	helm.HelmInit(SSHConfig, ip, IsLocal)
+	helm.HelmInit(SSHConfig, ip, RunLocal)
 }
 
 func helmfunc(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
 		logger.Slog.Exit0("参数不全, 命令类似: ergo helm nginx-ingress-controller")
 	}
-	helm.HelmInstall(SSHConfig, ip, args[0], IsLocal, isuninstall)
+	helm.HelmInstall(SSHConfig, ip, args[0], RunLocal, isuninstall)
 }
