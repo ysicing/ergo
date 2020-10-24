@@ -19,6 +19,14 @@ brew tap ysicing/tap
 brew install ergo
 ```
 
+### Mac OS升级
+
+```bash
+brew upgrade
+或者
+ergo upgrade
+```
+
 ## 命令支持 TODO
 
 分类: 传统运维cli, 云原生运维cli, 云服务商cli
@@ -32,10 +40,27 @@ brew install ergo
 ergo vm new --mem 4096 --cpu 2 --num 2 --ip 11.11.11.0/24 # 内存，CPU，副本数, 默认IP端，建议使用默认的
 # 初始化debian vm
 ergo vm init --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12
-# 安装常用工具
-ergo vm install --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12 docker
-# 执行shell
-ergo vm exec --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12 docker ps
+```
+
+- [ ] ops
+
+
+```
+# ops install
+## 法一， 通过参数方式
+ergo.go ops install w --ip 11.11.11.11 --pk ~/.ssh/id_rsa
+## 法二， 不传参数方式
+ergo.go ops install --ip 11.11.11.11 --pk ~/.ssh/id_rsa
+Use the arrow keys to navigate: ↓ ↑ → ← 
+? Select 安装包: 
+    docker
+    mysql
+    etcd
+    redis
+↓ ▸ w
+
+# ops exec 
+ergo ops exec w  --ip 11.11.11.11 --pk ~/.ssh/id_rsa
 ```
 
 #### 云原生运维cli
