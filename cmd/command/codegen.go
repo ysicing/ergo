@@ -23,7 +23,7 @@ func NewCodeGen() *cobra.Command {
 		Aliases: []string{"cg", "code"},
 		Run:     codegenv1,
 	}
-	cg.PersistentFlags().BoolVar(&mirror, "mirror", false, "使用gitee源")
+	cg.PersistentFlags().BoolVar(&mirror, "mirror", true, "使用gitee源")
 	return cg
 }
 
@@ -34,12 +34,12 @@ func codegenv1(cmd *cobra.Command, args []string) {
 		tmp = args[1]
 	} else {
 		prompt := promptui.Select{
-			Label: "Select Template",
-			Items: []string{"main"},
+			Label: "Select Go Template",
+			Items: []string{"ysicing/go-example"},
 		}
 		_, result, err := prompt.Run()
 		if err == nil {
-			tmp = "ysicing/go-example:" + result
+			tmp = result + ":master" // "ysicing/go-example:" + result
 		}
 	}
 	temples := strings.Split(tmp, ":")
@@ -70,7 +70,7 @@ func codegenv1(cmd *cobra.Command, args []string) {
 		return
 	}
 	logger.Slog.Info("Start downloading the template...")
-	err := codegen.Clone(dir, name, branch)
+	err := codegen.Clone(dir, name, branch, mirror)
 	if err != nil {
 		logger.Slog.Fatal(err)
 		return
