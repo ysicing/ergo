@@ -57,3 +57,23 @@ const xetcd = `
 
 helm delete etcd -n ops
 `
+
+const cm = `
+#!/bin/bash
+
+helminit 
+
+kubectl create ns cert-manager
+helminit || (
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo update
+)
+
+helm upgrade -i cert-manager -n cert-manager -f https://gitee.com/godu/helminit/raw/master/cert-manager.1.0.3.yaml --version v1.0.3 jetstack/cert-manager
+`
+
+const xcm = `
+#!/bin/bash
+
+helm delete cert-manager -n cert-manager
+`
