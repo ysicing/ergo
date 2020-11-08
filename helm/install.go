@@ -33,6 +33,7 @@ helm repo add cockroachdb https://charts.cockroachdb.com/
 helm repo add flagger https://flagger.app
 # https://grafana.com/docs/loki/latest/installation/helm/
 helm repo add loki https://grafana.github.io/loki/charts
+helm repo add jetstack https://charts.jetstack.io
 
 helm repo update
 EOF
@@ -85,6 +86,11 @@ func gethelm(packagename string, uninstall ...bool) (string, error) {
 			return xetcd, nil
 		}
 		return etcd, nil
+	case "cm", "cert-manager":
+		if xinstall {
+			return xcm, nil
+		}
+		return cm, nil
 	default:
 		return "", errors.New(fmt.Sprintf("%v 不支持哟", exmisc.SRed(packagename)))
 	}
