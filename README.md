@@ -39,7 +39,10 @@ ergo upgrade
 # 新建debian vm
 ergo vm new --mem 4096 --cpu 2 --num 2 --ip 11.11.11.0/24 # 内存，CPU，副本数, 默认IP端，建议使用默认的
 # 初始化debian vm
-ergo vm init --pass vagrant --ips 11.11.11.11 --ips 11.11.11.12
+ergo vm init --pass vagrant --ip 11.11.11.11 --ip 11.11.11.12
+# 升级debian内核
+ergo vm upcore --ip 11.11.11.11 --pk ~/.ssh/id_rsa
+
 ```
 
 - [ ] ops

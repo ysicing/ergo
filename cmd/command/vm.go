@@ -37,6 +37,7 @@ func NewVMCommand() *cobra.Command {
 	}
 	vm.AddCommand(NewVmNewCommand())
 	vm.AddCommand(NewVmInitCommand())
+	vm.AddCommand(NewVmUpCoreCommand())
 	return vm
 }
 
@@ -67,6 +68,29 @@ func NewVmInitCommand() *cobra.Command {
 	vminit.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
 	vminit.PersistentFlags().StringSliceVar(&IPS, "ip", nil, "机器IP")
 	return vminit
+}
+
+func NewVmUpCoreCommand() *cobra.Command {
+	vminit := &cobra.Command{
+		Use:   "upcore",
+		Short: "升级Debian内核",
+		Run:   vmupcorefunc,
+	}
+	vminit.PersistentFlags().StringVar(&SSHConfig.User, "user", "root", "用户")
+	vminit.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
+	vminit.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
+	vminit.PersistentFlags().StringSliceVar(&IPS, "ip", nil, "机器IP")
+	return vminit
+}
+
+func vmupcorefunc(cmd *cobra.Command, args []string) {
+	logger.Slog.Debug(SSHConfig, IPS)
+	var wg sync.WaitGroup
+	for _, ip := range IPS {
+		wg.Add(1)
+		go vm.RunUpgradeCore(SSHConfig, ip, &wg)
+	}
+	wg.Wait()
 }
 
 func vmnewprecheckfunc(cmd *cobra.Command, args []string) {

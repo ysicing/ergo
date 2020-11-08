@@ -34,7 +34,7 @@ var (
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	cfg := logger.LogConfig{Simple: true}
+	cfg := logger.Config{Simple: true, ConsoleOnly: true}
 	logger.InitLogger(&cfg)
 	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/doge/config.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&globalFlags.Debug, "debug", true, "enable client-side debug logging")
