@@ -76,6 +76,10 @@ net.ipv4.tcp_syncookies = 0
 
 net.ipv4.conf.all.rp_filter = 2
 net.ipv4.conf.default.rp_filter = 2
+
+net.ipv6.conf.all.disable_ipv6 =1
+net.ipv6.conf.default.disable_ipv6 =1
+
 EOF
 
 sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf
