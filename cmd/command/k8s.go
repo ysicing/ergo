@@ -69,7 +69,7 @@ func NewK8sJoinCommand() *cobra.Command {
 }
 
 func k8spre(cmd *cobra.Command, args []string) {
-	kvs := []string{"1.19.3", "1.19.2"}
+	kvs := []string{"1.19.4", "1.19.3", "1.19.2"}
 	if !convert.StringArrayContains(kvs, kv) {
 		logger.Slog.Infof("暂不支持 %v", exmisc.SRed(kv))
 		logger.Slog.Info("目前仅支持如下版本: ")

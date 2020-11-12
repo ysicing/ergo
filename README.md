@@ -68,14 +68,14 @@ ergo ops exec w  --ip 11.11.11.11 --pk ~/.ssh/id_rsa
 
 #### 云原生运维cli
 
-- [ ] 安装k8s 1.19.2/1.19.3
+- [ ] 安装k8s 1.19.2/1.19.3/1.19.4
 
 ```
 # 基于sealos 进行安装，只需要传master ip和worker ip以及节点password
 # 初始化集群
-ergo k8s init --km 11.11.11.11 --kv 1.19.3
+ergo k8s init --km 11.11.11.11 --kv 1.19.4
 # 添加节点
-ergo.go k8s join --kw 11.11.11.12 --kv 1.19.3
+ergo.go k8s join --kw 11.11.11.12 --kv 1.19.4
 ```
 
 - [ ] helm安装
