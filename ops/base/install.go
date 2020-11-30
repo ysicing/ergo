@@ -27,6 +27,10 @@ func getpackagessh(packagename string) (string, error) {
 		return etcd, nil
 	case "adminer":
 		return adminer, nil
+	case "prom":
+		return prom, nil
+	case "grafana":
+		return grafana, nil
 	default:
 		return "", errors.New(fmt.Sprintf("不支持", packagename))
 	}

@@ -9,7 +9,7 @@ curl -fsSL https://gitee.com/godu/install/raw/master/docker/get-docker.sh | bash
 cat > /etc/docker/daemon.json <<EOF
 {
   "registry-mirrors": ["https://reg-mirror.qiniu.com","https://dyucrs4l.mirror.aliyuncs.com"],
-  "bip": "169.254.1.1/24",
+  "bip": "172.30.42.1/16",
   "max-concurrent-downloads": 10,
   "log-driver": "json-file",
   "log-level": "warn",
@@ -39,6 +39,7 @@ version: '2.1'
 services:
   mariadb:
     image: 'registry.cn-beijing.aliyuncs.com/k7scn/mariadb:10.5-debian-10'
+    container_name: mariadb
     ports:
       - '3306:3306'
     volumes:
@@ -74,6 +75,7 @@ version: '2'
 services:
   redis:
     image: 'registry.cn-beijing.aliyuncs.com/k7scn/redis:6.0-debian-10'
+    container_name: redis
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - REDIS_PASSWORD=ahphu9nah9iuheid1aew2eiPei6Ach
@@ -102,6 +104,7 @@ version: '2'
 services:
   etcd:
     image: registry.cn-beijing.aliyuncs.com/k7scn/etcd:3-debian-10
+    container_name: etcd
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
     ports:
@@ -122,15 +125,74 @@ mkdir -pv ~/svc/adminer
 
 [ -f ~/svc/adminer/docker-compose.yaml ] && exit 0
 
-cat > ~/svc/etcd/docker-compose.yaml <<EOF
+cat > ~/svc/adminer/docker-compose.yaml <<EOF
 version: '2.1'
 
 services:
-  mariadb:
+  adminer:
+    container_name: adminer
     image: 'registry.cn-beijing.aliyuncs.com/k7scn/adminer'
     ports:
       - '127.0.0.1:10000:8080'
 EOF
 
 docker-compose -f ~/svc/adminer/docker-compose.yaml up -d
+`
+
+const prom = `
+mkdir -pv ~/svc/prom
+
+[ -f ~/svc/prom/docker-compose.yaml ] && exit 0
+cat > ~/svc/prom/prometheus.yml <<EOF
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+rule_files:
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+EOF
+
+cat > ~/svc/prom/docker-compose.yaml <<EOF
+version: '2'
+services:
+  prometheus:
+    image: registry.cn-beijing.aliyuncs.com/k7scn/prometheus:2-debian-10
+    container_name: prometheus
+    volumes:
+    - ./prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+    network_mode: host
+EOF
+
+docker-compose -f ~/svc/prom/docker-compose.yaml up -d
+`
+
+const grafana = `
+mkdir -pv ~/svc/grafana
+
+[ -f ~/svc/grafana/docker-compose.yaml ] && exit 0
+
+cat > ~/svc/grafana/docker-compose.yaml <<EOF
+version: '2'
+
+services:
+  grafana:
+    image: registry.cn-beijing.aliyuncs.com/k7scn/grafana:7-debian-10
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    environment:
+      - 'GF_SECURITY_ADMIN_PASSWORD=admin'
+      - 'GF_INSTALL_PLUGINS=grafana-clock-panel:1.1.0,grafana-kubernetes-app,farski-blendstat-panel,grafana-simple-json-datasource,yesoreyeram-boomtheme-panel'
+    volumes:
+      - grafana_data:/opt/bitnami/grafana/data
+volumes:
+  grafana_data:
+    driver: local
+EOF
+
+docker-compose -f ~/svc/grafana/docker-compose.yaml up -d
 `
