@@ -23,7 +23,7 @@ func NewCodeGen() *cobra.Command {
 		Aliases: []string{"cg", "code"},
 		Run:     codegenv1,
 	}
-	cg.PersistentFlags().BoolVar(&mirror, "mirror", true, "使用gitee源")
+	cg.PersistentFlags().BoolVar(&mirror, "mirror", false, "使用gitee源")
 	return cg
 }
 

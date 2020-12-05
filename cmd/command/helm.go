@@ -11,7 +11,7 @@ import (
 	"github.com/ysicing/ext/utils/exmisc"
 )
 
-var isuninstall bool
+var isuninstall, isgithub bool
 var ip string
 
 // NewHelmCommand() helm of ergo
@@ -69,6 +69,7 @@ func NewHelmInstallCommand() *cobra.Command {
 		Run:     helmfunc,
 	}
 	helmin.PersistentFlags().BoolVarP(&isuninstall, "uninstall", "x", false, "卸载")
+	helmin.PersistentFlags().BoolVarP(&isgithub, "githubmirror", "gh", true, "github(默认) or gitee")
 	return helmin
 }
 
@@ -80,5 +81,5 @@ func helmfunc(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
 		logger.Slog.Exit0("参数不全, 命令类似: ergo helm nginx-ingress-controller")
 	}
-	helm.HelmInstall(SSHConfig, ip, args[0], RunLocal, isuninstall)
+	helm.HelmInstall(SSHConfig, ip, args[0], RunLocal, isuninstall, isgithub)
 }

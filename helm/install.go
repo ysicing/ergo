@@ -4,6 +4,7 @@
 package helm
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/ysicing/ergo/utils/common"
@@ -11,6 +12,7 @@ import (
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
 	"github.com/ysicing/ext/utils/extime"
+	"html/template"
 )
 
 const (
@@ -43,6 +45,9 @@ chmod +x /usr/local/bin/helminit
 
 helminit
 `
+
+	GithubMirror = "https://raw.githubusercontent.com/ysicing/helminit"
+	GiteeMirror  = "https://gitee.com/ysicing/helminit/raw"
 )
 
 func gethelm(packagename string, uninstall ...bool) (string, error) {
@@ -96,20 +101,32 @@ func gethelm(packagename string, uninstall ...bool) (string, error) {
 	}
 }
 
-func HelmInstall(ssh sshutil.SSH, ip string, packagename string, local bool, isinstall bool) {
+type Mirror struct {
+	URL string
+}
+
+func HelmInstall(ssh sshutil.SSH, ip string, packagename string, local bool, isinstall bool, isgithub bool) {
 	helm, err := gethelm(packagename, isinstall)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	if !local {
-		if err := ssh.CmdAsync(ip, helm); err != nil {
+	url := GiteeMirror
+	if isgithub {
+		url = GithubMirror
+	}
+	m := Mirror{URL: url}
+	var data bytes.Buffer
+	t := template.Must(template.New("helm").Parse(helm))
+	t.Execute(&data, &m)
+	if len(ip) != 0 {
+		if err := ssh.CmdAsync(ip, data.String()); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
 	} else {
 		tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", packagename, extime.NowUnix())
-		exfile.WriteFile(tempfile, helm)
+		exfile.WriteFile(tempfile, data.String())
 		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
 			return
