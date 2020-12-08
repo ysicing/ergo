@@ -6,6 +6,7 @@ package base
 const dockersh = `
 
 curl -fsSL https://gitee.com/godu/install/raw/master/docker/get-docker.sh | bash -s docker --mirror Aliyun
+mkdir /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "registry-mirrors": ["https://reg-mirror.qiniu.com","https://dyucrs4l.mirror.aliyuncs.com"],

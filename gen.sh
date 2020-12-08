@@ -4,8 +4,6 @@ version=$(cat version.txt)
 macsha=$(cat dist/ergo_darwin_amd64.sha256sum | awk '{print $1}')
 linuxsha=$(cat dist/ergo_linux_amd64.sha256sum | awk '{print $1}')
 
-dist/ergo_linux_amd64 | grep $version &&
-
 cat > ergo.rb <<EOF
 class Ergo < Formula
     desc "Devops tools 运维工具"

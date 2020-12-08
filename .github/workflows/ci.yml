@@ -37,8 +37,6 @@ jobs:
           sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
           sha256sum ergo_windows_amd64.exe > ergo_windows_amd64.sha256sum
           popd
-          version=$(cat version.txt)
-          dist/ergo_linux_amd64 | grep $version && exit 0
           ./gen.sh
           docker logout
           make pre-release
