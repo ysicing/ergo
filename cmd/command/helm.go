@@ -69,7 +69,7 @@ func NewHelmInstallCommand() *cobra.Command {
 		Run:     helmfunc,
 	}
 	helmin.PersistentFlags().BoolVarP(&isuninstall, "uninstall", "x", false, "卸载")
-	helmin.PersistentFlags().BoolVarP(&isgithub, "githubmirror", "gh", true, "github(默认) or gitee")
+	helmin.PersistentFlags().BoolVarP(&isgithub, "githubmirror", "g", true, "github(默认) or gitee")
 	return helmin
 }
 

@@ -26,6 +26,7 @@ var (
 	vmInstance int64
 	vmIP       string
 	vmPath     string
+	vmLocal    bool
 )
 
 // NewVMCommand() vm of ergo
@@ -67,6 +68,7 @@ func NewVmInitCommand() *cobra.Command {
 	vminit.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
 	vminit.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
 	vminit.PersistentFlags().StringSliceVar(&IPS, "ip", nil, "机器IP")
+	vminit.PersistentFlags().BoolVar(&vmLocal, "local", false, "本地安装")
 	return vminit
 }
 
@@ -80,10 +82,16 @@ func NewVmUpCoreCommand() *cobra.Command {
 	vminit.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
 	vminit.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
 	vminit.PersistentFlags().StringSliceVar(&IPS, "ip", nil, "机器IP")
+	vminit.PersistentFlags().BoolVar(&vmLocal, "local", false, "本地安装")
 	return vminit
 }
 
 func vmupcorefunc(cmd *cobra.Command, args []string) {
+	// 本地
+	if vmLocal || len(IPS) == 0 {
+		vm.RunLocalShell("upcore")
+		return
+	}
 	logger.Slog.Debug(SSHConfig, IPS)
 	var wg sync.WaitGroup
 	for _, ip := range IPS {
@@ -176,6 +184,10 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 }
 
 func vminitfunc(cmd *cobra.Command, args []string) {
+	if vmLocal || len(IPS) == 0 {
+		vm.RunLocalShell("init")
+		return
+	}
 	logger.Slog.Debug(SSHConfig, IPS)
 	var wg sync.WaitGroup
 	for _, ip := range IPS {

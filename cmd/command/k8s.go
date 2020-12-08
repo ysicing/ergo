@@ -136,10 +136,10 @@ func k8sinitfunc(cmd *cobra.Command, args []string) {
 			SSHConfig.User = "root"
 		}
 		if kakms {
-			helm.HelmInstall(SSHConfig, ip, "kms", false, false)
+			helm.HelmInstall(SSHConfig, ip, "kms", false, false, false)
 		}
 		if kakd {
-			helm.HelmInstall(SSHConfig, ip, "kd", false, false)
+			helm.HelmInstall(SSHConfig, ip, "kd", false, false, false)
 		}
 	}
 }
