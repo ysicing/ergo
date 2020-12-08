@@ -16,6 +16,7 @@ import (
 const UpgradeCore = `
 #!/bin/bash
 
+export PATH=/usr/sbin:$PATH
 set -e
 
 version=$(cat /etc/os-release | grep VERSION_CODENAME | awk -F= '{print $2}'cat)
