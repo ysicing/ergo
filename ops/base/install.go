@@ -31,6 +31,8 @@ func getpackagessh(packagename string) (string, error) {
 		return prom, nil
 	case "grafana":
 		return grafana, nil
+	case "go":
+		return goscript, nil
 	default:
 		return "", errors.New(fmt.Sprintf("不支持", packagename))
 	}

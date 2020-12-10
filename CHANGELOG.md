@@ -8,3 +8,6 @@
     - 更新helm版本
     - 取消codegen mirror default
     - vm init,upcore 支持local方式
+
+- v1.0.9
+    - ops支持安装go
