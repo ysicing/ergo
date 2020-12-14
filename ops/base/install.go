@@ -33,6 +33,8 @@ func getpackagessh(packagename string) (string, error) {
 		return grafana, nil
 	case "go":
 		return goscript, nil
+	case "node-exporter":
+		return nodeexpoter, nil
 	default:
 		return "", errors.New(fmt.Sprintf("不支持", packagename))
 	}

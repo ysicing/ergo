@@ -230,3 +230,42 @@ go::install
 go::config
 go::test
 `
+
+const nodeexpoter = `
+#!/bin/bash
+
+set -e
+
+dl(){
+    pushd /tmp
+    # 下载
+    wget https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
+    # 解压
+    tar -xzf node_exporter-1.0.1.linux-amd64.tar.gz
+	rm -rf node_exporter-1.0.1.linux-amd64.tar.gz
+	mv node_exporter-1.0.1.linux-amd64/node_exporter /usr/local/bin/
+	chmod +x /usr/local/bin/node_exporter
+    popd
+}
+
+systemd(){
+
+cat > /etc/systemd/system/node-exporter.service <<EOF
+[Unit]
+Description=Node Exporter
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable node-exporter
+systemctl start node-exporter
+}
+
+dl
+systemd
+`

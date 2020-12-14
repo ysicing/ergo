@@ -64,7 +64,7 @@ func opsinstallfunc(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		prompt := promptui.Select{
 			Label: "Select 安装包",
-			Items: []string{"docker", "mysql", "etcd", "redis", "w", "adminer", "prom", "grafana", "go"},
+			Items: []string{"docker", "mysql", "etcd", "redis", "w", "adminer", "prom", "grafana", "go", "node-exporter"},
 		}
 		_, intallpackage, err = prompt.Run()
 		if err != nil {
@@ -97,7 +97,7 @@ func opsexecfunc(cmd *cobra.Command, args []string) {
 
 func opspreinstallfunc(cmd *cobra.Command, args []string) {
 	if len(args) != 0 {
-		skipkey := []string{"docker", "go", "golang", "w"}
+		skipkey := []string{"docker", "go", "golang", "w", "node-exporter"}
 		if !convert.StringArrayContains(skipkey, args[0]) {
 			// check docker
 			var num int
