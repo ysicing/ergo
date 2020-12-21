@@ -11,6 +11,7 @@ import (
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exmisc"
+	"os"
 )
 
 var (
@@ -76,7 +77,8 @@ func k8spre(cmd *cobra.Command, args []string) {
 		for _, kv := range kvs {
 			logger.Slog.Infof("%v", exmisc.SGreen(kv))
 		}
-		logger.Slog.Exit0("其他大版本支持敬请期待")
+		logger.Slog.Error("其他大版本支持敬请期待")
+		os.Exit(0)
 	}
 	logger.Slog.Debugf("开始安装: %v", exmisc.SGreen(kv))
 }

@@ -6,6 +6,7 @@ package vm
 import (
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/sshutil"
+	"os"
 	"sync"
 )
 
@@ -112,6 +113,7 @@ func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	err := ssh.CmdAsync(ip, InitSH)
 	if err != nil {
-		logger.Slog.Exit0(ip, err.Error())
+		logger.Slog.Error(ip, err.Error())
+		os.Exit(-1)
 	}
 }

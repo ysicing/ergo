@@ -15,6 +15,7 @@ import (
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -106,17 +107,20 @@ func vmnewprecheckfunc(cmd *cobra.Command, args []string) {
 	// CPU
 	cputotal, _ := cpu.Counts(true)
 	if int64(cputotal) <= vmCpu*vmInstance {
-		logger.Slog.Exit0(exmisc.SRed("CPU资源不够"), " 调整CPU大小或者副本数")
+		logger.Slog.Error(exmisc.SRed("CPU资源不够"), " 调整CPU大小或者副本数")
+		os.Exit(-1)
 	}
 	// mem
 	memtotal, _ := mem.VirtualMemory()
 	if memtotal.Total <= uint64(vmMem*vmInstance*1024*1024) {
-		logger.Slog.Exit0(exmisc.SRed("内存资源不够"), "请调整内存大小或者副本数")
+		logger.Slog.Error(exmisc.SRed("内存资源不够"), "请调整内存大小或者副本数")
+		os.Exit(-1)
 	}
 	logger.Slog.Debugf("check system res: %v", exmisc.SGreen("pass"))
 	logger.Slog.Debugf("%v", exmisc.SGreen("check system tools"))
 	if !common.WhichCmd("vagrant") || !common.WhichCmd("VirtualBoxVM") {
-		logger.Slog.Exit0(exmisc.SRed("vagrant"), "或", exmisc.SRed("VirtualBox"), "未安装，请先安装")
+		logger.Slog.Error(exmisc.SRed("vagrant"), "或", exmisc.SRed("VirtualBox"), "未安装，请先安装")
+		os.Exit(-1)
 	}
 	logger.Slog.Debugf("check system tools: %v", exmisc.SGreen("pass"))
 }
@@ -139,7 +143,8 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 				logger.Slog.Info("Destroy VM")
 				output, err := vagrant.Destroy()
 				if err != nil {
-					logger.Slog.Exit0f("Destroy VM err: %v", err.Error())
+					logger.Slog.Errorf("Destroy VM err: %v", err.Error())
+					os.Exit(-1)
 				}
 				for line := range output {
 					fmt.Println(line.Line)
@@ -174,7 +179,8 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 	}
 	if err != nil {
 		// vagrant.Destroy()
-		logger.Slog.Exit0("启动虚拟机失败，清理失败数据")
+		logger.Slog.Error("启动虚拟机失败，清理失败数据")
+		os.Exit(-1)
 	}
 	logger.Slog.Infof("default user/password: %v", exmisc.SGreen("root/vagrant"))
 	logger.Slog.Infof("销毁方式: cd %v, vagrant destroy -f ", vmPath)

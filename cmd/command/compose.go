@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exmisc"
+	"os"
 )
 
 func NewComposeCommand() *cobra.Command {
@@ -42,7 +43,8 @@ func NewComposeNew() *cobra.Command {
 		Short: "部署服务",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				logger.Slog.Exit0(exmisc.SRed("请确定安装服务名"))
+				logger.Slog.Error(exmisc.SRed("请确定安装服务名"))
+				os.Exit(-1)
 			}
 		},
 	}
