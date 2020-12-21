@@ -16,6 +16,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
-	github.com/ysicing/ext v0.0.0-20201117051416-1324250575d3
+	github.com/ysicing/ext v0.0.0-20201215110233-f154cb6815c6
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 )

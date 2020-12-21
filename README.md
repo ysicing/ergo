@@ -68,7 +68,7 @@ ergo ops exec w  --ip 11.11.11.11 --pk ~/.ssh/id_rsa
 
 #### 云原生运维cli
 
-- [ ] 安装k8s 1.19.2/1.19.3/1.19.4
+- [ ] 安装k8s 1.19.4/1.18.14
 
 ```
 # 基于sealos 进行安装，只需要传master ip和worker ip以及节点password

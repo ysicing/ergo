@@ -40,7 +40,7 @@ func NewK8sCommand() *cobra.Command {
 	k8s.PersistentFlags().StringSliceVar(&km, "km", []string{}, "k8s master")
 	k8s.PersistentFlags().StringSliceVar(&kw, "kw", []string{}, "k8s worker")
 	k8s.PersistentFlags().StringVar(&kpass, "kpass", "", "k8s节点密码")
-	k8s.PersistentFlags().StringVar(&kv, "kv", "1.19.3", "k8s版本")
+	k8s.PersistentFlags().StringVar(&kv, "kv", "1.18.14", "k8s版本")
 	return k8s
 }
 
@@ -69,14 +69,14 @@ func NewK8sJoinCommand() *cobra.Command {
 }
 
 func k8spre(cmd *cobra.Command, args []string) {
-	kvs := []string{"1.19.4", "1.19.3", "1.19.2"}
+	kvs := []string{"1.19.4", "1.18.14"}
 	if !convert.StringArrayContains(kvs, kv) {
 		logger.Slog.Infof("暂不支持 %v", exmisc.SRed(kv))
 		logger.Slog.Info("目前仅支持如下版本: ")
 		for _, kv := range kvs {
 			logger.Slog.Infof("%v", exmisc.SGreen(kv))
 		}
-		logger.Slog.Exit0("其他版本支持敬请期待")
+		logger.Slog.Exit0("其他大版本支持敬请期待")
 	}
 	logger.Slog.Debugf("开始安装: %v", exmisc.SGreen(kv))
 }
