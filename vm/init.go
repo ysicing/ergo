@@ -29,11 +29,11 @@ Storage=persistent
 # 最大占用空间 2G
 SystemMaxUse=2G
 
-# 单日志文件最大 200M
-SystemMaxFileSize=200M
+# 单日志文件最大 100M
+SystemMaxFileSize=100M
 
-# 日志保存时间 2 周
-MaxRetentionSec=2week
+# 日志保存时间 1 周
+MaxRetentionSec=1week
 
 # 禁止转发
 ForwardToSyslog=no
@@ -78,9 +78,9 @@ net.ipv4.tcp_syncookies = 0
 net.ipv4.conf.all.rp_filter = 2
 net.ipv4.conf.default.rp_filter = 2
 
-net.ipv6.conf.all.disable_ipv6 =1
-net.ipv6.conf.default.disable_ipv6 =1
-
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6=1
 EOF
 
 sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf
