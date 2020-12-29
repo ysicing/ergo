@@ -99,3 +99,8 @@ ergo helm install slb --ip 11.11.11.11 --pass vagrant -x
 
 - [sealos](https://github.com/fanux/sealos) `k8s基于sealos安装部分`
 - [zzz](https://github.com/sohaha/zzz) `codegen参考zzz init部分`
+
+
+## 🎉🎉 致谢
+
+感谢 [Jetbrains](https://www.jetbrains.com/community/opensource/#support) 对开源事业的支持

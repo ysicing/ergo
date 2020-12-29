@@ -5,7 +5,6 @@ package base
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
@@ -36,7 +35,7 @@ func getpackagessh(packagename string) (string, error) {
 	case "node-exporter":
 		return nodeexpoter, nil
 	default:
-		return "", errors.New(fmt.Sprintf("不支持", packagename))
+		return "", fmt.Errorf("不支持", packagename)
 	}
 }
 

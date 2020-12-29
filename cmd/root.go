@@ -48,7 +48,8 @@ func init() {
 		command.NewHelmCommand(),
 		command.NewComposeCommand(),
 		command.NewCodeGen(),
-		command.NewOPSCommand())
+		command.NewOPSCommand(),
+		command.NewCloudCommand())
 }
 
 func initConfig() {
