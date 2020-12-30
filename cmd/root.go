@@ -13,6 +13,7 @@ import (
 	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exfile"
+	"github.com/ysicing/ext/utils/exmisc"
 )
 
 const (
@@ -36,7 +37,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	cfg := logger.Config{Simple: true, ConsoleOnly: true}
 	logger.InitLogger(&cfg)
-	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/doge/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/ergo/config.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&globalFlags.Debug, "debug", true, "enable client-side debug logging")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.DisableSuggestions = false
@@ -56,14 +57,16 @@ func initConfig() {
 	if globalFlags.CfgFile == "" {
 		home, err := homedir.Dir()
 		common.CheckErr(err)
-		globalFlags.CfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/doge/", "config.yaml")
+		globalFlags.CfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/ergo", "config.yaml")
 	}
 	if !exfile.CheckFileExistsv2(globalFlags.CfgFile) {
 		config.WriteDefaultConfig(globalFlags.CfgFile)
 	}
 	viper.SetConfigFile(globalFlags.CfgFile)
 	viper.AutomaticEnv()
-	viper.ReadInConfig()
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", exmisc.SGreen(viper.ConfigFileUsed()))
+	}
 }
 
 func Execute() error {

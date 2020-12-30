@@ -95,6 +95,19 @@ ergo helm install slb --ip 11.11.11.11 --pass vagrant -x
 
 - [ ] 阿里云镜像仓库, ucloud镜像仓库
 
+- [ ] 阿里云dns解析
+
+```bazaar
+23:47 ➜  ergo cloud dns show godu.dev hk2
+Using config file: /Users/ysicing/.config/ergo/config.yaml
+A *.hk2.godu.dev ---> 127.0.0.1 *
+A hk2.vps.godu.dev ---> 127.0.0.1 *
+
+23:47 ➜  ergo cloud dns renew --domain hk2.vps.godu.dev --value 127.0.0.1
+已存在记录
+更新成功
+```
+
 #### 🎉🎉 参考其他开源项目
 
 - [sealos](https://github.com/fanux/sealos) `k8s基于sealos安装部分`
