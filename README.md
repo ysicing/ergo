@@ -114,6 +114,6 @@ A hk2.vps.godu.dev ---> 127.0.0.1 *
 - [zzz](https://github.com/sohaha/zzz) `codegen参考zzz init部分`
 
 
-## 🎉🎉 致谢
+## 🎉🎉 赞助商
 
-感谢 [Jetbrains](https://www.jetbrains.com/community/opensource/#support) 对开源事业的支持
+[![jetbrains](docs/jetbrains.svg)](https://www.jetbrains.com/?from=ergo)
