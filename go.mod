@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.818
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.824
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/koding/logging v0.0.0-20160720134017-8b5a689ed69b // indirect
 	github.com/koding/vagrantutil v0.0.0-20180710063911-70827343f116

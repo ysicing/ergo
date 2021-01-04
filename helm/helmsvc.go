@@ -12,13 +12,13 @@ helminit
 
 kubectl create ns nginx-ingress
 
-helm upgrade -i nginx-ingress-controller -f {{ URL }}/master/nginx-ingress-controller/values.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 6.0.1
+helm upgrade -i nginx-ingress-controller -f %v/master/nginx-ingress-controller/values.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 7.0.9
 
-# helm upgrade -i nginx-ingress-controller -f https://gitee.com/ysicing/helminit/raw/master/nginx-ingress-controller/values.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 6.0.1
+# helm upgrade -i nginx-ingress-controller -f https://gitee.com/ysicing/helminit/raw/master/nginx-ingress-controller/values.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 7.0.9
 
-# helm upgrade -i nginx-ingress-controller -f https://raw.githubusercontent.com/ysicing/helminit/master/nginx-ingress-controller/values.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 6.0.1
+# helm upgrade -i nginx-ingress-controller -f https://raw.githubusercontent.com/ysicing/helminit/master/nginx-ingress-controller/values.yaml -n nginx-ingress bitnami/nginx-ingress-controller --version 7.0.9
 
-# helm upgrade -i flagger -f {{ URL }}/master/flagger/values.yaml  flagger/flagger -n nginx-ingress --version 1.3.0
+# helm upgrade -i flagger -f %v/master/flagger/values.yaml  flagger/flagger -n nginx-ingress --version 1.5.0
 `
 
 const xnginxIngressController = `
@@ -37,7 +37,7 @@ helminit
 
 kubectl create ns metallb-system
 
-helm upgrade -i metallb -f {{ URL }}/master/metallb/values.yaml -n metallb-system bitnami/metallb --version 1.0.1
+helm upgrade -i metallb -f %v/master/metallb/values.yaml -n metallb-system bitnami/metallb --version 2.0.2
 `
 
 const xmetallb = `
@@ -53,7 +53,7 @@ helminit
 
 kubectl create ns ops
 
-helm upgrade -i etcd -f {{ URL }}/master/etcd/values.yaml -n ops bitnami/etcd --version 5.3.0
+helm upgrade -i etcd -f %v/master/etcd/values.yaml -n ops bitnami/etcd --version 5.3.0
 `
 
 const xetcd = `
@@ -73,7 +73,7 @@ helminit || (
 	helm repo update
 )
 
-helm upgrade -i cert-manager -n cert-manager -f {{ URL }}/master/cert-manager/values.yaml --version v1.0.3 jetstack/cert-manager
+helm upgrade -i cert-manager -n cert-manager -f %v/master/cert-manager/values.yaml --version v1.0.3 jetstack/cert-manager
 `
 
 const xcm = `

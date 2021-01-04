@@ -31,6 +31,8 @@ github.com/aliyun/alibaba-cloud-sdk-go v1.61.814 h1:NYLjsLnhG0s4um0yv421x4cEw0ty
 github.com/aliyun/alibaba-cloud-sdk-go v1.61.814/go.mod h1:pUKYbK5JQ+1Dfxk80P0qxGqe5dkxDoabbZS7zOcouyA=
 github.com/aliyun/alibaba-cloud-sdk-go v1.61.818 h1:ItBvn9JFXHXa9HuyFIyeFVWHt+h86KXjshbQuzl7DIc=
 github.com/aliyun/alibaba-cloud-sdk-go v1.61.818/go.mod h1:pUKYbK5JQ+1Dfxk80P0qxGqe5dkxDoabbZS7zOcouyA=
+github.com/aliyun/alibaba-cloud-sdk-go v1.61.824 h1:PqDb39kkdZ82xdlNSW/XC0q/ZV4y2X45E6dF30B+tVs=
+github.com/aliyun/alibaba-cloud-sdk-go v1.61.824/go.mod h1:pUKYbK5JQ+1Dfxk80P0qxGqe5dkxDoabbZS7zOcouyA=
 github.com/apache/thrift v0.12.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=
 github.com/apache/thrift v0.13.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=

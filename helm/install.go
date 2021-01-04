@@ -4,7 +4,6 @@
 package helm
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"github.com/ysicing/ergo/utils/common"
@@ -12,7 +11,6 @@ import (
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
 	"github.com/ysicing/ext/utils/extime"
-	"html/template"
 )
 
 const (
@@ -115,18 +113,15 @@ func HelmInstall(ssh sshutil.SSH, ip string, packagename string, local bool, isi
 	if isgithub {
 		url = GithubMirror
 	}
-	m := Mirror{URL: url}
-	var data bytes.Buffer
-	t := template.Must(template.New("helm").Parse(helm))
-	t.Execute(&data, &m)
+	data := fmt.Sprintf(helm, url)
 	if len(ip) != 0 {
-		if err := ssh.CmdAsync(ip, data.String()); err != nil {
+		if err := ssh.CmdAsync(ip, data); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
 	} else {
 		tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", packagename, extime.NowUnix())
-		exfile.WriteFile(tempfile, data.String())
+		exfile.WriteFile(tempfile, data)
 		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
 			return
