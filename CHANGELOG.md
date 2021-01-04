@@ -14,3 +14,9 @@
   
 - v1.0.11
     - 新增支持k8s 1.18.14, 移除支持k8s 1.19.2,1.19.3
+  
+- v1.0.12
+    - 修复helm按照
+      - helm 更新nginxIngressController到7.0.9
+      - helm 更新mlb更新到2.0.2
+    - cloud dns支持
