@@ -5,7 +5,7 @@ package config
 
 import (
 	"github.com/ysicing/ext/utils/exfile"
-	"gopkg.in/yaml.v3"
+	"sigs.k8s.io/yaml"
 )
 
 //Config 配置文件
