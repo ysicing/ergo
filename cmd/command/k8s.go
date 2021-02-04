@@ -8,9 +8,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/helm"
 	"github.com/ysicing/ergo/k8s"
+	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
+	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
+	"github.com/ysicing/ext/utils/extime"
 	"os"
 )
 
@@ -33,6 +36,7 @@ func NewK8sCommand() *cobra.Command {
 	}
 	k8s.AddCommand(NewK8sInitCommand())
 	k8s.AddCommand(NewK8sJoinCommand())
+	k8s.AddCommand(NewK8sMasterSchedule())
 	k8s.PersistentFlags().StringVar(&SSHConfig.User, "user", "root", "用户")
 	k8s.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
 	k8s.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
@@ -41,7 +45,7 @@ func NewK8sCommand() *cobra.Command {
 	k8s.PersistentFlags().StringSliceVar(&km, "km", []string{}, "k8s master")
 	k8s.PersistentFlags().StringSliceVar(&kw, "kw", []string{}, "k8s worker")
 	k8s.PersistentFlags().StringVar(&kpass, "kpass", "", "k8s节点密码")
-	k8s.PersistentFlags().StringVar(&kv, "kv", "1.18.14", "k8s版本")
+	k8s.PersistentFlags().StringVar(&kv, "kv", "1.18.15", "k8s版本")
 	return k8s
 }
 
@@ -69,8 +73,17 @@ func NewK8sJoinCommand() *cobra.Command {
 	return k8sjoin
 }
 
+func NewK8sMasterSchedule() *cobra.Command {
+	k8sMasterSchedule := &cobra.Command{
+		Use:    "schedule",
+		Short:  "Master节点可以调度pods",
+		Run:    k8sschedulefunc,
+	}
+	return k8sMasterSchedule
+}
+
 func k8spre(cmd *cobra.Command, args []string) {
-	kvs := []string{"1.19.4", "1.18.14"}
+	kvs := []string{"1.18.15"}
 	if !convert.StringArrayContains(kvs, kv) {
 		logger.Slog.Infof("暂不支持 %v", exmisc.SRed(kv))
 		logger.Slog.Info("目前仅支持如下版本: ")
@@ -156,4 +169,15 @@ func k8sjoinfunc(cmd *cobra.Command, args []string) {
 	}
 	kargs = kms + kws
 	k8s.InstallK8s(SSHConfig, ip, klocal, false, kargs, kv)
+}
+
+func k8sschedulefunc(cmd *cobra.Command, args []string)  {
+	runschedule := "kubectl taint nodes --all node-role.kubernetes.io/master-"
+	tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", extime.NowUnix())
+	exfile.WriteFile(tempfile, runschedule)
+	if klocal {
+		common.RunCmd("/bin/bash", tempfile)
+	} else {
+		logger.Slog.Warnf("请在master节点执行.")
+	}
 }
