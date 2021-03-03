@@ -2,6 +2,7 @@
 
 version=$(cat version.txt)
 macsha=$(cat dist/ergo_darwin_amd64.sha256sum | awk '{print $1}')
+m1sha=$(cat dist/ergo_darwin_arm64.sha256sum | awk '{print $1}')
 linuxsha=$(cat dist/ergo_linux_amd64.sha256sum | awk '{print $1}')
 
 cat > ergo.rb <<EOF
@@ -12,8 +13,13 @@ class Ergo < Formula
     bottle :unneeded
 
     if OS.mac?
-      url "https://github.com/ysicing/ergo/releases/download/#{version}/ergo_darwin_amd64"
-      sha256 "${macsha}"
+      if Hardware::CPU.arm?
+        url "https://github.com/ysicing/ergo/releases/download/#{version}/ergo_darwin_arm64"
+        sha256 "${m1sha}"
+      else
+        url "https://github.com/ysicing/ergo/releases/download/#{version}/ergo_darwin_amd64"
+        sha256 "${macsha}"
+      end  
     elsif OS.linux?
       if Hardware::CPU.intel?
         url "https://github.com/ysicing/ergo/releases/download/#{version}/ergo_linux_amd64"
@@ -22,7 +28,11 @@ class Ergo < Formula
     end
 
     def install
-      bin.install "ergo_darwin_amd64" => "ergo"
+      if Hardware::CPU.intel?
+        bin.install "ergo_darwin_amd64" => "ergo"
+      else
+        bin.install "ergo_darwin_arm64" => "ergo"
+      end 
     end
   end
 EOF

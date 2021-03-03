@@ -13,7 +13,7 @@ jobs:
     - name: Install Go
       uses: actions/setup-go@v1
       with:
-        go-version: 1.15.x
+        go-version: 1.16.x
     - name: install gox
       run: |
           echo "install gox"
@@ -36,6 +36,8 @@ jobs:
           sha256sum ergo_darwin_amd64 > ergo_darwin_amd64.sha256sum
           sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
           sha256sum ergo_windows_amd64.exe > ergo_windows_amd64.sha256sum
+          sha256sum ergo_darwin_arm64 > ergo_darwin_arm64.sha256sum
+          sha256sum ergo_linux_arm64 > ergo_linux_arm64.sha256sum
           popd
           ./gen.sh
           docker logout
