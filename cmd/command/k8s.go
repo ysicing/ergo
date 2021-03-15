@@ -75,9 +75,9 @@ func NewK8sJoinCommand() *cobra.Command {
 
 func NewK8sMasterSchedule() *cobra.Command {
 	k8sMasterSchedule := &cobra.Command{
-		Use:    "schedule",
-		Short:  "Master节点可以调度pods",
-		Run:    k8sschedulefunc,
+		Use:   "schedule",
+		Short: "Master节点可以调度pods",
+		Run:   k8sschedulefunc,
 	}
 	return k8sMasterSchedule
 }
@@ -171,7 +171,7 @@ func k8sjoinfunc(cmd *cobra.Command, args []string) {
 	k8s.InstallK8s(SSHConfig, ip, klocal, false, kargs, kv)
 }
 
-func k8sschedulefunc(cmd *cobra.Command, args []string)  {
+func k8sschedulefunc(cmd *cobra.Command, args []string) {
 	runschedule := "kubectl taint nodes --all node-role.kubernetes.io/master-"
 	tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", extime.NowUnix())
 	exfile.WriteFile(tempfile, runschedule)
