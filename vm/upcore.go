@@ -11,6 +11,7 @@ import (
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/extime"
 	"sync"
+	"time"
 )
 
 const UpgradeCore = `
@@ -30,9 +31,13 @@ apt update
 
 apt dist-upgrade -y
 
-apt install -t ${version}-backports linux-image-amd64 -y
+arch=$(dpkg --print-architecture)
+
+apt install -t ${version}-backports linux-image-${arch} -y
 
 update-grub
+
+reboot
 `
 
 // RunUpgradeCore 升级内核
@@ -53,6 +58,7 @@ func RunWait(ssh sshutil.SSH, ip string) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
 		logger.Slog.Debug("waiting for reboot")
+		time.Sleep(10 * time.Second)
 		return false
 	}
 	return true
