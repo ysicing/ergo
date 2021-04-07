@@ -31,6 +31,12 @@ apt update
 
 apt dist-upgrade -y
 
+apt install open-iscsi -y
+
+systemctl enable --now iscsid
+
+apt install nfs-common -y
+
 arch=$(dpkg --print-architecture)
 
 apt install -t ${version}-backports linux-image-${arch} -y

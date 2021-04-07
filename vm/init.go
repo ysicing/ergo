@@ -107,6 +107,8 @@ EOF
 # ulimit -SHn 65535
 
 touch /.initdone
+
+exit 0
 `
 
 func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {

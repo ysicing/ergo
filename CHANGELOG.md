@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v1.0.17
+  - 优化upcore
+
 - v1.0.16
   - 优化arm架构初始化和升级内核
 
