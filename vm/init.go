@@ -4,8 +4,8 @@
 package vm
 
 import (
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/sshutil"
+	"k8s.io/klog/v2"
 	"os"
 	"sync"
 )
@@ -115,7 +115,7 @@ func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	err := ssh.CmdAsync(ip, InitSH)
 	if err != nil {
-		logger.Slog.Error(ip, err.Error())
+		klog.Errorf("ip %v, err: %v", ip, err)
 		os.Exit(-1)
 	}
 }

@@ -11,10 +11,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ergo/vm"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
+	"k8s.io/klog/v2"
 	"os"
 	"strings"
 	"sync"
@@ -93,7 +93,7 @@ func vmupcorefunc(cmd *cobra.Command, args []string) {
 		vm.RunLocalShell("upcore")
 		return
 	}
-	logger.Slog.Debug(SSHConfig, IPS)
+	klog.V(5).Info(SSHConfig, IPS)
 	var wg sync.WaitGroup
 	for _, ip := range IPS {
 		wg.Add(1)
@@ -103,26 +103,26 @@ func vmupcorefunc(cmd *cobra.Command, args []string) {
 }
 
 func vmnewprecheckfunc(cmd *cobra.Command, args []string) {
-	logger.Slog.Debugf("%v", exmisc.SGreen("check system res"))
+	klog.Infof("%v", exmisc.SGreen("check system res"))
 	// CPU
 	cputotal, _ := cpu.Counts(true)
 	if int64(cputotal) <= vmCpu*vmInstance {
-		logger.Slog.Error(exmisc.SRed("CPU资源不够"), " 调整CPU大小或者副本数")
+		klog.Error(exmisc.SRed("CPU资源不够"), " 调整CPU大小或者副本数")
 		os.Exit(-1)
 	}
 	// mem
 	memtotal, _ := mem.VirtualMemory()
 	if memtotal.Total <= uint64(vmMem*vmInstance*1024*1024) {
-		logger.Slog.Error(exmisc.SRed("内存资源不够"), "请调整内存大小或者副本数")
+		klog.Error(exmisc.SRed("内存资源不够"), "请调整内存大小或者副本数")
 		os.Exit(-1)
 	}
-	logger.Slog.Debugf("check system res: %v", exmisc.SGreen("pass"))
-	logger.Slog.Debugf("%v", exmisc.SGreen("check system tools"))
+	klog.Infof("check system res: %v", exmisc.SGreen("pass"))
+	klog.Infof("%v", exmisc.SGreen("check system tools"))
 	if !common.WhichCmd("vagrant") || !common.WhichCmd("VirtualBoxVM") {
-		logger.Slog.Error(exmisc.SRed("vagrant"), "或", exmisc.SRed("VirtualBox"), "未安装，请先安装")
+		klog.Error(exmisc.SRed("vagrant"), "或", exmisc.SRed("VirtualBox"), "未安装，请先安装")
 		os.Exit(-1)
 	}
-	logger.Slog.Debugf("check system tools: %v", exmisc.SGreen("pass"))
+	klog.Infof("check system tools: %v", exmisc.SGreen("pass"))
 }
 
 func vmnewfunc(cmd *cobra.Command, args []string) {
@@ -130,20 +130,20 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 	vmPath = common.GetPath(vmPath)
 	vgfile := common.GetPath(vmPath + "/Vagrantfile")
 
-	logger.Slog.Debugf("cpu: %v, mem: %v, 实例: %v, ip段: %v, Vagrantfile: %v", vmCpu, vmMem, vmInstance, vmIP, vgfile)
+	klog.Infof("cpu: %v, mem: %v, 实例: %v, ip段: %v, Vagrantfile: %v", vmCpu, vmMem, vmInstance, vmIP, vgfile)
 	vagrant, _ := vagrantutil.NewVagrant(vmPath)
 	if exfile.CheckFileExistsv2(vgfile) {
 		var rewritefile string
-		logger.Slog.Info("vagrantfile exist, Are you sure you want to rewrite vagrantfile ? [y/N]")
+		klog.Info("vagrantfile exist, Are you sure you want to rewrite vagrantfile ? [y/N]")
 		fmt.Scanln(&rewritefile)
 		if strings.ToLower(rewritefile) == "y" || strings.ToLower(rewritefile) == "yes" {
-			logger.Slog.Info("开始执行覆盖")
+			klog.Info("开始执行覆盖")
 			status, _ := vagrant.Status()
 			if status.String() == "Running" {
-				logger.Slog.Info("Destroy VM")
+				klog.Info("Destroy VM")
 				output, err := vagrant.Destroy()
 				if err != nil {
-					logger.Slog.Errorf("Destroy VM err: %v", err.Error())
+					klog.Errorf("Destroy VM err: %v", err.Error())
 					os.Exit(-1)
 				}
 				for line := range output {
@@ -157,9 +157,13 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 				Instance: convert.Int642Str(vmInstance),
 				IP:       vmIP,
 			}).Template()
-			exfile.WriteFile(vgfile, vagrantfile)
+			err := exfile.WriteFile(vgfile, vagrantfile)
+			if err != nil {
+				klog.Errorf("write file %v, err: %v", vgfile, err)
+				os.Exit(-1)
+			}
 		} else {
-			logger.Slog.Info("跳过此流程")
+			klog.Info("跳过此流程")
 		}
 	} else {
 		vagrantfile := vm.NewVM(vm.MetaData{
@@ -168,24 +172,28 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 			Instance: convert.Int642Str(vmInstance),
 			IP:       vmIP,
 		}).Template()
-		exfile.WriteFile(vgfile, vagrantfile)
+		err := exfile.WriteFile(vgfile, vagrantfile)
+		if err != nil {
+			klog.Errorf("write file %v, err: %v", vgfile, err)
+			os.Exit(-1)
+		}
 	}
 
 	// step 02 存在，启动
-	logger.Slog.Debugf("%v", exmisc.SGreen("StartUP VM"))
+	klog.Infof("%v", exmisc.SGreen("StartUP VM"))
 	output, err := vagrant.Up()
 	for line := range output {
 		fmt.Println(line.Line)
 	}
 	if err != nil {
 		// vagrant.Destroy()
-		logger.Slog.Error("启动虚拟机失败，清理失败数据")
+		klog.Error("启动虚拟机失败，清理失败数据")
 		os.Exit(-1)
 	}
-	logger.Slog.Infof("default user/password: %v", exmisc.SGreen("root/vagrant"))
-	logger.Slog.Infof("销毁方式: cd %v, vagrant destroy -f ", vmPath)
+	klog.Infof("default user/password: %v", exmisc.SGreen("root/vagrant"))
+	klog.Infof("销毁方式: cd %v, vagrant destroy -f ", vmPath)
 	if vmInstance == 1 {
-		logger.Slog.Infof("销毁方式: cd %v, vagrant ssh", vmPath)
+		klog.Infof("销毁方式: cd %v, vagrant ssh", vmPath)
 	}
 }
 
@@ -194,7 +202,7 @@ func vminitfunc(cmd *cobra.Command, args []string) {
 		vm.RunLocalShell("init")
 		return
 	}
-	logger.Slog.Debug(SSHConfig, IPS)
+	klog.V(5).Info(SSHConfig, IPS)
 	var wg sync.WaitGroup
 	for _, ip := range IPS {
 		wg.Add(1)

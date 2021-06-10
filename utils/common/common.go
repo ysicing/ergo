@@ -8,8 +8,8 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
+	"k8s.io/klog/v2"
 	"os"
 	"os/exec"
 	"strings"
@@ -57,7 +57,7 @@ func GetHostName() string {
 
 func SysCmpOk(a, b, c string) bool {
 	if convert.Str2Int(a)*convert.Str2Int(b) >= convert.Str2Int(c) {
-		logger.Slog.Debug(convert.Str2Int(a), convert.Str2Int(b), convert.Str2Int(c))
+		klog.V(5).Info(convert.Str2Int(a), convert.Str2Int(b), convert.Str2Int(c))
 		return false
 	}
 	return true

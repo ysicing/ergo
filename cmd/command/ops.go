@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/ops/base"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
+	"k8s.io/klog/v2"
 	"os"
 	"sync"
 )
@@ -104,13 +104,13 @@ func opspreinstallfunc(cmd *cobra.Command, args []string) {
 			if !RunLocal {
 				for _, ip := range IPS {
 					if !base.CheckCmd(SSHConfig, ip, "docker") {
-						logger.Slog.Error(ip, " 需要安装docker")
+						klog.Error("%v 需要安装docker", ip)
 						num++
 					}
 				}
 			} else {
 				if err := common.RunCmd("which", "docker"); err != nil {
-					logger.Slog.Error("本机", " 需要安装docker")
+					klog.Error("本机", " 需要安装docker")
 					num++
 				}
 			}
@@ -131,7 +131,7 @@ func netmtr() *cobra.Command {
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			logger.Slog.Info(target)
+			klog.Info(target)
 		},
 	}
 	nt.Flags().StringVar(&target, "t", "", "目标ip或者域名")

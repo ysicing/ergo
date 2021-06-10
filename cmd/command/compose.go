@@ -5,8 +5,7 @@ package command
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ext/logger"
-	"github.com/ysicing/ext/utils/exmisc"
+	"k8s.io/klog/v2"
 	"os"
 )
 
@@ -43,7 +42,7 @@ func NewComposeNew() *cobra.Command {
 		Short: "部署服务",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				logger.Slog.Error(exmisc.SRed("请确定安装服务名"))
+				klog.Errorf("请确定安装服务名")
 				os.Exit(-1)
 			}
 		},

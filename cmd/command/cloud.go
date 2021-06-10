@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/cloud/dns"
 	"github.com/ysicing/ext/utils/exmisc"
+	"k8s.io/klog/v2"
 	"os"
 	"strings"
 )
@@ -68,9 +69,9 @@ func dnsshow() *cobra.Command {
 							continue
 						}
 						if record.Status == "ENABLE" {
-							fmt.Println(fmt.Sprintf("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SGreen("*")))
+							klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SGreen("*"))
 						} else {
-							fmt.Println(fmt.Sprintf("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SRed("x")))
+							klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SRed("x"))
 						}
 					}
 				}

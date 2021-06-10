@@ -9,6 +9,8 @@ import (
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/extime"
+	"k8s.io/klog/v2"
+	"os"
 	"sync"
 )
 
@@ -53,7 +55,11 @@ func InstallPackage(ssh sshutil.SSH, ip string, packagename string, wg *sync.Wai
 		}
 	} else {
 		tempfile := fmt.Sprintf("/tmp/%v.tmp.sh", extime.NowUnix())
-		exfile.WriteFile(tempfile, runsh)
+		err := exfile.WriteFile(tempfile, runsh)
+		if err != nil {
+			klog.Errorf("write file %v, err: %v", tempfile, err)
+			os.Exit(-1)
+		}
 		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
 			return

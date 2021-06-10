@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v1.1.0
+  - 框架优化
+
 - v1.0.17
   - 优化upcore
 

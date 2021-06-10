@@ -9,6 +9,7 @@ import (
 	"github.com/ysicing/ergo/codegen"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exfile"
+	"k8s.io/klog/v2"
 	"strings"
 )
 
@@ -69,11 +70,11 @@ func codegenv1(cmd *cobra.Command, args []string) {
 	if name == "" {
 		return
 	}
-	logger.Slog.Info("Start downloading the template...")
+	klog.Infof("Start downloading the template...")
 	err := codegen.Clone(dir, name, branch, mirror)
 	if err != nil {
 		logger.Slog.Fatal(err)
 		return
 	}
-	logger.Slog.Infof("Init Done: %s\n", dir)
+	klog.Infof("Init Done: %s", dir)
 }

@@ -6,11 +6,12 @@ package k8s
 import (
 	"fmt"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exos"
 	"github.com/ysicing/ext/utils/extime"
+	"k8s.io/klog/v2"
+	"os"
 )
 
 const (
@@ -29,17 +30,21 @@ func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args, kv stri
 	} else {
 		runk8s = fmt.Sprintf(k8ssh, sealcfgpath, kv, "join", args)
 	}
-	logger.Slog.Debug(runk8s)
+	klog.V(5).Infof(runk8s)
 	if !local {
 		if err := ssh.CmdAsync(ip, runk8s); err != nil {
-			fmt.Println(err.Error())
+			klog.V(5).Infof("err: %v", err)
 			return err
 		}
 	} else {
 		tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", extime.NowUnix())
-		exfile.WriteFile(tempfile, runk8s)
+		err := exfile.WriteFile(tempfile, runk8s)
+		if err != nil {
+			klog.Errorf("write file %v, err: %v", tempfile, err)
+			os.Exit(-1)
+		}
 		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
-			fmt.Println(err.Error())
+			klog.V(5).Infof("err: %v", err)
 			return err
 		}
 	}

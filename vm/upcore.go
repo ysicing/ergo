@@ -10,6 +10,8 @@ import (
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/extime"
+	"k8s.io/klog/v2"
+	"os"
 	"sync"
 	"time"
 )
@@ -63,7 +65,7 @@ func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 func RunWait(ssh sshutil.SSH, ip string) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
-		logger.Slog.Debug("waiting for reboot")
+		klog.V(5).Infof("%v waiting for reboot", ip)
 		time.Sleep(10 * time.Second)
 		return false
 	}
@@ -81,7 +83,11 @@ func RunLocalShell(runtype string) {
 		shelldata = "uname -a"
 	}
 	tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", runtype, extime.NowUnix())
-	exfile.WriteFile(tempfile, shelldata)
+	err := exfile.WriteFile(tempfile, shelldata)
+	if err != nil {
+		klog.Errorf("write file %v, err: %v", tempfile, err)
+		os.Exit(-1)
+	}
 	if err := common.RunCmd("/bin/bash", tempfile); err != nil {
 		fmt.Println(err.Error())
 		return

@@ -17,5 +17,6 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/ysicing/ext v0.0.0-20201215110233-f154cb6815c6
+	k8s.io/klog/v2 v2.9.0 // indirect
 	sigs.k8s.io/yaml v1.2.0
 )

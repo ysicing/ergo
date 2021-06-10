@@ -11,9 +11,9 @@ import (
 	"github.com/ysicing/ergo/cmd/command"
 	"github.com/ysicing/ergo/config"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
+	"k8s.io/klog/v2"
 )
 
 const (
@@ -34,9 +34,8 @@ var (
 )
 
 func init() {
+	klog.InitFlags(nil)
 	cobra.OnInitialize(initConfig)
-	cfg := logger.Config{Simple: true, ConsoleOnly: true}
-	logger.InitLogger(&cfg)
 	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/ergo/config.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&globalFlags.Debug, "debug", true, "enable client-side debug logging")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -65,7 +64,7 @@ func initConfig() {
 	viper.SetConfigFile(globalFlags.CfgFile)
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", exmisc.SGreen(viper.ConfigFileUsed()))
+		klog.Infof("Using config file:", exmisc.SGreen(viper.ConfigFileUsed()))
 	}
 }
 

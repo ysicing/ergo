@@ -9,11 +9,11 @@ import (
 	"github.com/ysicing/ergo/helm"
 	"github.com/ysicing/ergo/k8s"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
 	"github.com/ysicing/ext/utils/extime"
+	"k8s.io/klog/v2"
 	"os"
 )
 
@@ -85,15 +85,16 @@ func NewK8sMasterSchedule() *cobra.Command {
 func k8spre(cmd *cobra.Command, args []string) {
 	kvs := []string{"1.18.15"}
 	if !convert.StringArrayContains(kvs, kv) {
-		logger.Slog.Infof("暂不支持 %v", exmisc.SRed(kv))
-		logger.Slog.Info("目前仅支持如下版本: ")
+		klog.Infof("暂不支持 %v", exmisc.SRed(kv))
+		klog.Infof("目前仅支持如下版本: ")
 		for _, kv := range kvs {
-			logger.Slog.Infof("%v", exmisc.SGreen(kv))
+			klog.Infof("%v", exmisc.SGreen(kv))
 		}
-		logger.Slog.Error("其他大版本支持敬请期待")
+		klog.Infof("其他大版本支持敬请期待")
 		os.Exit(0)
+		return
 	}
-	logger.Slog.Debugf("开始安装: %v", exmisc.SGreen(kv))
+	klog.Infof("开始安装: %v", exmisc.SGreen(kv))
 }
 
 func k8sfunc(cmd *cobra.Command, args []string) {
@@ -174,10 +175,14 @@ func k8sjoinfunc(cmd *cobra.Command, args []string) {
 func k8sschedulefunc(cmd *cobra.Command, args []string) {
 	runschedule := "kubectl taint nodes --all node-role.kubernetes.io/master-"
 	tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", extime.NowUnix())
-	exfile.WriteFile(tempfile, runschedule)
+	err := exfile.WriteFile(tempfile, runschedule)
+	if err != nil {
+		klog.Errorf("write file %v, err: %v", tempfile, err)
+		os.Exit(-1)
+	}
 	if klocal {
 		common.RunCmd("/bin/bash", tempfile)
 	} else {
-		logger.Slog.Warnf("请在master节点执行.")
+		klog.Infof("请在master节点执行.")
 	}
 }

@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/helm"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exmisc"
+	"k8s.io/klog/v2"
 	"os"
 )
 
@@ -80,7 +80,7 @@ func helminitfunc(cmd *cobra.Command, args []string) {
 
 func helmfunc(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
-		logger.Slog.Error("参数不全, 命令类似: ergo helm nginx-ingress-controller")
+		klog.Error("参数不全, 命令类似: ergo helm nginx-ingress-controller")
 		os.Exit(-1)
 	}
 	helm.HelmInstall(SSHConfig, ip, args[0], RunLocal, isuninstall, isgithub)
