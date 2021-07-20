@@ -45,7 +45,7 @@ func NewK8sCommand() *cobra.Command {
 	k8s.PersistentFlags().StringSliceVar(&km, "km", []string{}, "k8s master")
 	k8s.PersistentFlags().StringSliceVar(&kw, "kw", []string{}, "k8s worker")
 	k8s.PersistentFlags().StringVar(&kpass, "kpass", "", "k8s节点密码")
-	k8s.PersistentFlags().StringVar(&kv, "kv", "1.18.15", "k8s版本")
+	k8s.PersistentFlags().StringVar(&kv, "kv", "1.18.20", "k8s版本")
 	return k8s
 }
 
@@ -83,7 +83,7 @@ func NewK8sMasterSchedule() *cobra.Command {
 }
 
 func k8spre(cmd *cobra.Command, args []string) {
-	kvs := []string{"1.18.16"}
+	kvs := []string{"1.18.20"}
 	if !convert.StringArrayContains(kvs, kv) {
 		klog.Infof("暂不支持 %v", exmisc.SRed(kv))
 		klog.Infof("目前仅支持如下版本: ")
