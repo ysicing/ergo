@@ -83,7 +83,7 @@ func NewK8sMasterSchedule() *cobra.Command {
 }
 
 func k8spre(cmd *cobra.Command, args []string) {
-	kvs := []string{"1.18.15"}
+	kvs := []string{"1.18.16"}
 	if !convert.StringArrayContains(kvs, kv) {
 		klog.Infof("暂不支持 %v", exmisc.SRed(kv))
 		klog.Infof("目前仅支持如下版本: ")

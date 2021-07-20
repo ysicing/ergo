@@ -10,7 +10,7 @@ mkdir /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "registry-mirrors": ["https://dyucrs4l.mirror.aliyuncs.com"],
-  "bip": "172.30.42.1/16",
+  "bip": "169.254.123.1/24",
   "max-concurrent-downloads": 10,
   "log-driver": "json-file",
   "log-level": "warn",
@@ -28,6 +28,7 @@ systemctl restart docker
 docker info -f "{{json .ServerVersion }}"
 docker pull registry.cn-beijing.aliyuncs.com/k7scn/tools
 docker run --rm -v /usr/local/bin:/sysdir registry.cn-beijing.aliyuncs.com/k7scn/tools tar zxf /pkg.tgz -C /sysdir
+# 腾讯云使用bip有问题 169.254.123.1/24, 请使用172.30.42.1/16
 `
 
 const mysql = `
@@ -204,9 +205,9 @@ const goscript = `
 go::install(){
     pushd /tmp
     # 下载
-    wget https://dl.google.com/go/go1.15.10.linux-amd64.tar.gz
+    wget https://dl.google.com/go/go1.16.6.linux-amd64.tar.gz
     # 解压
-    tar -C /usr/local -xzf go1.15.10.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.16.6.linux-amd64.tar.gz
     popd
 }
 
@@ -239,11 +240,11 @@ set -e
 dl(){
     pushd /tmp
     # 下载
-    wget https://github.com/prometheus/node_exporter/releases/download/v1.1.2/node_exporter-1.1.2.linux-amd64.tar.gz
+	wget https://github.com/prometheus/node_exporter/releases/download/v1.2.0/node_exporter-1.2.0.linux-amd64.tar.gz
     # 解压
-    tar -xzf node_exporter-1.1.2.linux-amd64.tar.gz
-	rm -rf node_exporter-1.1.2.linux-amd64.tar.gz
-	mv node_exporter-1.1.2.linux-amd64/node_exporter /usr/local/bin/
+    tar -xzf node_exporter-1.2.0.linux-amd64.tar.gz
+	rm -rf node_exporter-1.2.0.linux-amd64.tar.gz
+	mv node_exporter-1.2.0.linux-amd64/node_exporter /usr/local/bin/
 	chmod +x /usr/local/bin/node_exporter
     popd
 }
