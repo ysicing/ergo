@@ -33,11 +33,7 @@ func GetIpPre(ip string) string {
 
 func WhichCmd(name string) bool {
 	cmd := exec.Command("which", name)
-	err := cmd.Run()
-	if err != nil {
-		return false
-	}
-	return true
+	return cmd.Run() == nil
 }
 
 func GetTotalMem() string {

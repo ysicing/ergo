@@ -64,7 +64,7 @@ func initConfig() {
 	viper.SetConfigFile(globalFlags.CfgFile)
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {
-		klog.Infof("Using config file:", exmisc.SGreen(viper.ConfigFileUsed()))
+		klog.Infof("Using config file: %v", exmisc.SGreen(viper.ConfigFileUsed()))
 	}
 }
 

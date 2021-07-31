@@ -37,7 +37,7 @@ func getpackagessh(packagename string) (string, error) {
 	case "node-exporter":
 		return nodeexpoter, nil
 	default:
-		return "", fmt.Errorf("不支持", packagename)
+		return "", fmt.Errorf("不支持: %v", packagename)
 	}
 }
 

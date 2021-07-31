@@ -4,7 +4,6 @@
 package helm
 
 import (
-	"errors"
 	"fmt"
 	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ext/sshutil"
@@ -97,7 +96,7 @@ func gethelm(packagename string, uninstall ...bool) (string, error) {
 		}
 		return cm, nil
 	default:
-		return "", errors.New(fmt.Sprintf("%v 不支持哟", exmisc.SRed(packagename)))
+		return "", fmt.Errorf("%v 不支持哟", exmisc.SRed(packagename))
 	}
 }
 

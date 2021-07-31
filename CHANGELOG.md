@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v1.0.19
+  - vm 升级内核默认安装`wireguard`
+
 - v1.0.18
   - k8s升级到1.18.20
   - go升级到1.16.x

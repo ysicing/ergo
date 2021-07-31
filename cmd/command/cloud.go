@@ -63,16 +63,14 @@ func dnsshow() *cobra.Command {
 					skey = args[1]
 				}
 				res := alidns.DomainRecords(args[0], skey)
-				if res != nil {
-					for _, record := range res {
-						if record.Type == "MX" {
-							continue
-						}
-						if record.Status == "ENABLE" {
-							klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SGreen("*"))
-						} else {
-							klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SRed("x"))
-						}
+				for _, record := range res {
+					if record.Type == "MX" {
+						continue
+					}
+					if record.Status == "ENABLE" {
+						klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SGreen("*"))
+					} else {
+						klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SRed("x"))
 					}
 				}
 			} else {

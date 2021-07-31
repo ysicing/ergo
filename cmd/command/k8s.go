@@ -28,7 +28,7 @@ var (
 	kakd   bool
 )
 
-// NewK8sCommand() helm of ergo
+// NewK8sCommand helm of ergo
 func NewK8sCommand() *cobra.Command {
 	k8s := &cobra.Command{
 		Use:   "k8s",
@@ -49,7 +49,7 @@ func NewK8sCommand() *cobra.Command {
 	return k8s
 }
 
-// NewK8sInitCommand() k8s init of ergo
+// NewK8sInitCommand k8s init of ergo
 func NewK8sInitCommand() *cobra.Command {
 	k8sinit := &cobra.Command{
 		Use:    "init",
@@ -62,7 +62,7 @@ func NewK8sInitCommand() *cobra.Command {
 	return k8sinit
 }
 
-// NewK8sJoinCommand() k8s init of ergo
+// NewK8sJoinCommand k8s init of ergo
 func NewK8sJoinCommand() *cobra.Command {
 	k8sjoin := &cobra.Command{
 		Use:    "join",

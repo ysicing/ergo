@@ -33,7 +33,7 @@ apt update
 
 apt dist-upgrade -y
 
-apt install open-iscsi -y
+apt install open-iscsi wireguard -y
 
 systemctl enable --now iscsid
 
