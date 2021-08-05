@@ -6,7 +6,6 @@ package vm
 import (
 	"fmt"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/extime"
@@ -53,7 +52,7 @@ func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	err := ssh.CmdAsync(ip, UpgradeCore)
 	if err != nil {
-		logger.Slog.Fatal(ip, err.Error())
+		klog.Fatal(ip, err.Error())
 	}
 	for i := 0; i <= 10; i++ {
 		if RunWait(ssh, ip) {

@@ -7,7 +7,6 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/codegen"
-	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/exfile"
 	"k8s.io/klog/v2"
 	"strings"
@@ -73,7 +72,7 @@ func codegenv1(cmd *cobra.Command, args []string) {
 	klog.Infof("Start downloading the template...")
 	err := codegen.Clone(dir, name, branch, mirror)
 	if err != nil {
-		logger.Slog.Fatal(err)
+		klog.Fatal(err)
 		return
 	}
 	klog.Infof("Init Done: %s", dir)

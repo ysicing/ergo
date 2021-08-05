@@ -61,7 +61,6 @@ func SysCmpOk(a, b, c string) bool {
 
 //RunCmd is exec on os ,no return
 func RunCmd(name string, arg ...string) error {
-	// logger.Slog.Debug(name, arg)
 	cmd := exec.Command(name, arg[:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
