@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/cloud/dns"
+	ecsapi "github.com/ysicing/ergo/pkg/cloud/ecs"
+	lighthouseapi "github.com/ysicing/ergo/pkg/cloud/lighthouse"
 	"github.com/ysicing/ext/utils/exmisc"
 	"k8s.io/klog/v2"
 	"os"
@@ -21,6 +23,7 @@ var (
 	domain   string
 	dnstype  string
 	value    string
+	vmid string
 )
 
 // NewCloudCommand 云服务商支持
@@ -29,12 +32,167 @@ func NewCloudCommand() *cobra.Command {
 		Use:   "cloud",
 		Short: "云服务商支持",
 	}
-	cloud.AddCommand(NewCloudDns())
+	cloud.AddCommand(NewCloudVM(), NewCloudLighthouse(), NewCloudDns())
 	cloud.PersistentFlags().StringVar(&provider, "p", "ali", "云服务商ali, qcloud")
 	cloud.PersistentFlags().StringVar(&region, "region", "", "数据中心")
 	cloud.PersistentFlags().StringVar(&key, "key", "", "api key")
 	cloud.PersistentFlags().StringVar(&secret, "secret", "", "api secret")
 	return cloud
+}
+
+func NewCloudVM() *cobra.Command {
+	vm := &cobra.Command{
+		Use: "vm",
+		Short: "vm操作",
+		Long: "ECS,CVM",
+	}
+	vm.AddCommand(vmlist(), vmreset())
+	return vm
+}
+
+func vmlist() *cobra.Command {
+	vmlist := &cobra.Command{
+		Use:   "list",
+		Short: "列出机器",
+		Run: func(cmd *cobra.Command, args []string) {
+			if provider == "ali" || provider == "aliyun" {
+				ecs := new(ecsapi.ECS)
+				if err := ecs.List(); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+			if provider == "tx" || provider == "qcloud" {
+				cvm := ecsapi.CVM{
+					Region: region,
+					SecretKey: secret,
+					SecretID: key,
+				}
+				if err := cvm.List(); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+		},
+	}
+	return vmlist
+}
+
+func vmreset() *cobra.Command {
+	vmlist := &cobra.Command{
+		Use:   "reset",
+		Short: "重装系统",
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if len(vmid) == 0 {
+				fmt.Println("vmid不允许为空")
+				os.Exit(-1)
+			}
+		},
+		Run: func(cmd *cobra.Command, args []string) {
+			if provider == "ali" || provider == "aliyun" {
+				ecs := new(ecsapi.ECS)
+				if err := ecs.Reset(); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+			if provider == "tx" || provider == "qcloud" {
+				cvm := ecsapi.CVM{
+					Region: region,
+					SecretKey: secret,
+					SecretID: key,
+				}
+				if err := cvm.Reset(vmid); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+		},
+	}
+	vmlist.PersistentFlags().StringVar(&vmid, "vmid", "", "机器ip")
+	return vmlist
+}
+
+func NewCloudLighthouse() *cobra.Command {
+	lighthouse := &cobra.Command{
+		Use: "lighthouse",
+		Aliases: []string{"vmlite", "qlvm"},
+		Short: "轻量操作",
+		Long: "Lighthouse",
+	}
+	lighthouse.AddCommand(lighthouselist(), lighthousereset(), lighthousebind())
+	return lighthouse
+}
+
+
+func lighthouselist() *cobra.Command {
+	vmlist := &cobra.Command{
+		Use:   "list",
+		Short: "列出机器",
+		Run: func(cmd *cobra.Command, args []string) {
+			if provider == "tx" || provider == "qcloud" {
+				lighthouse := lighthouseapi.Lighthouse{
+					Region: region,
+					SecretKey: secret,
+					SecretID: key,
+				}
+				if err := lighthouse.List(); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+		},
+	}
+	return vmlist
+}
+
+func lighthousereset() *cobra.Command {
+	lighthouselist := &cobra.Command{
+		Use:   "reset",
+		Short: "重装系统",
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if len(vmid) == 0 {
+				fmt.Println("vmid不允许为空")
+				os.Exit(-1)
+			}
+		},
+		Run: func(cmd *cobra.Command, args []string) {
+			if provider == "tx" || provider == "qcloud" {
+				lighthouse := lighthouseapi.Lighthouse{
+					Region: region,
+					SecretKey: secret,
+					SecretID: key,
+				}
+				if err := lighthouse.Reset(vmid); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+		},
+	}
+	lighthouselist.PersistentFlags().StringVar(&vmid, "vmid", "", "机器ip")
+	return lighthouselist
+}
+
+func lighthousebind() *cobra.Command {
+	lighthouselist := &cobra.Command{
+		Use:   "bind",
+		Short: "绑定密钥",
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if len(vmid) == 0 {
+				fmt.Println("vmid不允许为空")
+				os.Exit(-1)
+			}
+		},
+		Run: func(cmd *cobra.Command, args []string) {
+			if provider == "tx" || provider == "qcloud" {
+				lighthouse := lighthouseapi.Lighthouse{
+					Region: region,
+					SecretKey: secret,
+					SecretID: key,
+				}
+				if err := lighthouse.BindKey(vmid); err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+		},
+	}
+	lighthouselist.PersistentFlags().StringVar(&vmid, "vmid", "", "机器ip")
+	return lighthouselist
 }
 
 func NewCloudDns() *cobra.Command {
