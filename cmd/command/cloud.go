@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/cloud/dns"
+	ecsapi "github.com/ysicing/ergo/pkg/cloud/ecs"
 	"github.com/ysicing/ext/utils/exmisc"
 	"k8s.io/klog/v2"
 	"os"
@@ -29,12 +30,44 @@ func NewCloudCommand() *cobra.Command {
 		Use:   "cloud",
 		Short: "云服务商支持",
 	}
-	cloud.AddCommand(NewCloudDns())
+	cloud.AddCommand(NewCloudVM(), NewCloudDns())
 	cloud.PersistentFlags().StringVar(&provider, "p", "ali", "云服务商ali, qcloud")
 	cloud.PersistentFlags().StringVar(&region, "region", "", "数据中心")
 	cloud.PersistentFlags().StringVar(&key, "key", "", "api key")
 	cloud.PersistentFlags().StringVar(&secret, "secret", "", "api secret")
 	return cloud
+}
+
+func NewCloudVM() *cobra.Command {
+	vm := &cobra.Command{
+		Use: "vm",
+		Short: "vm操作",
+		Long: "ECS,CVM,轻量等",
+	}
+	vm.AddCommand(vmlist())
+	return vm
+}
+
+func vmlist() *cobra.Command {
+	dnsshow := &cobra.Command{
+		Use:   "list",
+		Short: "列出机器",
+		Run: func(cmd *cobra.Command, args []string) {
+			if provider == "ali" || provider == "aliyun" {
+				ecs := new(ecsapi.ECS)
+				ecs.List()
+			}
+			if provider == "tx" || provider == "qcloud" {
+				cvm := ecsapi.CVM{
+					Region: region,
+					SecretKey: secret,
+					SecretID: key,
+				}
+				cvm.List()
+			}
+		},
+	}
+	return dnsshow
 }
 
 func NewCloudDns() *cobra.Command {

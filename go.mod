@@ -15,6 +15,8 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.222 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.222 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/ysicing/ext v0.0.0-20201215110233-f154cb6815c6
 	k8s.io/klog/v2 v2.9.0 // indirect
