@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v1.0.22
+  - 优化vm init
+
 - v1.0.21
   - 优化vm init
 

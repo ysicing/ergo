@@ -106,6 +106,9 @@ EOF
 
 # ulimit -SHn 65535
 
+# 2021.08.06 禁用腾讯云默认开启ipv6
+sed -i '/^net.ipv6.conf/ s/^\(.*\)$/# \1/g'  /etc/sysctl.conf
+
 cat > /root/.bashrc <<EOF
 PS1='\${debian_chroot:+(\$debian_chroot)}\[\033[01;32m\]\u@\[\033[00m\]\[\033[01;31m\]\H\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 export LS_OPTIONS='--color=auto'
