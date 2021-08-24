@@ -5,16 +5,16 @@ package command
 
 import (
 	"fmt"
+	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/exstr"
+	"github.com/ergoapi/util/file"
 	"github.com/koding/vagrantutil"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ergo/vm"
-	"github.com/ysicing/ext/utils/convert"
-	"github.com/ysicing/ext/utils/exfile"
-	"github.com/ysicing/ext/utils/exmisc"
-	"k8s.io/klog/v2"
 	"os"
 	"strings"
 	"sync"
@@ -93,7 +93,7 @@ func vmupcorefunc(cmd *cobra.Command, args []string) {
 		vm.RunLocalShell("upcore")
 		return
 	}
-	klog.V(5).Info(SSHConfig, IPS)
+	logrus.Debug(SSHConfig, IPS)
 	var wg sync.WaitGroup
 	for _, ip := range IPS {
 		wg.Add(1)
@@ -103,26 +103,26 @@ func vmupcorefunc(cmd *cobra.Command, args []string) {
 }
 
 func vmnewprecheckfunc(cmd *cobra.Command, args []string) {
-	klog.Infof("%v", exmisc.SGreen("check system res"))
+	logrus.Infof("%v", color.SGreen("check system res"))
 	// CPU
 	cputotal, _ := cpu.Counts(true)
 	if int64(cputotal) <= vmCpu*vmInstance {
-		klog.Error(exmisc.SRed("CPU资源不够"), " 调整CPU大小或者副本数")
-		os.Exit(-1)
+		logrus.Error(color.SRed("CPU资源不够"), " 调整CPU大小或者副本数")
+		os.Exit(0)
 	}
 	// mem
 	memtotal, _ := mem.VirtualMemory()
 	if memtotal.Total <= uint64(vmMem*vmInstance*1024*1024) {
-		klog.Error(exmisc.SRed("内存资源不够"), "请调整内存大小或者副本数")
+		logrus.Error(color.SRed("内存资源不够"), "请调整内存大小或者副本数")
 		os.Exit(-1)
 	}
-	klog.Infof("check system res: %v", exmisc.SGreen("pass"))
-	klog.Infof("%v", exmisc.SGreen("check system tools"))
+	logrus.Infof("check system res: %v", color.SGreen("pass"))
+	logrus.Infof("%v", color.SGreen("check system tools"))
 	if !common.WhichCmd("vagrant") || !common.WhichCmd("VirtualBoxVM") {
-		klog.Error(exmisc.SRed("vagrant"), "或", exmisc.SRed("VirtualBox"), "未安装，请先安装")
+		logrus.Error(color.SRed("vagrant"), "或", color.SRed("VirtualBox"), "未安装，请先安装")
 		os.Exit(-1)
 	}
-	klog.Infof("check system tools: %v", exmisc.SGreen("pass"))
+	logrus.Infof("check system tools: %v", color.SGreen("pass"))
 }
 
 func vmnewfunc(cmd *cobra.Command, args []string) {
@@ -130,21 +130,21 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 	vmPath = common.GetPath(vmPath)
 	vgfile := common.GetPath(vmPath + "/Vagrantfile")
 
-	klog.Infof("cpu: %v, mem: %v, 实例: %v, ip段: %v, Vagrantfile: %v", vmCpu, vmMem, vmInstance, vmIP, vgfile)
+	logrus.Infof("cpu: %v, mem: %v, 实例: %v, ip段: %v, Vagrantfile: %v", vmCpu, vmMem, vmInstance, vmIP, vgfile)
 	vagrant, _ := vagrantutil.NewVagrant(vmPath)
-	if exfile.CheckFileExistsv2(vgfile) {
+	if file.CheckFileExists(vgfile) {
 		var rewritefile string
-		klog.Info("vagrantfile exist, Are you sure you want to rewrite vagrantfile ? [y/N]")
+		logrus.Info("vagrantfile exist, Are you sure you want to rewrite vagrantfile ? [y/N]")
 		fmt.Scanln(&rewritefile)
 		if strings.ToLower(rewritefile) == "y" || strings.ToLower(rewritefile) == "yes" {
-			klog.Info("开始执行覆盖")
+			logrus.Debug("开始执行覆盖")
 			status, _ := vagrant.Status()
 			if status.String() == "Running" {
-				klog.Info("Destroy VM")
+				logrus.Info("Destroy VM")
 				output, err := vagrant.Destroy()
 				if err != nil {
-					klog.Errorf("Destroy VM err: %v", err.Error())
-					os.Exit(-1)
+					logrus.Errorf("Destroy VM err: %v", err.Error())
+					os.Exit(0)
 				}
 				for line := range output {
 					fmt.Println(line.Line)
@@ -152,48 +152,48 @@ func vmnewfunc(cmd *cobra.Command, args []string) {
 				}
 			}
 			vagrantfile := vm.NewVM(vm.MetaData{
-				Cpus:     convert.Int642Str(vmCpu),
-				Memory:   convert.Int642Str(vmMem),
-				Instance: convert.Int642Str(vmInstance),
+				Cpus:     exstr.Int642Str(vmCpu),
+				Memory:   exstr.Int642Str(vmMem),
+				Instance: exstr.Int642Str(vmInstance),
 				IP:       vmIP,
 			}).Template()
-			err := exfile.WriteFile(vgfile, vagrantfile)
+			err := file.Writefile(vgfile, vagrantfile)
 			if err != nil {
-				klog.Errorf("write file %v, err: %v", vgfile, err)
-				os.Exit(-1)
+				logrus.Errorf("write file %v, err: %v", vgfile, err)
+				os.Exit(0)
 			}
 		} else {
-			klog.Info("跳过此流程")
+			logrus.Debug("跳过此流程")
 		}
 	} else {
 		vagrantfile := vm.NewVM(vm.MetaData{
-			Cpus:     convert.Int642Str(vmCpu),
-			Memory:   convert.Int642Str(vmMem),
-			Instance: convert.Int642Str(vmInstance),
+			Cpus:     exstr.Int642Str(vmCpu),
+			Memory:   exstr.Int642Str(vmMem),
+			Instance: exstr.Int642Str(vmInstance),
 			IP:       vmIP,
 		}).Template()
-		err := exfile.WriteFile(vgfile, vagrantfile)
+		err := file.Writefile(vgfile, vagrantfile)
 		if err != nil {
-			klog.Errorf("write file %v, err: %v", vgfile, err)
-			os.Exit(-1)
+			logrus.Errorf("write file %v, err: %v", vgfile, err)
+			os.Exit(0)
 		}
 	}
 
 	// step 02 存在，启动
-	klog.Infof("%v", exmisc.SGreen("StartUP VM"))
+	logrus.Infof("%v", color.SGreen("StartUP VM"))
 	output, err := vagrant.Up()
 	for line := range output {
 		fmt.Println(line.Line)
 	}
 	if err != nil {
 		// vagrant.Destroy()
-		klog.Error("启动虚拟机失败，清理失败数据")
-		os.Exit(-1)
+		logrus.Error("启动虚拟机失败，清理失败数据")
+		os.Exit(0)
 	}
-	klog.Infof("default user/password: %v", exmisc.SGreen("root/vagrant"))
-	klog.Infof("销毁方式: cd %v, vagrant destroy -f ", vmPath)
+	logrus.Infof("default user/password: %v", color.SGreen("root/vagrant"))
+	logrus.Infof("销毁方式: cd %v, vagrant destroy -f ", vmPath)
 	if vmInstance == 1 {
-		klog.Infof("销毁方式: cd %v, vagrant ssh", vmPath)
+		logrus.Infof("销毁方式: cd %v, vagrant ssh", vmPath)
 	}
 }
 
@@ -202,7 +202,7 @@ func vminitfunc(cmd *cobra.Command, args []string) {
 		vm.RunLocalShell("init")
 		return
 	}
-	klog.V(5).Info(SSHConfig, IPS)
+	logrus.Debug(SSHConfig, IPS)
 	var wg sync.WaitGroup
 	for _, ip := range IPS {
 		wg.Add(1)

@@ -5,14 +5,15 @@ package command
 
 import (
 	"fmt"
+	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/exstr"
+	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/ztime"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/helm"
 	"github.com/ysicing/ergo/k8s"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/utils/convert"
-	"github.com/ysicing/ext/utils/exfile"
-	"github.com/ysicing/ext/utils/exmisc"
-	"github.com/ysicing/ext/utils/extime"
 	"k8s.io/klog/v2"
 	"os"
 )
@@ -84,17 +85,17 @@ func NewK8sMasterSchedule() *cobra.Command {
 
 func k8spre(cmd *cobra.Command, args []string) {
 	kvs := []string{"1.18.20"}
-	if !convert.StringArrayContains(kvs, kv) {
-		klog.Infof("暂不支持 %v", exmisc.SRed(kv))
-		klog.Infof("目前仅支持如下版本: ")
+	if !exstr.StringArrayContains(kvs, kv) {
+		klog.Errorf("暂不支持 %v", color.SRed(kv))
+		klog.Info("目前仅支持如下版本: ")
 		for _, kv := range kvs {
-			klog.Infof("%v", exmisc.SGreen(kv))
+			logrus.Debugf("%v", color.SGreen(kv))
 		}
-		klog.Infof("其他大版本支持敬请期待")
+		logrus.Infof("其他大版本支持敬请期待")
 		os.Exit(0)
 		return
 	}
-	klog.Infof("开始安装: %v", exmisc.SGreen(kv))
+	logrus.Infof("开始安装: %v", color.SGreen(kv))
 }
 
 func k8sfunc(cmd *cobra.Command, args []string) {
@@ -174,15 +175,15 @@ func k8sjoinfunc(cmd *cobra.Command, args []string) {
 
 func k8sschedulefunc(cmd *cobra.Command, args []string) {
 	runschedule := "kubectl taint nodes --all node-role.kubernetes.io/master-"
-	tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", extime.NowUnix())
-	err := exfile.WriteFile(tempfile, runschedule)
+	tempfile := fmt.Sprintf("/tmp/%v.k8s.tmp.sh", ztime.NowUnix())
+	err := file.Writefile(tempfile, runschedule)
 	if err != nil {
-		klog.Errorf("write file %v, err: %v", tempfile, err)
-		os.Exit(-1)
+		logrus.Errorf("write file %v, err: %v", tempfile, err)
+		os.Exit(0)
 	}
 	if klocal {
 		common.RunCmd("/bin/bash", tempfile)
 	} else {
-		klog.Infof("请在master节点执行.")
+		logrus.Infof("请在master节点执行.")
 	}
 }

@@ -4,11 +4,12 @@
 package command
 
 import (
+	"github.com/ergoapi/util/exstr"
 	"github.com/manifoldco/promptui"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/ops/base"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/utils/convert"
 	"k8s.io/klog/v2"
 	"os"
 	"sync"
@@ -24,8 +25,6 @@ func NewOPSCommand() *cobra.Command {
 	// 系统
 	ops.AddCommand(opsinstall())
 	ops.AddCommand(opsexec())
-	// 网络
-	ops.AddCommand(netmtr())
 	return ops
 }
 
@@ -98,19 +97,19 @@ func opsexecfunc(cmd *cobra.Command, args []string) {
 func opspreinstallfunc(cmd *cobra.Command, args []string) {
 	if len(args) != 0 {
 		skipkey := []string{"docker", "go", "golang", "w", "node-exporter"}
-		if !convert.StringArrayContains(skipkey, args[0]) {
+		if !exstr.StringArrayContains(skipkey, args[0]) {
 			// check docker
 			var num int
 			if !RunLocal {
 				for _, ip := range IPS {
 					if !base.CheckCmd(SSHConfig, ip, "docker") {
-						klog.Error("%v 需要安装docker", ip)
+						logrus.Errorf("%v 需要安装docker", ip)
 						num++
 					}
 				}
 			} else {
 				if err := common.RunCmd("which", "docker"); err != nil {
-					klog.Error("本机", " 需要安装docker")
+					logrus.Error("本机", " 需要安装docker")
 					num++
 				}
 			}
@@ -119,21 +118,4 @@ func opspreinstallfunc(cmd *cobra.Command, args []string) {
 			}
 		}
 	}
-}
-
-func netmtr() *cobra.Command {
-	nt := &cobra.Command{
-		Use:   "mtr",
-		Short: "mtr",
-		PreRun: func(cmd *cobra.Command, args []string) {
-			if len(target) == 0 {
-				target = "www.baidu.com"
-			}
-		},
-		Run: func(cmd *cobra.Command, args []string) {
-			klog.Info(target)
-		},
-	}
-	nt.Flags().StringVar(&target, "t", "", "目标ip或者域名")
-	return nt
 }

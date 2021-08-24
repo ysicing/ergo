@@ -4,8 +4,8 @@
 package config
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/ysicing/ext/utils/exfile"
-	"k8s.io/klog/v2"
 	"sigs.k8s.io/yaml"
 )
 
@@ -26,6 +26,6 @@ func WriteDefaultConfig(path string) {
 	cfg, _ := yaml.Marshal(exampleConfig())
 	err := exfile.WriteFile(path, string(cfg))
 	if err != nil {
-		klog.Errorf("write default config %v, err: %v", path, err)
+		logrus.Errorf("write default config %v, err: %v", path, err)
 	}
 }

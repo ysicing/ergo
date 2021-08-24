@@ -6,14 +6,14 @@ package cmd
 import (
 	"fmt"
 	"github.com/mitchellh/go-homedir"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/ysicing/ergo/cmd/command"
 	"github.com/ysicing/ergo/config"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/utils/exfile"
-	"github.com/ysicing/ext/utils/exmisc"
-	"k8s.io/klog/v2"
+	"github.com/ergoapi/util/file"
+	"os"
 )
 
 const (
@@ -34,7 +34,8 @@ var (
 )
 
 func init() {
-	klog.InitFlags(nil)
+	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.DebugLevel)
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/ergo/config.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&globalFlags.Debug, "debug", true, "enable client-side debug logging")
@@ -58,17 +59,16 @@ func initConfig() {
 		common.CheckErr(err)
 		globalFlags.CfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/ergo", "config.yaml")
 	}
-	if !exfile.CheckFileExistsv2(globalFlags.CfgFile) {
+	if !file.CheckFileExists(globalFlags.CfgFile) {
 		config.WriteDefaultConfig(globalFlags.CfgFile)
 	}
 	viper.SetConfigFile(globalFlags.CfgFile)
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {
-		klog.Infof("Using config file: %v", exmisc.SGreen(viper.ConfigFileUsed()))
+		logrus.Infof("Using config file: %v", viper.ConfigFileUsed())
 	}
 }
 
 func Execute() error {
-	// rootCmd.SetUsageFunc(usageFunc)
 	return rootCmd.Execute()
 }

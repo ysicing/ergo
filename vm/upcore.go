@@ -5,10 +5,11 @@ package vm
 
 import (
 	"fmt"
+	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/ztime"
+	"github.com/sirupsen/logrus"
 	"github.com/ysicing/ergo/utils/common"
 	"github.com/ysicing/ext/sshutil"
-	"github.com/ysicing/ext/utils/exfile"
-	"github.com/ysicing/ext/utils/extime"
 	"k8s.io/klog/v2"
 	"os"
 	"sync"
@@ -64,7 +65,7 @@ func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 func RunWait(ssh sshutil.SSH, ip string) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
-		klog.V(5).Infof("%v waiting for reboot", ip)
+		logrus.Debugf("%v waiting for reboot", ip)
 		time.Sleep(10 * time.Second)
 		return false
 	}
@@ -81,14 +82,14 @@ func RunLocalShell(runtype string) {
 	default:
 		shelldata = "uname -a"
 	}
-	tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", runtype, extime.NowUnix())
-	err := exfile.WriteFile(tempfile, shelldata)
+	tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", runtype, ztime.NowUnix())
+	err := file.Writefile(tempfile, shelldata)
 	if err != nil {
-		klog.Errorf("write file %v, err: %v", tempfile, err)
-		os.Exit(-1)
+		logrus.Errorf("write file %v, err: %v", tempfile, err)
+		os.Exit(0)
 	}
 	if err := common.RunCmd("/bin/bash", tempfile); err != nil {
-		fmt.Println(err.Error())
+		logrus.Errorf("run shell err: %v", err)
 		return
 	}
 }

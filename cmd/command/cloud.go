@@ -5,12 +5,12 @@ package command
 
 import (
 	"fmt"
+	"github.com/ergoapi/util/color"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/cloud/dns"
 	ecsapi "github.com/ysicing/ergo/pkg/cloud/ecs"
 	lighthouseapi "github.com/ysicing/ergo/pkg/cloud/lighthouse"
-	"github.com/ysicing/ext/utils/exmisc"
-	"k8s.io/klog/v2"
 	"os"
 	"strings"
 )
@@ -226,13 +226,13 @@ func dnsshow() *cobra.Command {
 						continue
 					}
 					if record.Status == "ENABLE" {
-						klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SGreen("*"))
+						logrus.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SGreen("*"))
 					} else {
-						klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SRed("x"))
+						logrus.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SRed("x"))
 					}
 				}
 			} else {
-				fmt.Println("暂不支持")
+				logrus.Error("暂不支持")
 				os.Exit(0)
 			}
 		},
@@ -246,8 +246,8 @@ func dnsupdate() *cobra.Command {
 		Short: "更新解析,不存在则新加",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if len(domain) == 0 || len(strings.Split(domain, ".")) <= 2 {
-				fmt.Println("域名不允许为空或者不支持二级域如 ysicing.net ")
-				os.Exit(-1)
+				logrus.Error("域名不允许为空或者不支持二级域如 ysicing.net ")
+				os.Exit(0)
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
@@ -261,7 +261,7 @@ func dnsupdate() *cobra.Command {
 					key = "A"
 				}
 				if res != nil {
-					fmt.Println("已存在记录")
+					logrus.Debug("已存在记录")
 					for _, record := range res {
 						if record.Type == "MX" {
 							continue
@@ -269,7 +269,7 @@ func dnsupdate() *cobra.Command {
 						if record.RR == dpre {
 							err := alidns.UpdateDomainRecord(record.RecordID, record.RR, key, value)
 							if err == nil {
-								fmt.Println("更新成功")
+								logrus.Info("更新成功")
 							}
 						}
 					}
@@ -277,10 +277,10 @@ func dnsupdate() *cobra.Command {
 				}
 				err := alidns.AddDomainRecord(dd, dpre, key, value)
 				if err == nil {
-					fmt.Println("添加成功")
+					logrus.Info("添加成功")
 				}
 			} else {
-				fmt.Println("暂不支持")
+				logrus.Error("暂不支持")
 				os.Exit(0)
 			}
 		},

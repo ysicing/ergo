@@ -4,13 +4,13 @@
 package common
 
 import (
-	"k8s.io/klog/v2"
+	"github.com/sirupsen/logrus"
 	"os"
 )
 
 func CheckErr(err error) {
 	if err != nil {
-		klog.Errorf("err: %v", err)
+		logrus.Errorf("err: %v", err)
 		os.Exit(0)
 	}
 }

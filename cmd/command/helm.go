@@ -4,11 +4,10 @@
 package command
 
 import (
-	"fmt"
+	"github.com/ergoapi/util/color"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/helm"
-	"github.com/ysicing/ext/utils/exmisc"
-	"k8s.io/klog/v2"
 	"os"
 )
 
@@ -46,15 +45,15 @@ func NewHelmListCommand() *cobra.Command {
 		Use:   "list",
 		Short: "支持helm",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("目前支持如下: ")
+			logrus.Info("目前支持如下: ")
 			list := []string{"nginx-ingress-controller", "metallb", "cronhpa", "tkn", "metrics-server", "etcd", "kubernetes_dashboard", "cert-manager"}
 			for _, l := range list {
 				if l == "metallb" {
-					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("slb"))
+					logrus.Debug("ergo helm install ", color.SGreen(l), "or ergo helm install ", color.SGreen("slb"))
 				} else if l == "nginx-ingress-controller" {
-					fmt.Println("ergo helm install ", exmisc.SGreen(l), "or ergo helm install ", exmisc.SGreen("default-ingress"))
+					logrus.Debug("ergo helm install ", color.SGreen(l), "or ergo helm install ", color.SGreen("default-ingress"))
 				} else {
-					fmt.Println("ergo helm install ", exmisc.SGreen(l))
+					logrus.Debug("ergo helm install ", color.SGreen(l))
 				}
 			}
 		},
@@ -80,8 +79,8 @@ func helminitfunc(cmd *cobra.Command, args []string) {
 
 func helmfunc(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
-		klog.Error("参数不全, 命令类似: ergo helm nginx-ingress-controller")
-		os.Exit(-1)
+		logrus.Error("参数不全, 命令类似: ergo helm nginx-ingress-controller")
+		os.Exit(0)
 	}
 	helm.HelmInstall(SSHConfig, ip, args[0], RunLocal, isuninstall, isgithub)
 }

@@ -4,8 +4,8 @@
 package command
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"k8s.io/klog/v2"
 	"os"
 )
 
@@ -42,8 +42,8 @@ func NewComposeNew() *cobra.Command {
 		Short: "部署服务",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				klog.Errorf("请确定安装服务名")
-				os.Exit(-1)
+				logrus.Error("请确定安装服务名")
+				os.Exit(0)
 			}
 		},
 	}

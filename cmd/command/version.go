@@ -8,7 +8,7 @@ import (
 	"github.com/ysicing/ergo/version"
 )
 
-// version.ShowVersion() version of ergo
+// NewVersionCommand version of ergo
 func NewVersionCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",

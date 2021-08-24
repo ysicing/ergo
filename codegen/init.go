@@ -6,8 +6,8 @@ package codegen
 import (
 	"errors"
 	"fmt"
+	"github.com/ergoapi/util/file"
 	"github.com/sohaha/zlsgo/zshell"
-	"github.com/ysicing/ext/utils/exfile"
 )
 
 // COPY zzz https://github.com/sohaha/zzz/blob/master/cmd/init.go
@@ -44,7 +44,6 @@ func Clone(dir, name, branch string, mirror bool) (err error) {
 	if err != nil {
 		return
 	}
-	exfile.Rmdir(dir + "/.git")
-
+	file.Rmdir(dir + "/.git")
 	return
 }

@@ -6,10 +6,10 @@ package vm
 import (
 	"bytes"
 	"fmt"
+	"github.com/ergoapi/util/zos"
+	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/utils/exhash"
-	"github.com/ysicing/ext/utils/exos"
-	"github.com/ysicing/ext/utils/extime"
+	"github.com/ergoapi/util/exhash"
 	"html/template"
 )
 
@@ -31,9 +31,9 @@ func (d Debian) Template() string {
 		d.md.Instance = DefaultInstance
 	}
 	if d.md.Name == "" {
-		d.md.Name = exhash.GenMd5(extime.NowUnixString())
+		d.md.Name = exhash.MD5(ztime.NowUnixString())
 	}
-	if exos.IsMacOS() && exos.GetUserName() == "ysicing" {
+	if zos.IsMacOS() && zos.GetUserName() == "ysicing" {
 		d.md.Box = "file://builds/virtualbox-debian.10.6.1.box"
 	} else {
 		d.md.Box = DefaultBox

@@ -4,8 +4,8 @@
 package vm
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/ysicing/ext/sshutil"
-	"k8s.io/klog/v2"
 	"os"
 	"sync"
 )
@@ -127,7 +127,7 @@ func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	err := ssh.CmdAsync(ip, InitSH)
 	if err != nil {
-		klog.Errorf("ip %v, err: %v", ip, err)
-		os.Exit(-1)
+		logrus.Errorf("ip %v, err: %v", ip, err)
+		os.Exit(0)
 	}
 }

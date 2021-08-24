@@ -4,11 +4,11 @@
 package command
 
 import (
+	"github.com/ergoapi/util/file"
 	"github.com/manifoldco/promptui"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/codegen"
-	"github.com/ysicing/ext/utils/exfile"
-	"k8s.io/klog/v2"
 	"strings"
 )
 
@@ -52,7 +52,7 @@ func codegenv1(cmd *cobra.Command, args []string) {
 	}
 	dir := ""
 	if argsL > 0 {
-		dir = exfile.RealPath(args[0])
+		dir = file.RealPath(args[0])
 	} else {
 		dir = "."
 		if len(temples) >= 2 {
@@ -64,16 +64,16 @@ func codegenv1(cmd *cobra.Command, args []string) {
 			// 	}
 			// }
 		}
-		dir = exfile.RealPath(dir)
+		dir = file.RealPath(dir)
 	}
 	if name == "" {
 		return
 	}
-	klog.Infof("Start downloading the template...")
+	logrus.Infof("Start downloading the template...")
 	err := codegen.Clone(dir, name, branch, mirror)
 	if err != nil {
-		klog.Fatal(err)
+		logrus.Fatal(err)
 		return
 	}
-	klog.Infof("Init Done: %s", dir)
+	logrus.Infof("Init Done: %s", dir)
 }

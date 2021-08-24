@@ -6,9 +6,9 @@ package dns
 import (
 	"encoding/json"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/alidns"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"k8s.io/klog/v2"
-	"log"
 )
 
 type AliDns struct {
@@ -65,13 +65,13 @@ func (ali *AliDns) DomainRecords(domain string, keyword ...string) []AliDomainRe
 
 	response, err := ali.client.DescribeDomainRecords(request)
 	if err != nil {
-		log.Print(err)
+		logrus.Errorf("ali获取域名记录失败: %v",err)
 		return nil
 	}
 	var resp AliDomainRecordsResp
 	err = json.Unmarshal(response.GetHttpContentBytes(), &resp)
 	if err != nil {
-		log.Print(err)
+		logrus.Errorf("json Unmarshal 失败: %v",err)
 		return nil
 	}
 	return resp.DomainRecords.Record
@@ -86,7 +86,7 @@ func (ali *AliDns) AddDomainRecord(domain, rr, rtype, value string) error {
 	request.Value = value
 	_, err := ali.client.AddDomainRecord(request)
 	if err != nil {
-		log.Print(err)
+		logrus.Errorf("新增记录失败: %v",err)
 		return err
 	}
 	return nil
@@ -101,7 +101,7 @@ func (ali *AliDns) UpdateDomainRecord(rid, rr, rtype, value string) error {
 	request.Value = value
 	_, err := ali.client.UpdateDomainRecord(request)
 	if err != nil {
-		log.Print(err)
+		logrus.Errorf("更新记录失败: %v",err)
 		return err
 	}
 	return nil
