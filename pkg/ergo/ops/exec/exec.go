@@ -1,11 +1,14 @@
 // MIT License
 // Copyright (c) 2020 ysicing <i@ysicing.me>
 
-package base
+package exec
 
 import (
 	"fmt"
-	"github.com/ysicing/ext/sshutil"
+	"github.com/ergoapi/sshutil"
+	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 	"sync"
 )
@@ -24,4 +27,23 @@ func CheckCmd(ssh sshutil.SSH, ip string, packagename string) bool {
 		return false
 	}
 	return true
+}
+
+func ExecLocal(execcmd ...string) error {
+	var shell string
+	switch runtime.GOOS {
+	case "linux":
+		shell = "/bin/sh"
+	case "freebsd":
+		shell = "/bin/csh"
+	case "windows":
+		shell = "cmd.exe"
+	default:
+		shell = "/bin/sh"
+	}
+	cmd := exec.Command(shell)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stdout
+	cmd.Stdin = os.Stdin
+	return cmd.Run()
 }

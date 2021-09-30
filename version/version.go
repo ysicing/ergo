@@ -6,15 +6,14 @@ package version
 import (
 	"fmt"
 	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/excmd"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/logo"
-	"github.com/ergoapi/util/excmd"
 	"runtime"
 )
 
-var UsageTpl = `ergo ops 效能工具
-`
+var UsageTpl = `ergo ops 效能工具`
 
 var versionTpl = `效能工具: ergo
  Version:           %v
@@ -43,10 +42,12 @@ func PreCheckVersion() (string, error) {
 		Owner: "ysicing",
 		Repo:  "ergo",
 	}
+	// 请求api失败
 	lastag, err := pkg.LastTag()
 	if err != nil {
 		return "", err
 	}
+	// 版本判断，不一样
 	if lastag.Name != Version {
 		return lastag.Name, nil
 	}
@@ -75,7 +76,7 @@ func ShowVersion() {
 		return
 	}
 	if lastversion != "" {
-		log.Infof("当前最新版本 %v, 可以使用ergo upgrade将版本升级到最新版本", color.SGreen(lastversion))
+		log.Infof("当前最新版本 %v, 可以使用 %v 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
 	} else {
 		log.Infof("当前已经是最新版本")
 	}

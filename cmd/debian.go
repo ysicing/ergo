@@ -34,17 +34,20 @@ func NewDebianCmd(f factory.Factory) *cobra.Command {
 		Short:   "初始化debian, 升级debian内核",
 		Aliases: []string{"deb"},
 		Args:    cobra.NoArgs,
+		Version: "2.0.0",
 	}
 	init := &cobra.Command{
-		Use:   "init",
-		Short: "初始化debian或debian系环境",
+		Use:     "init",
+		Short:   "初始化debian或debian系环境",
+		Version: "2.0.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return cmd.Init(f)
 		},
 	}
 	upcore := &cobra.Command{
-		Use:   "upcore",
-		Short: "升级Debian内核",
+		Use:     "upcore",
+		Short:   "升级Debian内核",
+		Version: "2.0.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return cmd.UpCore(f)
 		},

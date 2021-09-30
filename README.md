@@ -37,14 +37,20 @@ ergo upgrade
   - [ ] 🎉lima
   - [ ] vagrant(2.x deprecated)
 - [ ] `acr`/`tcr`/`gh`镜像管理
+- [ ] ops
+  - [x] ps
+  - [x] nc
+  - [ ] net
+  - [ ] exec
 
-  
+#### 其他开源项目
 
-#### 🎉🎉 参考其他开源项目
+> 感谢以下项目
 
-- [sealos](https://github.com/fanux/sealos) `k8s基于sealos安装部分`
-- [zzz](https://github.com/sohaha/zzz) `codegen参考zzz init部分`
+- [sealos](https://github.com/fanux/sealos)
+- [zzz](https://github.com/sohaha/zzz)
 - [devspace](https://github.com/loft-sh/devspace)
+- [CDK](https://github.com/cdk-team/CDK)
 
 ## 🎉🎉 赞助商
 

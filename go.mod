@@ -3,13 +3,12 @@ module github.com/ysicing/ergo
 go 1.16
 
 require (
-	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1016
+	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/ergoapi/sshutil v0.0.2
 	github.com/ergoapi/util v0.0.7
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/go-logr/logr v1.1.0 // indirect
-	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gosuri/uitable v0.0.4
@@ -24,6 +23,7 @@ require (
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6
 	github.com/pkg/sftp v1.13.4 // indirect
 	github.com/shirou/gopsutil v2.20.9+incompatible
+	github.com/shirou/gopsutil/v3 v3.21.8
 	github.com/sirupsen/logrus v1.6.0
 	github.com/sohaha/zlsgo v0.1.65
 	github.com/spf13/cobra v1.2.1

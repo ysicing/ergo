@@ -1,14 +1,14 @@
 // MIT License
 // Copyright (c) 2020 ysicing <i@ysicing.me>
 
-package base
+package exec
 
 import (
 	"fmt"
+	"github.com/ergoapi/sshutil"
+	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/pkg/util/common"
-	"github.com/ysicing/ext/sshutil"
-	"github.com/ysicing/ext/utils/exfile"
-	"github.com/ysicing/ext/utils/extime"
 	"k8s.io/klog/v2"
 	"os"
 	"sync"
@@ -54,8 +54,8 @@ func InstallPackage(ssh sshutil.SSH, ip string, packagename string, wg *sync.Wai
 			return
 		}
 	} else {
-		tempfile := fmt.Sprintf("/tmp/%v.tmp.sh", extime.NowUnix())
-		err := exfile.WriteFile(tempfile, runsh)
+		tempfile := fmt.Sprintf("/tmp/%v.tmp.sh", ztime.NowUnix())
+		err := file.Writefile(tempfile, runsh)
 		if err != nil {
 			klog.Errorf("write file %v, err: %v", tempfile, err)
 			os.Exit(-1)
