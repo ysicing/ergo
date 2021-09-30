@@ -6,7 +6,7 @@ package command
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/helm"
+	"github.com/ysicing/ergo/pkg/ergo/helm"
 	"github.com/ysicing/ext/utils/exmisc"
 	"k8s.io/klog/v2"
 	"os"

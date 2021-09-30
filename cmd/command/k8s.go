@@ -6,9 +6,9 @@ package command
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/helm"
-	"github.com/ysicing/ergo/k8s"
-	"github.com/ysicing/ergo/utils/common"
+	"github.com/ysicing/ergo/pkg/ergo/helm"
+	"github.com/ysicing/ergo/pkg/ergo/k8s"
+	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"

@@ -6,8 +6,8 @@ package command
 import (
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/ops/base"
-	"github.com/ysicing/ergo/utils/common"
+	base2 "github.com/ysicing/ergo/pkg/ergo/ops/base"
+	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ext/utils/convert"
 	"k8s.io/klog/v2"
 	"os"
@@ -76,11 +76,11 @@ func opsinstallfunc(cmd *cobra.Command, args []string) {
 
 	if RunLocal {
 		wg.Add(1)
-		go base.InstallPackage(SSHConfig, "", intallpackage, &wg, RunLocal)
+		go base2.InstallPackage(SSHConfig, "", intallpackage, &wg, RunLocal)
 	} else {
 		for _, ip := range IPS {
 			wg.Add(1)
-			go base.InstallPackage(SSHConfig, ip, intallpackage, &wg, RunLocal)
+			go base2.InstallPackage(SSHConfig, ip, intallpackage, &wg, RunLocal)
 		}
 	}
 	wg.Wait()
@@ -90,7 +90,7 @@ func opsexecfunc(cmd *cobra.Command, args []string) {
 	var wg sync.WaitGroup
 	for _, ip := range IPS {
 		wg.Add(1)
-		base.ExecSh(SSHConfig, ip, &wg, args...)
+		base2.ExecSh(SSHConfig, ip, &wg, args...)
 	}
 	wg.Wait()
 }
@@ -103,7 +103,7 @@ func opspreinstallfunc(cmd *cobra.Command, args []string) {
 			var num int
 			if !RunLocal {
 				for _, ip := range IPS {
-					if !base.CheckCmd(SSHConfig, ip, "docker") {
+					if !base2.CheckCmd(SSHConfig, ip, "docker") {
 						klog.Error("%v 需要安装docker", ip)
 						num++
 					}

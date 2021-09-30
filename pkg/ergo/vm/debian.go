@@ -6,7 +6,7 @@ package vm
 import (
 	"bytes"
 	"fmt"
-	"github.com/ysicing/ergo/utils/common"
+	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ext/utils/exhash"
 	"github.com/ysicing/ext/utils/exos"
 	"github.com/ysicing/ext/utils/extime"

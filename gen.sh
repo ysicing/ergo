@@ -7,7 +7,7 @@ linuxsha=$(cat dist/ergo_linux_amd64.sha256sum | awk '{print $1}')
 
 cat > ergo.rb <<EOF
 class Ergo < Formula
-    desc "Devops tools 运维工具"
+    desc "Devops tools 运维工具Ergo"
     homepage "https://github.com/ysicing/ergo"
     version "${version}"
     bottle :unneeded

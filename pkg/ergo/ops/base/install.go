@@ -5,7 +5,7 @@ package base
 
 import (
 	"fmt"
-	"github.com/ysicing/ergo/utils/common"
+	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ext/sshutil"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/extime"

@@ -7,4 +7,3 @@ type ECSAction interface {
 	Reset(id string) error
 	List() error
 }
-

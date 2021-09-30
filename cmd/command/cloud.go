@@ -6,9 +6,9 @@ package command
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/pkg/cloud/dns"
-	ecsapi "github.com/ysicing/ergo/pkg/cloud/ecs"
-	lighthouseapi "github.com/ysicing/ergo/pkg/cloud/lighthouse"
+	"github.com/ysicing/ergo/pkg/ergo/cloud/dns"
+	"github.com/ysicing/ergo/pkg/ergo/cloud/ecs"
+	lighthouseapi "github.com/ysicing/ergo/pkg/ergo/cloud/lighthouse"
 	"github.com/ysicing/ext/utils/exmisc"
 	"k8s.io/klog/v2"
 	"os"
@@ -23,7 +23,7 @@ var (
 	domain   string
 	dnstype  string
 	value    string
-	vmid string
+	vmid     string
 )
 
 // NewCloudCommand 云服务商支持
@@ -42,9 +42,9 @@ func NewCloudCommand() *cobra.Command {
 
 func NewCloudVM() *cobra.Command {
 	vm := &cobra.Command{
-		Use: "vm",
+		Use:   "vm",
 		Short: "vm操作",
-		Long: "ECS,CVM",
+		Long:  "ECS,CVM",
 	}
 	vm.AddCommand(vmlist(), vmreset())
 	return vm
@@ -56,16 +56,16 @@ func vmlist() *cobra.Command {
 		Short: "列出机器",
 		Run: func(cmd *cobra.Command, args []string) {
 			if provider == "ali" || provider == "aliyun" {
-				ecs := new(ecsapi.ECS)
+				ecs := new(ecs.ECS)
 				if err := ecs.List(); err != nil {
 					fmt.Println(err.Error())
 				}
 			}
 			if provider == "tx" || provider == "qcloud" {
-				cvm := ecsapi.CVM{
-					Region: region,
+				cvm := ecs.CVM{
+					Region:    region,
 					SecretKey: secret,
-					SecretID: key,
+					SecretID:  key,
 				}
 				if err := cvm.List(); err != nil {
 					fmt.Println(err.Error())
@@ -88,16 +88,16 @@ func vmreset() *cobra.Command {
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			if provider == "ali" || provider == "aliyun" {
-				ecs := new(ecsapi.ECS)
+				ecs := new(ecs.ECS)
 				if err := ecs.Reset(); err != nil {
 					fmt.Println(err.Error())
 				}
 			}
 			if provider == "tx" || provider == "qcloud" {
-				cvm := ecsapi.CVM{
-					Region: region,
+				cvm := ecs.CVM{
+					Region:    region,
 					SecretKey: secret,
-					SecretID: key,
+					SecretID:  key,
 				}
 				if err := cvm.Reset(vmid); err != nil {
 					fmt.Println(err.Error())
@@ -111,15 +111,14 @@ func vmreset() *cobra.Command {
 
 func NewCloudLighthouse() *cobra.Command {
 	lighthouse := &cobra.Command{
-		Use: "lighthouse",
+		Use:     "lighthouse",
 		Aliases: []string{"vmlite", "qlvm"},
-		Short: "轻量操作",
-		Long: "Lighthouse",
+		Short:   "轻量操作",
+		Long:    "Lighthouse",
 	}
 	lighthouse.AddCommand(lighthouselist(), lighthousereset(), lighthousebind())
 	return lighthouse
 }
-
 
 func lighthouselist() *cobra.Command {
 	vmlist := &cobra.Command{
@@ -128,9 +127,9 @@ func lighthouselist() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if provider == "tx" || provider == "qcloud" {
 				lighthouse := lighthouseapi.Lighthouse{
-					Region: region,
+					Region:    region,
 					SecretKey: secret,
-					SecretID: key,
+					SecretID:  key,
 				}
 				if err := lighthouse.List(); err != nil {
 					fmt.Println(err.Error())
@@ -154,9 +153,9 @@ func lighthousereset() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if provider == "tx" || provider == "qcloud" {
 				lighthouse := lighthouseapi.Lighthouse{
-					Region: region,
+					Region:    region,
 					SecretKey: secret,
-					SecretID: key,
+					SecretID:  key,
 				}
 				if err := lighthouse.Reset(vmid); err != nil {
 					fmt.Println(err.Error())
@@ -181,9 +180,9 @@ func lighthousebind() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if provider == "tx" || provider == "qcloud" {
 				lighthouse := lighthouseapi.Lighthouse{
-					Region: region,
+					Region:    region,
 					SecretKey: secret,
-					SecretID: key,
+					SecretID:  key,
 				}
 				if err := lighthouse.BindKey(vmid); err != nil {
 					fmt.Println(err.Error())

@@ -14,9 +14,9 @@ import (
 )
 
 type CVM struct {
-	SecretID string
+	SecretID  string
 	SecretKey string
-	Region string
+	Region    string
 }
 
 func (c *CVM) region() string {
@@ -26,7 +26,7 @@ func (c *CVM) region() string {
 	return fmt.Sprintf("ap-%v", c.Region)
 }
 
-func (c *CVM) loginKeyID() (string) {
+func (c *CVM) loginKeyID() string {
 	credential := common.NewCredential(
 		c.SecretID,
 		c.SecretKey,
@@ -58,18 +58,18 @@ func (c *CVM) Reset(cvmid string) error {
 	client, _ := cvm.NewClient(credential, c.region(), cpf)
 	request := cvm.NewResetInstanceRequest()
 	request.InstanceId = common.StringPtr(cvmid)
-	request.EnhancedService = &cvm.EnhancedService {
-		SecurityService: &cvm.RunSecurityServiceEnabled {
+	request.EnhancedService = &cvm.EnhancedService{
+		SecurityService: &cvm.RunSecurityServiceEnabled{
 			Enabled: common.BoolPtr(true),
 		},
-		MonitorService: &cvm.RunMonitorServiceEnabled {
+		MonitorService: &cvm.RunMonitorServiceEnabled{
 			Enabled: common.BoolPtr(true),
 		},
 	}
 	keyid := c.loginKeyID()
 	if len(keyid) > 0 {
 		request.LoginSettings = &cvm.LoginSettings{
-			KeyIds:         []*string{common.StringPtr(keyid)},
+			KeyIds: []*string{common.StringPtr(keyid)},
 		}
 	}
 
@@ -84,7 +84,7 @@ func (c *CVM) Reset(cvmid string) error {
 	return nil
 }
 
-func (c *CVM) List() error  {
+func (c *CVM) List() error {
 	credential := common.NewCredential(
 		c.SecretID,
 		c.SecretKey,

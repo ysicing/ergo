@@ -6,6 +6,8 @@ package version
 import (
 	"fmt"
 	"github.com/wangle201210/githubapi/repos"
+	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ysicing/ergo/pkg/util/logo"
 	"github.com/ysicing/ext/utils/excmd"
 	"github.com/ysicing/ext/utils/exmisc"
 	"runtime"
@@ -36,19 +38,24 @@ const (
 	defaultBuildDate     = "Mon Aug  3 15:06:50 2020"
 )
 
-func PreCheckVersion() *string {
+func PreCheckVersion() (string, error) {
 	pkg := repos.Pkg{
 		Owner: "ysicing",
 		Repo:  "ergo",
 	}
-	lastag, _ := pkg.LastTag()
-	if lastag.Name != Version {
-		return &lastag.Name
+	lastag, err := pkg.LastTag()
+	if err != nil {
+		return "", err
 	}
-	return nil
+	if lastag.Name != Version {
+		return lastag.Name, nil
+	}
+	return "", nil
 }
 
 func ShowVersion() {
+	log := log.GetInstance()
+	logo.PrintLogo()
 	if Version == "" {
 		Version = defaultVersion
 	}
@@ -60,22 +67,40 @@ func ShowVersion() {
 	}
 	osarch := fmt.Sprintf("%v/%v", runtime.GOOS, runtime.GOARCH)
 	fmt.Printf(versionTpl, Version, runtime.Version(), GitCommitHash, BuildDate, osarch, Version)
-	lastversion := PreCheckVersion()
-	if lastversion != nil {
-		fmt.Printf("当前最新版本 %v\n", exmisc.SGreen(*lastversion))
+	log.StartWait("从github获取最新版本 ...")
+	lastversion, err := PreCheckVersion()
+	log.StopWait()
+	if err != nil {
+		log.Errorf("从github获取版本失败: %v", err)
+		return
+	}
+	if lastversion != "" {
+		log.Infof("当前最新版本 %v, 可以使用ergo upgrade将版本升级到最新版本", exmisc.SGreen(lastversion))
+	} else {
+		log.Infof("当前已经是最新版本")
 	}
 }
 
 func Upgrade() {
-	lastversion := PreCheckVersion()
-	if lastversion == nil {
-		fmt.Printf("当前已经是最新版本了: %v", defaultVersion)
+	log := log.GetInstance()
+	log.StartWait("从github获取最新版本 ...")
+	lastversion, err := PreCheckVersion()
+	log.StopWait()
+	if err != nil {
+		log.Errorf("从github获取版本失败: %v", err)
+		return
+	}
+	if lastversion == "" {
+		fmt.Printf("当前已经是最新版本了: %v", Version)
 		return
 	}
 	if runtime.GOOS != "linux" {
 		excmd.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo")
 	} else {
-		newbin := fmt.Sprintf("https://github.com/ysicing/ergo/releases/download/%v/ergo_linux_amd64", *lastversion)
+		log.StartWait(fmt.Sprintf("Downloading version %s...", lastversion))
+		newbin := fmt.Sprintf("https://github.com/ysicing/ergo/releases/download/%v/ergo_linux_amd64", lastversion)
 		excmd.DownloadFile(newbin, "/usr/local/bin/ergo")
+		log.StopWait()
 	}
+	log.Donef("Successfully updated ergo to version %s", lastversion)
 }

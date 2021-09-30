@@ -14,9 +14,9 @@ import (
 )
 
 type Lighthouse struct {
-	SecretID string
+	SecretID  string
 	SecretKey string
-	Region string
+	Region    string
 }
 
 func (c *Lighthouse) region() string {
@@ -47,7 +47,7 @@ func (c *Lighthouse) Reset(cvmid string) error {
 	return nil
 }
 
-func (c *Lighthouse) loginKeyID() (string) {
+func (c *Lighthouse) loginKeyID() string {
 	credential := common.NewCredential(
 		c.SecretID,
 		c.SecretKey,
@@ -98,7 +98,7 @@ func (c *Lighthouse) BindKey(cvmid string) error {
 	return nil
 }
 
-func (c *Lighthouse) List() error  {
+func (c *Lighthouse) List() error {
 	credential := common.NewCredential(
 		c.SecretID,
 		c.SecretKey,
@@ -124,5 +124,3 @@ func (c *Lighthouse) List() error  {
 	fmt.Println(table)
 	return nil
 }
-
-

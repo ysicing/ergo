@@ -6,7 +6,7 @@ package command
 import (
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/codegen"
+	"github.com/ysicing/ergo/pkg/ergo/codegen"
 	"github.com/ysicing/ext/utils/exfile"
 	"k8s.io/klog/v2"
 	"strings"

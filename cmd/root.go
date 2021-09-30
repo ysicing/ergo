@@ -4,16 +4,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/mitchellh/go-homedir"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"github.com/ysicing/ergo/cmd/command"
-	"github.com/ysicing/ergo/config"
-	"github.com/ysicing/ergo/utils/common"
-	"github.com/ysicing/ext/utils/exfile"
-	"github.com/ysicing/ext/utils/exmisc"
-	"k8s.io/klog/v2"
+	"github.com/ysicing/ergo/cmd/flags"
+	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 const (
@@ -22,53 +16,64 @@ const (
 )
 
 var (
-	globalFlags = command.GlobalFlags{}
+	globalFlags *flags.GlobalFlags
 )
 
-var (
-	rootCmd = &cobra.Command{
-		Use:        cliName,
-		Short:      cliDescription,
-		SuggestFor: []string{"ergo"},
-	}
-)
-
-func init() {
-	klog.InitFlags(nil)
-	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&globalFlags.CfgFile, "config", "", "config file (default is $HOME/.config/ergo/config.yaml)")
-	rootCmd.PersistentFlags().BoolVar(&globalFlags.Debug, "debug", true, "enable client-side debug logging")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.DisableSuggestions = false
-	rootCmd.AddCommand(
-		command.NewVersionCommand(),
-		command.NewUpgradeCommand(),
-		command.NewVMCommand(),
-		command.NewK8sCommand(),
-		command.NewHelmCommand(),
-		command.NewComposeCommand(),
-		command.NewCodeGen(),
-		command.NewOPSCommand(),
-		command.NewCloudCommand())
-}
-
-func initConfig() {
-	if globalFlags.CfgFile == "" {
-		home, err := homedir.Dir()
-		common.CheckErr(err)
-		globalFlags.CfgFile = fmt.Sprintf("%v/%v/%v", home, ".config/ergo", "config.yaml")
-	}
-	if !exfile.CheckFileExistsv2(globalFlags.CfgFile) {
-		config.WriteDefaultConfig(globalFlags.CfgFile)
-	}
-	viper.SetConfigFile(globalFlags.CfgFile)
-	viper.AutomaticEnv()
-	if err := viper.ReadInConfig(); err == nil {
-		klog.Infof("Using config file: %v", exmisc.SGreen(viper.ConfigFileUsed()))
+func Execute() {
+	// create a new factory
+	f := factory.DefaultFactory()
+	// build the root command
+	rootCmd := BuildRoot(f)
+	// before hook
+	// execute command
+	err := rootCmd.Execute()
+	// after hook
+	if err != nil {
+		if globalFlags.Debug {
+			f.GetLog().Fatalf("%+v", err)
+		} else {
+			f.GetLog().Fatal(err)
+		}
 	}
 }
 
-func Execute() error {
-	// rootCmd.SetUsageFunc(usageFunc)
-	return rootCmd.Execute()
+// BuildRoot creates a new root command from the
+func BuildRoot(f factory.Factory) *cobra.Command {
+	// build the root cmd
+	rootCmd := NewRootCmd(f)
+	persistentFlags := rootCmd.PersistentFlags()
+	globalFlags = flags.SetGlobalFlags(persistentFlags)
+	// Add sub commands
+
+	// Add main commands
+	rootCmd.AddCommand(NewVersionCmd())
+	rootCmd.AddCommand(NewUpgradeCmd())
+	rootCmd.AddCommand(NewDebianCmd(f))
+	// Add plugin commands
+	return rootCmd
+}
+
+// NewRootCmd returns a new root command
+func NewRootCmd(f factory.Factory) *cobra.Command {
+	return &cobra.Command{
+		Use:           cliName,
+		SilenceUsage:  true,
+		SilenceErrors: true,
+		Short:         "ergo, ergo, NB!",
+		PersistentPreRunE: func(cobraCmd *cobra.Command, args []string) error {
+			if cobraCmd.Annotations != nil {
+				return nil
+			}
+			log := f.GetLog()
+			if globalFlags.Silent {
+				log.SetLevel(logrus.FatalLevel)
+			} else if globalFlags.Debug {
+				log.SetLevel(logrus.DebugLevel)
+			}
+
+			// apply extra flags TODO
+			return nil
+		},
+		Long: cliDescription,
+	}
 }
