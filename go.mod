@@ -6,6 +6,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1016
 	github.com/ergoapi/sshutil v0.0.2
+	github.com/ergoapi/util v0.0.7
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/go-logr/logr v1.1.0 // indirect
 	github.com/go-ole/go-ole v1.2.5 // indirect

@@ -5,11 +5,11 @@ package version
 
 import (
 	"fmt"
+	"github.com/ergoapi/util/color"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/logo"
-	"github.com/ysicing/ext/utils/excmd"
-	"github.com/ysicing/ext/utils/exmisc"
+	"github.com/ergoapi/util/excmd"
 	"runtime"
 )
 
@@ -75,7 +75,7 @@ func ShowVersion() {
 		return
 	}
 	if lastversion != "" {
-		log.Infof("当前最新版本 %v, 可以使用ergo upgrade将版本升级到最新版本", exmisc.SGreen(lastversion))
+		log.Infof("当前最新版本 %v, 可以使用ergo upgrade将版本升级到最新版本", color.SGreen(lastversion))
 	} else {
 		log.Infof("当前已经是最新版本")
 	}
@@ -91,7 +91,7 @@ func Upgrade() {
 		return
 	}
 	if lastversion == "" {
-		fmt.Printf("当前已经是最新版本了: %v", Version)
+		log.Infof("当前已经是最新版本了: %v", Version)
 		return
 	}
 	if runtime.GOOS != "linux" {

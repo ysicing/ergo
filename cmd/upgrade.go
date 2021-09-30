@@ -5,7 +5,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/pkg/ergo/version"
+	"github.com/ysicing/ergo/version"
 )
 
 type UpgradeCmd struct{}
