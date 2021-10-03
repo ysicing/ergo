@@ -4,9 +4,9 @@
 package vm
 
 import (
-	"github.com/ysicing/ext/sshutil"
-	"k8s.io/klog/v2"
-	"os"
+	"fmt"
+	"github.com/ergoapi/sshutil"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"sync"
 )
 
@@ -123,11 +123,15 @@ touch /.initdone
 exit 0
 `
 
-func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	err := ssh.CmdAsync(ip, InitSH)
-	if err != nil {
-		klog.Errorf("ip %v, err: %v", ip, err)
-		os.Exit(-1)
+func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup, log log.Logger) {
+	defer func() {
+		log.StopWait()
+		wg.Done()
+	}()
+	log.StartWait(fmt.Sprintf("start init %v", ip))
+	if err := ssh.CmdAsync(ip, InitSH); err != nil {
+		log.Errorf("ip %v, err: %v", ip, err)
+		return
 	}
+
 }

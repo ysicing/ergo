@@ -6,12 +6,10 @@ package cmd
 import (
 	"github.com/ergoapi/sshutil"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/cmd/command"
 	"github.com/ysicing/ergo/cmd/flags"
 	vm2 "github.com/ysicing/ergo/pkg/ergo/vm"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/log"
-	"k8s.io/klog/v2"
 	"sync"
 )
 
@@ -66,15 +64,15 @@ func NewDebianCmd(f factory.Factory) *cobra.Command {
 func (cmd *DebianCmd) Init(f factory.Factory) error {
 	cmd.log = f.GetLog()
 	if cmd.local || len(cmd.ips) == 0 {
-		vm2.RunLocalShell("init")
+		vm2.RunLocalShell("init", cmd.log)
 		return nil
 	}
 
-	klog.V(5).Info(command.SSHConfig, command.IPS)
+	cmd.log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
 	var wg sync.WaitGroup
-	for _, ip := range command.IPS {
+	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm2.RunInit(command.SSHConfig, ip, &wg)
+		go vm2.RunInit(cmd.sshcfg, ip, &wg, cmd.log)
 	}
 	wg.Wait()
 	return nil
@@ -84,14 +82,14 @@ func (cmd *DebianCmd) UpCore(f factory.Factory) error {
 	cmd.log = f.GetLog()
 	// 本地
 	if cmd.local || len(cmd.ips) == 0 {
-		vm2.RunLocalShell("upcore")
+		vm2.RunLocalShell("upcore", cmd.log)
 		return nil
 	}
-	klog.V(5).Info(command.SSHConfig, command.IPS)
+	cmd.log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
 	var wg sync.WaitGroup
-	for _, ip := range command.IPS {
+	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm2.RunUpgradeCore(command.SSHConfig, ip, &wg)
+		go vm2.RunUpgradeCore(cmd.sshcfg, ip, &wg, cmd.log)
 	}
 	wg.Wait()
 	return nil
