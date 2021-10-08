@@ -14,14 +14,15 @@ type K3sOption struct {
 	*flags.GlobalFlags
 	log log.Logger
 }
+
 func NewK3sCmd(f factory.Factory) *cobra.Command {
 	opt := K3sOption{
 		GlobalFlags: globalFlags,
 	}
 	k3s := &cobra.Command{
-		Use:     "k3s",
-		Short:   "k3s",
-		Args:    cobra.NoArgs,
+		Use:   "k3s",
+		Short: "k3s",
+		Args:  cobra.NoArgs,
 	}
 	init := &cobra.Command{
 		Use:     "k3s",
