@@ -32,3 +32,9 @@ func (c *Hello) Dump() error {
 	c.meta.Log.WriteString("hello package\n")
 	return nil
 }
+
+func init() {
+	InstallPackage(OpsPackage{
+		Name: "hello",
+	})
+}

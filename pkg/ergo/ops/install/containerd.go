@@ -28,3 +28,10 @@ func (c *Containerd) UnInstallPost() error {
 func (c *Containerd) Dump() error {
 	return nil
 }
+
+func init() {
+	InstallPackage(OpsPackage{
+		Name:    "containerd",
+		Version: "1.1.1",
+	})
+}
