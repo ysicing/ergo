@@ -4,7 +4,6 @@
 package cmd
 
 import (
-	"github.com/ergoapi/sshutil"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
@@ -12,6 +11,7 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/ops/ps"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/log"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"strings"
 	"sync"
 )
@@ -37,10 +37,20 @@ type ExecCmd struct {
 	ips    []string
 }
 
-// NewOPSCmd ergo ops
-func NewOPSCmd(f factory.Factory) *cobra.Command {
+type InstallCmd struct {
+	OPSCmd
+	list   bool
+	dump   bool
+	local  bool
+	sshcfg sshutil.SSH
+	ips    []string
+}
+
+// newOPSCmd ergo ops
+func newOPSCmd(f factory.Factory) *cobra.Command {
 	cmd := OPSCmd{
 		GlobalFlags: globalFlags,
+		log:         f.GetLog(),
 	}
 	ops := &cobra.Command{
 		Use:     "ops",
@@ -48,6 +58,7 @@ func NewOPSCmd(f factory.Factory) *cobra.Command {
 		Version: "2.0.0",
 		Args:    cobra.NoArgs,
 	}
+
 	pscmd := &cobra.Command{
 		Use:     "ps",
 		Short:   "Show process information like \"ps -ef\" command",
@@ -119,6 +130,7 @@ func execCmd(supercmd OPSCmd) *cobra.Command {
 }
 
 func (cmd *ExecCmd) Exec(args []string) error {
+	cmd.sshcfg.Log = cmd.log
 	if cmd.local {
 		return exec.ExecLocal(args...)
 	}

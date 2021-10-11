@@ -6,8 +6,8 @@ package common
 import (
 	"fmt"
 	"github.com/mitchellh/go-homedir"
-	"github.com/shirou/gopsutil/cpu"
-	"github.com/shirou/gopsutil/mem"
+	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/ysicing/ext/utils/convert"
 	"k8s.io/klog/v2"
 	"os"

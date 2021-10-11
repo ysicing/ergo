@@ -5,8 +5,7 @@ package vm
 
 import (
 	"fmt"
-	"github.com/ergoapi/sshutil"
-	"github.com/ysicing/ergo/pkg/util/log"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"sync"
 )
 
@@ -123,14 +122,14 @@ touch /.initdone
 exit 0
 `
 
-func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup, log log.Logger) {
+func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer func() {
-		log.StopWait()
+		ssh.Log.StopWait()
 		wg.Done()
 	}()
-	log.StartWait(fmt.Sprintf("start init %v", ip))
+	ssh.Log.StartWait(fmt.Sprintf("start init %v", ip))
 	if err := ssh.CmdAsync(ip, InitSH); err != nil {
-		log.Errorf("ip %v, err: %v", ip, err)
+		ssh.Log.Errorf("ip %v, err: %v", ip, err)
 		return
 	}
 

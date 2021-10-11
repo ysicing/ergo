@@ -5,7 +5,7 @@ package exec
 
 import (
 	"fmt"
-	"github.com/ergoapi/sshutil"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"os"
 	"os/exec"
 	"runtime"

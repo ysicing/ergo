@@ -10,8 +10,8 @@ import (
 
 type UpgradeCmd struct{}
 
-// NewUpgradeCmd upgrade of ergo
-func NewUpgradeCmd() *cobra.Command {
+// newUpgradeCmd upgrade of ergo
+func newUpgradeCmd() *cobra.Command {
 	cmd := UpgradeCmd{}
 	return &cobra.Command{
 		Use:     "upgrade",

@@ -10,8 +10,8 @@ import (
 
 type VersionCmd struct{}
 
-// NewVersionCmd show version of ergo
-func NewVersionCmd() *cobra.Command {
+// newVersionCmd show version of ergo
+func newVersionCmd() *cobra.Command {
 	cmd := VersionCmd{}
 	return &cobra.Command{
 		Use:   "version",
