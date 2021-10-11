@@ -1,3 +1,6 @@
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=coverage)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
+
 ## ergo
 
 > 一个使用 Go 编写运维工具,尽量减少重复工作，同时降低维护脚本的成本
