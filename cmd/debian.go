@@ -4,28 +4,27 @@
 package cmd
 
 import (
-	"github.com/ergoapi/sshutil"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	vm2 "github.com/ysicing/ergo/pkg/ergo/vm"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"sync"
 )
 
 type DebianCmd struct {
 	*flags.GlobalFlags
-	log    log.Logger
+	// log    log.Logger
 	local  bool
 	sshcfg sshutil.SSH
 	ips    []string
 }
 
-// NewDebianCmd ergo debian tools
-func NewDebianCmd(f factory.Factory) *cobra.Command {
+// newDebianCmd ergo debian tools
+func newDebianCmd(f factory.Factory) *cobra.Command {
 	cmd := &DebianCmd{
 		GlobalFlags: globalFlags,
-		log:         log.GetInstance(),
+		// log:         log.GetInstance(),
 	}
 	debian := &cobra.Command{
 		Use:     "debian",
@@ -62,34 +61,35 @@ func NewDebianCmd(f factory.Factory) *cobra.Command {
 }
 
 func (cmd *DebianCmd) Init(f factory.Factory) error {
-	cmd.log = f.GetLog()
+	// cmd.log = f.GetLog()
+	cmd.sshcfg.Log = f.GetLog()
 	if cmd.local || len(cmd.ips) == 0 {
-		vm2.RunLocalShell("init", cmd.log)
+		vm2.RunLocalShell("init", cmd.sshcfg.Log)
 		return nil
 	}
 
-	cmd.log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
+	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm2.RunInit(cmd.sshcfg, ip, &wg, cmd.log)
+		go vm2.RunInit(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil
 }
 
 func (cmd *DebianCmd) UpCore(f factory.Factory) error {
-	cmd.log = f.GetLog()
+	cmd.sshcfg.Log = f.GetLog()
 	// 本地
 	if cmd.local || len(cmd.ips) == 0 {
-		vm2.RunLocalShell("upcore", cmd.log)
+		vm2.RunLocalShell("upcore", cmd.sshcfg.Log)
 		return nil
 	}
-	cmd.log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
+	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm2.RunUpgradeCore(cmd.sshcfg, ip, &wg, cmd.log)
+		go vm2.RunUpgradeCore(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil

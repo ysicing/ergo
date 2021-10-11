@@ -4,15 +4,14 @@
 package cmd
 
 import (
-	"github.com/ergoapi/sshutil"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
-	"github.com/ysicing/ergo/pkg/ergo/ops/install"
 	"github.com/ysicing/ergo/pkg/ergo/ops/nc"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ps"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/log"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"strings"
 	"sync"
 )
@@ -47,8 +46,8 @@ type InstallCmd struct {
 	ips    []string
 }
 
-// NewOPSCmd ergo ops
-func NewOPSCmd(f factory.Factory) *cobra.Command {
+// newOPSCmd ergo ops
+func newOPSCmd(f factory.Factory) *cobra.Command {
 	cmd := OPSCmd{
 		GlobalFlags: globalFlags,
 		log:         f.GetLog(),
@@ -72,7 +71,6 @@ func NewOPSCmd(f factory.Factory) *cobra.Command {
 	ops.AddCommand(pscmd)
 	ops.AddCommand(ncCmd(cmd))
 	ops.AddCommand(execCmd(cmd))
-	ops.AddCommand(installCmd(cmd))
 	return ops
 }
 
@@ -132,6 +130,7 @@ func execCmd(supercmd OPSCmd) *cobra.Command {
 }
 
 func (cmd *ExecCmd) Exec(args []string) error {
+	cmd.sshcfg.Log = cmd.log
 	if cmd.local {
 		return exec.ExecLocal(args...)
 	}
@@ -142,54 +141,4 @@ func (cmd *ExecCmd) Exec(args []string) error {
 	}
 	wg.Wait()
 	return nil
-}
-
-func installCmd(supercmd OPSCmd) *cobra.Command {
-	cmd := InstallCmd{
-		OPSCmd: supercmd,
-	}
-	install := &cobra.Command{
-		Use:     "install",
-		Short:   "安装",
-		Version: "2.0.0",
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return cmd.Exec(args)
-		},
-	}
-	install.PersistentFlags().StringVar(&cmd.sshcfg.User, "user", "root", "用户")
-	install.PersistentFlags().StringVar(&cmd.sshcfg.Pass, "pass", "", "密码")
-	install.PersistentFlags().StringVar(&cmd.sshcfg.PkFile, "pk", "", "私钥")
-	install.PersistentFlags().StringVar(&cmd.sshcfg.PkPass, "pkpass", "", "私钥密码")
-	install.PersistentFlags().StringSliceVar(&cmd.ips, "ip", nil, "机器IP")
-	install.PersistentFlags().BoolVar(&cmd.local, "local", false, "本地安装")
-	install.PersistentFlags().BoolVar(&cmd.list, "show", false, "列出可安装程序")
-	install.PersistentFlags().BoolVar(&cmd.dump, "dump", false, "显示可安装程序安装脚本")
-
-	return install
-}
-
-func (cmd *InstallCmd) Exec(args []string) error {
-	if cmd.list {
-		return install.ShowPackage(cmd.log)
-	}
-	if len(args) == 0 {
-		args = append(args, "hello")
-	}
-	cmd.log.Debug(args)
-	name := args[0]
-	i := install.NewInstall(install.Meta{Log: cmd.log}, args[0])
-	if cmd.dump {
-		err := i.Dump()
-		if err != nil {
-			cmd.log.Errorf("dump %s err: %v", name)
-		}
-		return err
-	}
-	if err := i.InstallPre(); err != nil {
-		return err
-	}
-	if err := i.Install(); err != nil {
-		return err
-	}
-	return i.InstallPost()
 }

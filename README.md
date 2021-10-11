@@ -44,7 +44,12 @@ ergo upgrade
   - [x] ps
   - [x] nc
   - [ ] net
-  - [ ] exec
+  - [x] exec
+
+- [ ] repo
+  - [x] list
+  - [x] install
+  - [ ] uninstall
 
 #### 其他开源项目
 

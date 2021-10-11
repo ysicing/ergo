@@ -5,10 +5,10 @@ package exec
 
 import (
 	"fmt"
-	"github.com/ergoapi/sshutil"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/pkg/util/common"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"k8s.io/klog/v2"
 	"os"
 	"sync"

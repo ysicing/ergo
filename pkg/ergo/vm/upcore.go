@@ -5,11 +5,11 @@ package vm
 
 import (
 	"fmt"
-	"github.com/ergoapi/sshutil"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ergo/pkg/util/log"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"sync"
 	"time"
 )
@@ -49,28 +49,28 @@ reboot
 `
 
 // RunUpgradeCore 升级内核
-func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup, log log.Logger) {
+func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer func() {
-		log.StopWait()
+		ssh.Log.StopWait()
 		wg.Done()
 	}()
-	log.StartWait(fmt.Sprintf("%s start upcore", ip))
+	ssh.Log.StartWait(fmt.Sprintf("%s start upcore", ip))
 	err := ssh.CmdAsync(ip, UpgradeCore)
 	if err != nil {
-		log.Fatal(ip, err.Error())
+		ssh.Log.Fatal(ip, err.Error())
 		return
 	}
 	for i := 0; i <= 10; i++ {
-		if RunWait(ssh, ip, log) {
+		if RunWait(ssh, ip) {
 			break
 		}
 	}
 }
 
-func RunWait(ssh sshutil.SSH, ip string, log log.Logger) bool {
+func RunWait(ssh sshutil.SSH, ip string) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
-		log.Debugf("%v waiting for reboot", ip)
+		ssh.Log.Debugf("%v waiting for reboot", ip)
 		time.Sleep(10 * time.Second)
 		return false
 	}

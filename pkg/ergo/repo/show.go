@@ -1,11 +1,10 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package install
+package repo
 
 import (
 	"github.com/gosuri/uitable"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"helm.sh/helm/v3/pkg/cli/output"
 	"io"
 	"os"
@@ -18,8 +17,9 @@ func InstallPackage(packagename OpsPackage) {
 }
 
 type OpsPackage struct {
-	Name    string
-	Version string
+	Name     string
+	Version  string
+	Describe string
 }
 
 func (o *OpsPackage) GetName() string {
@@ -33,16 +33,22 @@ func (o *OpsPackage) GetVersion() string {
 	return o.Version
 }
 
-func ShowPackage(log log.Logger) error {
-	// logo.PrintLogo()
-	return writeTable(os.Stdout)
+func ShowPackage(mode string) error {
+	switch mode {
+	case "json":
+		return output.EncodeJSON(os.Stdout, InstallPackages)
+	case "yaml":
+		return output.EncodeYAML(os.Stdout, InstallPackages)
+	default:
+		return writeTable(os.Stdout)
+	}
 }
 
 func writeTable(out io.Writer) error {
 	table := uitable.New()
-	table.AddRow("NAME", "VERSION")
+	table.AddRow("NAME", "VERSION", "DESCRIBE")
 	for _, r := range InstallPackages {
-		table.AddRow(r.GetName(), r.GetVersion())
+		table.AddRow(r.GetName(), r.GetVersion(), r.Describe)
 	}
 	return output.EncodeTable(out, table)
 }
