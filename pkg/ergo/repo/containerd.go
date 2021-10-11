@@ -90,15 +90,16 @@ func (c *Containerd) Install() error {
 			c.meta.SSH.Log.Errorf("run shell err: %v", err.Error())
 			return err
 		}
+		c.meta.SSH.Log.Donef("install %v", c.name())
 		return nil
 	}
 	for _, ip := range c.meta.IPs {
 		err := c.meta.SSH.CmdAsync(ip, ContainerdInstall)
 		if err != nil {
 			c.meta.SSH.Log.Debugf("err msg: %v", err)
-			c.meta.SSH.Log.Warnf("%v install failed", ip)
+			c.meta.SSH.Log.Failf("%v install %v failed", ip, c.name())
 		} else {
-			c.meta.SSH.Log.Debugf("%v install ok", ip)
+			c.meta.SSH.Log.Donef("%v install %v", ip, c.name())
 		}
 	}
 	return nil
