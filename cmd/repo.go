@@ -16,12 +16,12 @@ import (
 
 type RepoCmd struct {
 	*flags.GlobalFlags
-	local  bool
-	sshcfg sshutil.SSH
-	ips    []string
-	output string
+	local   bool
+	sshcfg  sshutil.SSH
+	ips     []string
+	output  string
 	volumes bool
-	all bool
+	all     bool
 }
 
 // newRepoCmd ergo repo tools
@@ -61,8 +61,8 @@ func newRepoCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 	down := &cobra.Command{
-		Use: "down",
-		Short: "down",
+		Use:     "down",
+		Short:   "down",
 		Version: "2.0.2",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return repocmd.Down(args)

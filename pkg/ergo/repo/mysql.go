@@ -136,22 +136,22 @@ func (c *Mysql) Install() error {
 		if !ssh.WhichCmd("docker") {
 			return fmt.Errorf("请先安装docker/containerd")
 		}
-		tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultComposeDir(), c.name())
-		err := file.Writefile(tempfile, c.tpl)
+		localfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultComposeDir(), c.name())
+		err := file.Writefile(localfile, c.tpl)
 		if err != nil {
-			c.meta.SSH.Log.Errorf("write file %v, err: %v", tempfile, err)
+			c.meta.SSH.Log.Errorf("write file %v, err: %v", localfile, err)
 			return err
 		}
-		if err := ssh.RunCmd("/bin/bash", "docker", "compose", "-f", tempfile, "up", "-d"); err != nil {
+		if err := ssh.RunCmd("/bin/bash", "docker", "compose", "-f", localfile, "up", "-d"); err != nil {
 			c.meta.SSH.Log.Errorf("run shell err: %v", err.Error())
 			return err
 		}
 		c.meta.SSH.Log.Donef("install %v", c.name())
 		return nil
 	}
+	remotefile := fmt.Sprintf("/%v/%v/%v.yaml", c.meta.SSH.User, common.DefaultComposeDir, c.name())
+	tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultTmpDir(), c.name())
 	for _, ip := range c.meta.IPs {
-		remotefile := fmt.Sprintf("/%v/%v/%v.yaml", c.meta.SSH.User, common.DefaultComposeDir, c.name())
-		tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultTmpDir(), c.name())
 		err := file.Writefile(tempfile, c.tpl)
 		c.meta.SSH.CopyLocalToRemote(ip, tempfile, remotefile)
 		err = c.meta.SSH.CmdAsync(ip, fmt.Sprintf("docker compose -f %v up -d", remotefile))

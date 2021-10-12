@@ -115,9 +115,9 @@ func (c *Postgresql) Install() error {
 		c.meta.SSH.Log.Donef("install %v", c.name())
 		return nil
 	}
+	remotefile := fmt.Sprintf("/%v/%v/%v.yaml", c.meta.SSH.User, common.DefaultComposeDir, c.name())
+	tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultTmpDir(), c.name())
 	for _, ip := range c.meta.IPs {
-		remotefile := fmt.Sprintf("/%v/%v/%v.yaml", c.meta.SSH.User, common.DefaultComposeDir, c.name())
-		tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultTmpDir(), c.name())
 		err := file.Writefile(tempfile, c.tpl)
 		c.meta.SSH.CopyLocalToRemote(ip, tempfile, remotefile)
 		err = c.meta.SSH.CmdAsync(ip, fmt.Sprintf("docker compose -f %v up -d", remotefile))
