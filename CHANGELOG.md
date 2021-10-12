@@ -1,6 +1,11 @@
 ## Ergo CHANGELOG
 
-- v2.0.0-beta
+- v2.0.1
+  - repo新增mysql
+  - plugin初步支持plugin, 参考kubectl plugin
+
+- v2.0.0
+  - 调整代码结构
 
 - v1.0.22
   - 优化vm init

@@ -6,11 +6,11 @@ package vm
 import (
 	"bytes"
 	"fmt"
-	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ext/utils/exhash"
 	"github.com/ysicing/ext/utils/exos"
 	"github.com/ysicing/ext/utils/extime"
 	"html/template"
+	"strings"
 )
 
 type Debian struct {
@@ -38,10 +38,17 @@ func (d Debian) Template() string {
 	} else {
 		d.md.Box = DefaultBox
 	}
-	d.md.IP = fmt.Sprintf("%v.1", common.GetIpPre(d.md.IP))
+	d.md.IP = fmt.Sprintf("%v.1", getIpPre(d.md.IP))
 	t := template.Must(template.New("debian").Parse(tpl))
 	t.Execute(&b, &d.md)
 	return b.String()
+}
+
+// getIpPre 获取IP前缀
+func getIpPre(ip string) string {
+	ip = strings.ReplaceAll(ip, "/24", "")
+	ips := strings.Split(ip, ".")
+	return strings.Join(ips[:3], ".")
 }
 
 const DefaultDebianTpl = `

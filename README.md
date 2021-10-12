@@ -1,4 +1,3 @@
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=coverage)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
 
 ## ergo
@@ -32,24 +31,46 @@ ergo upgrade
 
 ## 命令支持
 
-- [x] version
-- [x] upgrade
+- [x] completion
 - [x] debian
-  - [x] init
-  - [x] upcore
-  - [ ] 🎉lima
-  - [ ] vagrant(2.x deprecated)
-- [ ] `acr`/`tcr`/`gh`镜像管理
-- [ ] ops
-  - [x] ps
-  - [x] nc
-  - [ ] net
-  - [x] exec
+  - [x] `init` 初始化debian
+  - [x] `upcore` 升级debian内核
+- [x] ops
+  - [x] `ps` 进程
+  - [x] `nc` nc
+  - [x] `exec` 执行命令
+- [x] plugin
+  - [x] `list` 列出ergo插件
+- [x] repo
+  - [x] `list` 列出支持的软件包
+  - [x] `install` 安装软件包
+    - [x] containerd
+    - [x] mysql
+  - [x] `dump` dump安装脚本 
+- [x] upgrade
+- [x] version
 
-- [ ] repo
-  - [x] list
-  - [x] install
-  - [ ] uninstall
+### ergo插件
+
+> 默认支持`ergo-`插件
+
+```bash
+# 列出插件
+ergo plugin list
+[warn]   Unable to read directory "/Users/ysicing/bin" from your PATH: open /Users/ysicing/bin: no such file or directory. Skipping...
+The following compatible plugins are available:
+[info]   doge /usr/local/bin/ergo-doge
+[info]   hello /Users/ysicing/.ergo/bin/ergo-hello
+
+# ergo-doge插件
+cat /usr/local/bin/ergo-doge                                   
+#!/bin/bash
+echo $@
+
+# 使用
+ergo doge haha  
+haha
+```
 
 #### 其他开源项目
 
@@ -59,6 +80,7 @@ ergo upgrade
 - [zzz](https://github.com/sohaha/zzz)
 - [devspace](https://github.com/loft-sh/devspace)
 - [CDK](https://github.com/cdk-team/CDK)
+- [kubectl](https://k8s.io/kubectl)
 
 ## 🎉🎉 赞助商
 

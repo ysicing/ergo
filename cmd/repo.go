@@ -76,7 +76,7 @@ func (repo *RepoCmd) List() error {
 	return install2.ShowPackage(repo.output)
 }
 
-func (repo *RepoCmd) Dump() error  {
+func (repo *RepoCmd) Dump() error {
 	repo.sshcfg.Log.Infof("开始加载可用安装程序")
 	searcher := func(input string, index int) bool {
 		packages := install2.InstallPackages[index]

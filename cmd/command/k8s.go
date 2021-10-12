@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/helm"
 	"github.com/ysicing/ergo/pkg/ergo/k8s"
-	"github.com/ysicing/ergo/pkg/util/common"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
@@ -38,7 +38,7 @@ func NewK8sCommand() *cobra.Command {
 	k8s.AddCommand(NewK8sJoinCommand())
 	k8s.AddCommand(NewK8sMasterSchedule())
 	k8s.PersistentFlags().StringVar(&SSHConfig.User, "user", "root", "用户")
-	k8s.PersistentFlags().StringVar(&SSHConfig.Password, "pass", "", "密码")
+	k8s.PersistentFlags().StringVar(&SSHConfig.Pass, "pass", "", "密码")
 	k8s.PersistentFlags().StringVar(&SSHConfig.PkFile, "pk", "", "私钥")
 	k8s.PersistentFlags().StringVar(&ip, "ip", "", "执行机器IP")
 	k8s.PersistentFlags().BoolVar(&klocal, "local", true, "本地模式")
@@ -105,13 +105,13 @@ func k8sfunc(cmd *cobra.Command, args []string) {
 	for _, w := range kw {
 		kws = kws + fmt.Sprintf(" --node %v ", w)
 	}
-	if len(kpass) == 0 && len(SSHConfig.Password) == 0 {
+	if len(kpass) == 0 && len(SSHConfig.Pass) == 0 {
 		kpassword = " --passwd vagrant"
 	}
 	if len(kpass) != 0 {
 		kpassword = fmt.Sprintf(" --passwd %v ", kpass)
-	} else if len(SSHConfig.Password) != 0 {
-		kpassword = fmt.Sprintf(" --passwd %v ", SSHConfig.Password)
+	} else if len(SSHConfig.Pass) != 0 {
+		kpassword = fmt.Sprintf(" --passwd %v ", SSHConfig.Pass)
 	}
 	if kinit {
 		kargs = kms + kws + kpassword
@@ -129,13 +129,13 @@ func k8sinitfunc(cmd *cobra.Command, args []string) {
 	for _, w := range kw {
 		kws = kws + fmt.Sprintf(" --node %v ", w)
 	}
-	if len(kpass) == 0 && len(SSHConfig.Password) == 0 {
+	if len(kpass) == 0 && len(SSHConfig.Pass) == 0 {
 		kpassword = " --passwd vagrant"
 	}
 	if len(kpass) != 0 {
 		kpassword = fmt.Sprintf(" --passwd %v ", kpass)
-	} else if len(SSHConfig.Password) != 0 {
-		kpassword = fmt.Sprintf(" --passwd %v ", SSHConfig.Password)
+	} else if len(SSHConfig.Pass) != 0 {
+		kpassword = fmt.Sprintf(" --passwd %v ", SSHConfig.Pass)
 	}
 
 	kargs = kms + kws + kpassword + " --lvscare-image registry.cn-beijing.aliyuncs.com/k7scn/lvscare "
@@ -143,11 +143,11 @@ func k8sinitfunc(cmd *cobra.Command, args []string) {
 		if len(ip) == 0 {
 			ip = km[0]
 		}
-		if len(SSHConfig.Password) == 0 {
+		if len(SSHConfig.Pass) == 0 {
 			if len(kpass) != 0 {
-				SSHConfig.Password = kpass
+				SSHConfig.Pass = kpass
 			} else {
-				SSHConfig.Password = "vagrant"
+				SSHConfig.Pass = "vagrant"
 			}
 			SSHConfig.User = "root"
 		}
@@ -181,7 +181,7 @@ func k8sschedulefunc(cmd *cobra.Command, args []string) {
 		os.Exit(-1)
 	}
 	if klocal {
-		common.RunCmd("/bin/bash", tempfile)
+		sshutil.RunCmd("/bin/bash", tempfile)
 	} else {
 		klog.Infof("请在master节点执行.")
 	}

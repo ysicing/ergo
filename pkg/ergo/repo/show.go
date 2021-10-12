@@ -12,8 +12,8 @@ import (
 
 var InstallPackages []OpsPackage
 
-func InstallPackage(packagename OpsPackage) {
-	InstallPackages = append(InstallPackages, packagename)
+func InstallPackage(p OpsPackage) {
+	InstallPackages = append(InstallPackages, p)
 }
 
 type OpsPackage struct {
