@@ -3,8 +3,14 @@
 
 package main
 
-import "github.com/ysicing/ergo/cmd"
+import (
+	"github.com/ysicing/ergo/cmd"
+	"github.com/ysicing/ergo/cmd/boot"
+)
 
 func main() {
+	if err := boot.OnBoot(); err != nil {
+		panic(err)
+	}
 	cmd.Execute()
 }

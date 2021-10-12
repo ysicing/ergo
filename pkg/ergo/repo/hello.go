@@ -3,6 +3,10 @@
 
 package repo
 
+const (
+	hello = "hello"
+)
+
 type Hello struct {
 	meta Meta
 }

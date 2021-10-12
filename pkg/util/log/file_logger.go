@@ -5,14 +5,12 @@ package log
 
 import (
 	"github.com/sirupsen/logrus"
+	"github.com/ysicing/ergo/common"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"strings"
 	"sync"
 )
-
-// Logdir specifies the relative path to the ergo logs
-var Logdir = "./.ergo/logs/"
 
 var logs = map[string]Logger{}
 var logsMutext sync.Mutex
@@ -35,7 +33,7 @@ func GetFileLogger(filename string) Logger {
 		}
 		newLogger.logger.Formatter = &logrus.JSONFormatter{}
 		newLogger.logger.SetOutput(&lumberjack.Logger{
-			Filename:   Logdir + filename + ".log",
+			Filename:   common.GetDefaultLogDir() + "/" + filename + ".log",
 			MaxAge:     12,
 			MaxBackups: 4,
 			MaxSize:    10 * 1024 * 1024,

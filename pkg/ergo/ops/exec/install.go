@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
-	"github.com/ysicing/ergo/pkg/util/common"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"k8s.io/klog/v2"
 	"os"
@@ -60,7 +59,7 @@ func InstallPackage(ssh sshutil.SSH, ip string, packagename string, wg *sync.Wai
 			klog.Errorf("write file %v, err: %v", tempfile, err)
 			os.Exit(-1)
 		}
-		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
+		if err := sshutil.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
 			return
 		}

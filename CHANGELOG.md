@@ -1,6 +1,10 @@
 ## Ergo CHANGELOG
 
-- v2.0.0-beta
+- v2.0.1-beta
+  - 支持数据库相关操作
+
+- v2.0.0
+  - 调整代码结构
 
 - v1.0.22
   - 优化vm init

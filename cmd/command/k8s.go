@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/helm"
 	"github.com/ysicing/ergo/pkg/ergo/k8s"
-	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ext/utils/convert"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
@@ -181,7 +180,7 @@ func k8sschedulefunc(cmd *cobra.Command, args []string) {
 		os.Exit(-1)
 	}
 	if klocal {
-		common.RunCmd("/bin/bash", tempfile)
+		drop.RunCmd("/bin/bash", tempfile)
 	} else {
 		klog.Infof("请在master节点执行.")
 	}

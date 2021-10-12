@@ -6,10 +6,12 @@ package repo
 import (
 	"fmt"
 	"github.com/ergoapi/util/file"
-	"github.com/ergoapi/util/zos"
 	"github.com/ergoapi/util/ztime"
-	"github.com/ysicing/ergo/pkg/util/common"
-	"github.com/ysicing/ext/utils/exfile"
+	"github.com/ysicing/ergo/pkg/util/ssh"
+)
+
+const (
+	containerd = "containerd"
 )
 
 const ContainerdInstall = `
@@ -51,30 +53,10 @@ func (c *Containerd) name() string {
 	return containerd
 }
 
-func (c *Containerd) InstallPre() error {
-	// check docker
-	c.meta.SSH.Log.Debugf("check docker")
-	if c.meta.Local {
-
-		return nil
-	}
-	for _, ip := range c.meta.IPs {
-		err := c.meta.SSH.CmdAsync(ip, "which docker")
-		if err == nil {
-			tmpfile := zos.GetHomeDir() + "/.ergo/tmp/install." + c.name() + ip + ".tmp"
-			exfile.WriteFile(tmpfile, err.Error())
-			c.meta.SSH.Log.Debugf("err msg: %v", err)
-			c.meta.SSH.Log.Warnf("%v pre check, docker exist", ip)
-		} else {
-			c.meta.SSH.Log.Debugf("%v pre check ok", ip)
-		}
-	}
-	return nil
-}
 func (c *Containerd) Install() error {
 	c.meta.SSH.Log.Debugf("install containerd")
 	if c.meta.Local {
-		if common.WhichCmd("docker") {
+		if ssh.WhichCmd("docker") {
 			return fmt.Errorf("已经安装docker, 请先卸载docker")
 		}
 		tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", containerd, ztime.NowUnix())
@@ -86,7 +68,7 @@ func (c *Containerd) Install() error {
 		defer func() {
 			file.RemoveFiles(tempfile)
 		}()
-		if err := common.RunCmd("/bin/bash", tempfile); err != nil {
+		if err := ssh.RunCmd("/bin/bash", tempfile); err != nil {
 			c.meta.SSH.Log.Errorf("run shell err: %v", err.Error())
 			return err
 		}
@@ -111,8 +93,8 @@ func (c *Containerd) Dump(mode string) error {
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:    "containerd",
-		Version: "1.5.7",
+		Name:     "containerd",
+		Version:  "1.5.7",
 		Describe: "参考https://ysicing.me/posts/containerd-nerdctl/",
 	})
 }

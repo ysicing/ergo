@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
-	"github.com/ysicing/ergo/pkg/util/common"
 	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"sync"
@@ -93,7 +92,7 @@ func RunLocalShell(runtype string, log log.Logger) {
 		log.Errorf("write file %v, err: %v", tempfile, err)
 		return
 	}
-	if err := common.RunCmd("/bin/bash", tempfile); err != nil {
+	if err := sshutil.RunCmd("/bin/bash", tempfile); err != nil {
 		log.Errorf("run shell err: %v", err.Error())
 		return
 	}
