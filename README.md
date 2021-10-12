@@ -45,7 +45,7 @@ ergo upgrade
   - [x] `list` 列出支持的软件包
   - [x] `install` 安装软件包
     - [x] containerd
-    - [x] mysql
+    - [x] mysql,redis,etcd,mongodb,consul,minio,postgresql,rabbitmq
   - [x] `dump` dump安装脚本 
 - [x] upgrade
 - [x] version

@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.0.2
+  - repo新增redis,etcd,mongodb,consul,minio,postgresql,rabbitmq
+
 - v2.0.1
   - repo新增mysql
   - plugin初步支持plugin, 参考kubectl plugin

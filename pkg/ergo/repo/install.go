@@ -58,12 +58,26 @@ type Meta struct {
 
 func NewInstall(m Meta, t string) InstallInterface {
 	switch t {
+	case consul:
+		return &Consul{meta: m}
 	case containerd:
 		return &Containerd{meta: m}
-	case mysql:
-		return &Mysql{meta: m}
+	case etcd:
+		return &Etcd{meta: m}
 	case hello:
 		return &Hello{meta: m}
+	case minio:
+		return &Minio{meta: m}
+	case mongodb:
+		return &Mongodb{meta: m}
+	case mysql:
+		return &Mysql{meta: m}
+	case postgresql:
+		return &Postgresql{meta: m}
+	case rabbitmq:
+		return &Rabbitmq{meta: m}
+	case redis:
+		return &Redis{meta: m}
 	default:
 		m.SSH.Log.Errorf("not support [%v], will show default package hello", t)
 		return &Hello{meta: m}

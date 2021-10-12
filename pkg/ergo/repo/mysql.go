@@ -11,7 +11,7 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"html/template"
+	"text/template"
 )
 
 const (
@@ -22,6 +22,7 @@ const mysqlcompose = `version: '2.1'
 services:
   mysql:
     image: docker.io/bitnami/mysql:8.0.26-debian-10-r74
+	container_name: mysql
     ports:
       - '3306:3306'
     volumes:
@@ -123,34 +124,34 @@ func (c *Mysql) parse() {
 		c.meta.SSH.Log.Infof("Enable Mysql Exporter.")
 	}
 	var b bytes.Buffer
-	t := template.Must(template.New("mysql").Parse(mysqlcompose))
+	t := template.Must(template.New(c.name()).Parse(mysqlcompose))
 	t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
 func (c *Mysql) Install() error {
 	c.parse()
-	c.meta.SSH.Log.Debugf("install mysql")
+	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
 		if !ssh.WhichCmd("docker") {
 			return fmt.Errorf("请先安装docker/containerd")
 		}
-		tempfile := common.GetDefaultComposeDir() + "/mysql.yaml"
-		err := file.Writefile(tempfile, c.tpl)
+		localfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultComposeDir(), c.name())
+		err := file.Writefile(localfile, c.tpl)
 		if err != nil {
-			c.meta.SSH.Log.Errorf("write file %v, err: %v", tempfile, err)
+			c.meta.SSH.Log.Errorf("write file %v, err: %v", localfile, err)
 			return err
 		}
-		if err := ssh.RunCmd("/bin/bash", "docker", "compose", "-f", tempfile, "up", "-d"); err != nil {
+		if err := ssh.RunCmd("/bin/bash", "docker", "compose", "-f", localfile, "up", "-d"); err != nil {
 			c.meta.SSH.Log.Errorf("run shell err: %v", err.Error())
 			return err
 		}
 		c.meta.SSH.Log.Donef("install %v", c.name())
 		return nil
 	}
+	remotefile := fmt.Sprintf("/%v/%v/%v.yaml", c.meta.SSH.User, common.DefaultComposeDir, c.name())
+	tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultTmpDir(), c.name())
 	for _, ip := range c.meta.IPs {
-		remotefile := fmt.Sprintf("/%v/%v/mysql.yaml", c.meta.SSH.User, common.DefaultComposeDir)
-		tempfile := common.GetDefaultTmpDir() + "/mysql.yaml"
 		err := file.Writefile(tempfile, c.tpl)
 		c.meta.SSH.CopyLocalToRemote(ip, tempfile, remotefile)
 		err = c.meta.SSH.CmdAsync(ip, fmt.Sprintf("docker compose -f %v up -d", remotefile))
