@@ -69,11 +69,6 @@ func (ss *SSH) Copy(host, localFilePath, remoteFilePath string) {
 	defer srcFile.Close()
 
 	dstFile, err := sftpClient.Create(remoteFilePath)
-	defer func() {
-		if r := recover(); r != nil {
-			ss.Log.Debugf("[%s]scpCopy: %s", host, err)
-		}
-	}()
 	if err != nil {
 		panic(err)
 	}
@@ -122,11 +117,6 @@ func (ss *SSH) CopyConfigFile(host, remoteFilePath string, localFilePathOrBytes 
 	switch v := localFilePathOrBytes.(type) {
 	case string:
 		srcFile, err := os.Open(v)
-		defer func() {
-			if r := recover(); r != nil {
-				ss.Log.Errorf("[%s]scpCopy: %s", host, err)
-			}
-		}()
 		if err != nil {
 			panic(err)
 		}
@@ -139,11 +129,6 @@ func (ss *SSH) CopyConfigFile(host, remoteFilePath string, localFilePathOrBytes 
 	}
 
 	dstFile, err := sftpClient.Create(remoteFilePath)
-	defer func() {
-		if r := recover(); r != nil {
-			ss.Log.Errorf("[%s]scpCopy: %s", host, err)
-		}
-	}()
 	if err != nil {
 		panic(err)
 	}
@@ -215,11 +200,6 @@ func (ss *SSH) CopyRemoteFileToLocal(host, localFilePath, remoteFilePath string)
 	defer sftpClient.Close()
 	// open remote source file
 	srcFile, err := sftpClient.Open(remoteFilePath)
-	defer func() {
-		if r := recover(); r != nil {
-			ss.Log.Errorf("[%s]scpCopy: %s", host, err)
-		}
-	}()
 	if err != nil {
 		panic(err)
 	}
@@ -227,11 +207,6 @@ func (ss *SSH) CopyRemoteFileToLocal(host, localFilePath, remoteFilePath string)
 
 	// open local Destination file
 	dstFile, err := os.Create(localFilePath)
-	defer func() {
-		if r := recover(); r != nil {
-			ss.Log.Errorf("[%s]scpCopy: %s", host, err)
-		}
-	}()
 	if err != nil {
 		panic(err)
 	}
@@ -252,11 +227,6 @@ func (ss *SSH) CopyLocalToRemote(host, localPath, remotePath string) {
 		panic(err)
 	}
 	sshClient, err := ss.connect(host)
-	defer func() {
-		if r := recover(); r != nil {
-			ss.Log.Errorf("[%s]scpConnect err: %s", host, err)
-		}
-	}()
 	if err != nil {
 		panic(err)
 	}

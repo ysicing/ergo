@@ -5,7 +5,7 @@ package k8s
 
 import (
 	"fmt"
-	"github.com/ysicing/ext/sshutil"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exos"
 	"github.com/ysicing/ext/utils/extime"
@@ -42,7 +42,7 @@ func InstallK8s(ssh sshutil.SSH, ip string, local bool, init bool, args, kv stri
 			klog.Errorf("write file %v, err: %v", tempfile, err)
 			os.Exit(-1)
 		}
-		if err := drop.RunCmd("/bin/bash", tempfile); err != nil {
+		if err := sshutil.RunCmd("/bin/bash", tempfile); err != nil {
 			klog.V(5).Infof("err: %v", err)
 			return err
 		}

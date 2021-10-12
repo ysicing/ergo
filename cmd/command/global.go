@@ -3,7 +3,7 @@
 
 package command
 
-import "github.com/ysicing/ext/sshutil"
+import sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 
 var (
 	SSHConfig sshutil.SSH

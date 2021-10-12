@@ -5,7 +5,7 @@ package helm
 
 import (
 	"fmt"
-	"github.com/ysicing/ext/sshutil"
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ext/utils/exfile"
 	"github.com/ysicing/ext/utils/exmisc"
 	"github.com/ysicing/ext/utils/extime"
@@ -126,7 +126,7 @@ func HelmInstall(ssh sshutil.SSH, ip string, packagename string, local bool, isi
 			klog.Errorf("write file %v, err: %v", tempfile, err)
 			os.Exit(-1)
 		}
-		if err := drop.RunCmd("/bin/bash", tempfile); err != nil {
+		if err := sshutil.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
@@ -147,7 +147,7 @@ func HelmInit(ssh sshutil.SSH, ip string, local bool) {
 			klog.Errorf("write file %v, err: %v", tempfile, err)
 			os.Exit(-1)
 		}
-		if err := drop.RunCmd("/bin/bash", tempfile); err != nil {
+		if err := sshutil.RunCmd("/bin/bash", tempfile); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
