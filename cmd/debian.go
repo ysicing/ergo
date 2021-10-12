@@ -6,7 +6,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
-	vm2 "github.com/ysicing/ergo/pkg/ergo/vm"
+	"github.com/ysicing/ergo/pkg/ergo/vm"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"sync"
@@ -64,7 +64,7 @@ func (cmd *DebianCmd) Init(f factory.Factory) error {
 	// cmd.log = f.GetLog()
 	cmd.sshcfg.Log = f.GetLog()
 	if cmd.local || len(cmd.ips) == 0 {
-		vm2.RunLocalShell("init", cmd.sshcfg.Log)
+		vm.RunLocalShell("init", cmd.sshcfg.Log)
 		return nil
 	}
 
@@ -72,7 +72,7 @@ func (cmd *DebianCmd) Init(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm2.RunInit(cmd.sshcfg, ip, &wg)
+		go vm.RunInit(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil
@@ -82,14 +82,14 @@ func (cmd *DebianCmd) UpCore(f factory.Factory) error {
 	cmd.sshcfg.Log = f.GetLog()
 	// 本地
 	if cmd.local || len(cmd.ips) == 0 {
-		vm2.RunLocalShell("upcore", cmd.sshcfg.Log)
+		vm.RunLocalShell("upcore", cmd.sshcfg.Log)
 		return nil
 	}
 	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm2.RunUpgradeCore(cmd.sshcfg, ip, &wg)
+		go vm.RunUpgradeCore(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil

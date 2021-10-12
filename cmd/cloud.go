@@ -1,16 +1,18 @@
-// MIT License
-// Copyright (c) 2020 ysicing <i@ysicing.me>
+/*
+ * Copyright (c) 2021 ysicing <i@ysicing.me>
+ */
 
-package command
+package cmd
 
 import (
 	"fmt"
+	"github.com/ergoapi/util/color"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/dns"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/ecs"
 	lighthouseapi "github.com/ysicing/ergo/pkg/ergo/cloud/lighthouse"
-	"github.com/ysicing/ext/utils/exmisc"
-	"k8s.io/klog/v2"
+	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"os"
 	"strings"
 )
@@ -26,10 +28,17 @@ var (
 	vmid     string
 )
 
+type CloudOptions struct {
+	Log log.Logger
+}
+
 // NewCloudCommand 云服务商支持
-func NewCloudCommand() *cobra.Command {
+func newCloudCommand(f factory.Factory) *cobra.Command {
+	//o := &CloudOptions{
+	//	Log: f.GetLog(),
+	//}
 	cloud := &cobra.Command{
-		Use:   "cloud",
+		Use:   "cloud [flags]",
 		Short: "云服务商支持",
 	}
 	cloud.AddCommand(NewCloudVM(), NewCloudLighthouse(), NewCloudDns())
@@ -225,9 +234,9 @@ func dnsshow() *cobra.Command {
 						continue
 					}
 					if record.Status == "ENABLE" {
-						klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SGreen("*"))
+						fmt.Fprintf(os.Stdout, "%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SGreen("*"))
 					} else {
-						klog.Infof("%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, exmisc.SRed("x"))
+						fmt.Fprintf(os.Stdout,"%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SRed("x"))
 					}
 				}
 			} else {

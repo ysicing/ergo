@@ -6,8 +6,8 @@ package codegen
 import (
 	"errors"
 	"fmt"
+	"github.com/ergoapi/util/file"
 	"github.com/sohaha/zlsgo/zshell"
-	"github.com/ysicing/ext/utils/exfile"
 )
 
 // COPY zzz https://github.com/sohaha/zzz/blob/master/cmd/init.go
@@ -18,6 +18,20 @@ type (
 		Dir     string
 	}
 )
+
+var CodeType = []struct {
+	Key   string
+	Value string
+}{
+	{
+		Key:   "go",
+		Value: "go",
+	},
+	{
+		Key:   "crd",
+		Value: "crd",
+	},
+}
 
 var conf stInitConf
 
@@ -44,7 +58,15 @@ func Clone(dir, name, branch string, mirror bool) (err error) {
 	if err != nil {
 		return
 	}
-	exfile.Rmdir(dir + "/.git")
+	file.Rmdir(dir + "/.git")
 
 	return
+}
+
+func GoClone() error {
+	return nil
+}
+
+func GenCrds() error {
+	return nil
 }

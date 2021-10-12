@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/alidns"
 	"github.com/spf13/viper"
-	"k8s.io/klog/v2"
 	"log"
 )
 
@@ -25,7 +24,7 @@ func NewAliDns(region, akey, asecret string) *AliDns {
 	}
 	client, err := alidns.NewClientWithAccessKey(region, akey, asecret)
 	if err != nil {
-		klog.Fatal(err)
+		log.Fatal(err)
 		return nil
 	}
 	return &AliDns{client: client}
