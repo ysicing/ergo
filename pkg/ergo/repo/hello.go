@@ -3,9 +3,21 @@
 
 package repo
 
+import (
+	"fmt"
+	"github.com/ergoapi/util/file"
+	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/ssh"
+	"os"
+)
+
 const (
 	hello = "hello"
 )
+
+const hellocompose = `#!/bin/bash
+echo $@
+`
 
 type Hello struct {
 	meta Meta
@@ -16,7 +28,22 @@ func (c *Hello) name() string {
 }
 
 func (c *Hello) Install() error {
-	c.meta.SSH.Log.WriteString("installing hello\n")
+	c.meta.SSH.Log.Warnf("default support local")
+	tempfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), c.name())
+	file.RemoveFiles(tempfile)
+	err := file.Writefile(tempfile, hellocompose)
+	if err != nil {
+		c.meta.SSH.Log.Errorf("write file %v, err: %v", tempfile, err)
+		return err
+	}
+	c.meta.SSH.Log.Donef("install %v", c.name())
+	args := os.Args
+	c.meta.SSH.Log.StartWait("ergo hello 6666")
+	if err := ssh.RunCmd(args[0], "hello", "6666"); err != nil {
+		return err
+	}
+	c.meta.SSH.Log.StopWait()
+	c.meta.SSH.Log.Done("ergo hello 6666")
 	return nil
 }
 
@@ -28,6 +55,7 @@ func (c *Hello) Dump(mode string) error {
 func init() {
 	InstallPackage(OpsPackage{
 		Name:     "hello",
-		Describe: "默认",
+		Describe: "默认插件",
+		Version:  "0.0.1",
 	})
 }

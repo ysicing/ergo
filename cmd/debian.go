@@ -27,7 +27,7 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 		// log:         log.GetInstance(),
 	}
 	debian := &cobra.Command{
-		Use:     "debian",
+		Use:     "debian [flags]",
 		Short:   "初始化debian, 升级debian内核",
 		Aliases: []string{"deb"},
 		Args:    cobra.NoArgs,

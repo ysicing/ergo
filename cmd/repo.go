@@ -29,7 +29,7 @@ func newRepoCmd(f factory.Factory) *cobra.Command {
 	}
 	repocmd.sshcfg.Log = f.GetLog()
 	repo := &cobra.Command{
-		Use:     "repo",
+		Use:     "repo [flags]",
 		Short:   "包管理工具",
 		Args:    cobra.NoArgs,
 		Version: "2.0.1",
@@ -140,6 +140,9 @@ func (repo *RepoCmd) Install() error {
 	}
 	pn := install2.InstallPackages[selectid].Name
 	repo.sshcfg.Log.Infof("选择安装: %v", pn)
+	if len(repo.ips) == 0 && repo.local {
+		return fmt.Errorf("配置ip或者本地调试")
+	}
 	i := install2.NewInstall(install2.Meta{SSH: repo.sshcfg, Local: repo.local, IPs: repo.ips}, pn)
 	repo.sshcfg.Log.StartWait(fmt.Sprintf("开始安装: %v", pn))
 	defer repo.sshcfg.Log.StopWait()

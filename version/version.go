@@ -5,11 +5,14 @@ package version
 
 import (
 	"fmt"
+	"github.com/blang/semver"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/excmd"
+	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/logo"
+	"os"
 	"runtime"
 )
 
@@ -98,10 +101,33 @@ func Upgrade() {
 	if runtime.GOOS != "linux" {
 		excmd.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo")
 	} else {
+		release, found, err := selfupdate.DetectVersion("ysicing/ergo", lastversion)
+		if err != nil {
+			log.Errorf("从github获取版本: %v错误: %v", lastversion, err)
+			return
+		} else if !found {
+			log.Errorf("ergo 不存在版本:%s", lastversion)
+			return
+		}
+		cmdPath, err := os.Executable()
+		if err != nil {
+			log.Errorf("ergo executable err:%v", err)
+			return
+		}
 		log.StartWait(fmt.Sprintf("Downloading version %s...", lastversion))
-		newbin := fmt.Sprintf("https://github.com/ysicing/ergo/releases/download/%v/ergo_linux_amd64", lastversion)
-		excmd.DownloadFile(newbin, "/usr/local/bin/ergo")
+		err = selfupdate.DefaultUpdater().UpdateTo(release, cmdPath)
 		log.StopWait()
+		if err != nil {
+			log.Errorf("升级失败: %v", err)
+			return
+		}
 	}
-	log.Donef("Successfully updated ergo to version %s", lastversion)
+	latest, err := selfupdate.UpdateSelf(semver.MustParse(lastversion), "ysicing/ergo")
+	log.StopWait()
+	if err != nil {
+		log.Donef("Successfully updated ergo to version %s", lastversion)
+		return
+	}
+	log.Donef("Successfully updated ergo to version %s", latest.Version)
+	log.Infof("Release note: \n\t%s", latest.ReleaseNotes)
 }
