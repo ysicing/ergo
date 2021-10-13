@@ -11,6 +11,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.1.0 // indirect
+	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4

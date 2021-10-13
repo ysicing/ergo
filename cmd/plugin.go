@@ -4,21 +4,15 @@
 package cmd
 
 import (
-	"bytes"
-	"fmt"
+	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
-	"io/ioutil"
+	"helm.sh/helm/v3/cmd/helm/require"
+	"helm.sh/helm/v3/pkg/cli/output"
 	"os"
-	"path/filepath"
-	"runtime"
 	"strings"
-)
-
-var (
-	ValidPluginFilenamePrefixes = []string{"ergo"}
 )
 
 // newPluginCmd ergo plugin
@@ -29,20 +23,49 @@ func newPluginCmd(f factory.Factory) *cobra.Command {
 		Short:                 "Provides utilities for interacting with plugins",
 	}
 	cmd.AddCommand(NewCmdPluginList(f))
+	cmd.AddCommand(NewCmdPluginListRemote(f))
+	cmd.AddCommand(NewCmdPluginRepo(f))
+	cmd.AddCommand(NewCmdPluginInstall(f))
 	return cmd
 }
 
-type PluginListOptions struct {
-	Verifier PathVerifier
-	Log      log.Logger
-	NameOnly bool
+func NewCmdPluginListRemote(f factory.Factory) *cobra.Command {
+	o := &plugin.ListRemoteOptions{
+		Log:     f.GetLog(),
+		RepoCfg: common.GetDefaultPluginRepoCfg(),
+	}
+	cmd := &cobra.Command{
+		Use:   "ls-remote",
+		Short: "List remote versions available for install",
+		Run: func(cmd *cobra.Command, args []string) {
+			o.Run()
+		},
+	}
+	return cmd
+}
 
-	PluginPaths []string
+func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
+	o := &plugin.RepoInstallOption{
+		Log:     f.GetLog(),
+		RepoCfg: common.GetDefaultPluginRepoCfg(),
+	}
+	cmd := &cobra.Command{
+		Use:     "install [Repo] [Name]",
+		Short:   "install plugin",
+		Aliases: []string{"i"},
+		Args:    require.ExactArgs(2),
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			o.Repo = args[0]
+			o.Name = args[1]
+			return o.Run()
+		},
+	}
+	return cmd
 }
 
 // NewCmdPluginList provides a way to list all plugin executables visible to ergo
 func NewCmdPluginList(f factory.Factory) *cobra.Command {
-	o := &PluginListOptions{
+	o := &plugin.ListOptions{
 		Log: f.GetLog(),
 	}
 	cmd := &cobra.Command{
@@ -57,177 +80,101 @@ func NewCmdPluginList(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-func (o *PluginListOptions) Complete(cmd *cobra.Command) error {
-	o.Verifier = &CommandOverrideVerifier{
-		root:        cmd.Root(),
-		seenPlugins: make(map[string]string),
+func NewCmdPluginRepo(f factory.Factory) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "repo [flags]",
+		Short: "Provides utilities for interacting with plugin repos",
 	}
-	o.PluginPaths = filepath.SplitList(os.Getenv("PATH"))
-	return nil
+	cmd.AddCommand(NewCmdPluginRepoList(f))
+	cmd.AddCommand(NewCmdPluginRepoAdd(f))
+	cmd.AddCommand(NewCmdPluginRepoDel(f))
+	cmd.AddCommand(NewCmdPluginRepoUpdate(f))
+	return cmd
 }
 
-func (o *PluginListOptions) Run() error {
-	pluginsFound := false
-	isFirstFile := true
-	var pluginErrors []error
-	pluginWarnings := 0
+var listoutput string
 
-	for _, dir := range uniquePathsList(o.PluginPaths) {
-		if len(strings.TrimSpace(dir)) == 0 {
-			continue
-		}
-
-		files, err := ioutil.ReadDir(dir)
-		if err != nil {
-			if _, ok := err.(*os.PathError); ok {
-				o.Log.Warnf("Unable to read directory %q from your PATH: %v. Skipping...", dir, err)
-				continue
+func NewCmdPluginRepoList(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
+	cmd := &cobra.Command{
+		Use:     "list",
+		Short:   "list plugin repositories",
+		Aliases: []string{"ls"},
+		Run: func(cobraCmd *cobra.Command, args []string) {
+			f, err := plugin.LoadFile(common.GetDefaultPluginRepoCfg())
+			if err != nil || len(f.Repositories) == 0 {
+				log.Warnf("no repositories to show")
+				return
 			}
-
-			pluginErrors = append(pluginErrors, fmt.Errorf("error: unable to read directory %q in your PATH: %v", dir, err))
-			continue
-		}
-
-		for _, f := range files {
-			if f.IsDir() {
-				continue
-			}
-			if !hasValidPrefix(f.Name(), ValidPluginFilenamePrefixes) {
-				continue
-			}
-
-			if isFirstFile {
-				fmt.Fprintf(os.Stdout, "The following compatible plugins are available:\n")
-				pluginsFound = true
-				isFirstFile = false
-			}
-
-			pluginPath := f.Name()
-			if !o.NameOnly {
-				pluginPath = filepath.Join(dir, pluginPath)
-			}
-			pluginname := strings.Split(f.Name(), "-")[1]
-			o.Log.Infof("%s %s", pluginname, pluginPath)
-			if errs := o.Verifier.Verify(filepath.Join(dir, f.Name())); len(errs) != 0 {
-				for _, err := range errs {
-					o.Log.Warnf("  - %s\n", err)
-					pluginWarnings++
+			switch strings.ToLower(listoutput) {
+			case "json":
+				output.EncodeJSON(os.Stdout, f.Repositories)
+			case "yaml":
+				output.EncodeYAML(os.Stdout, f.Repositories)
+			default:
+				log.Infof("上次变更时间: %v", f.Generated)
+				table := uitable.New()
+				table.AddRow("NAME", "URL")
+				for _, re := range f.Repositories {
+					table.AddRow(re.Name, re.Url)
 				}
+				output.EncodeTable(os.Stdout, table)
 			}
-		}
+		},
 	}
-
-	if !pluginsFound {
-		pluginErrors = append(pluginErrors, fmt.Errorf("error: unable to find any ergo plugins in your PATH"))
-	}
-
-	if pluginWarnings > 0 {
-		if pluginWarnings == 1 {
-			pluginErrors = append(pluginErrors, fmt.Errorf("error: one plugin warning was found"))
-		} else {
-			pluginErrors = append(pluginErrors, fmt.Errorf("error: %v plugin warnings were found", pluginWarnings))
-		}
-	}
-	if len(pluginErrors) > 0 {
-		errs := bytes.NewBuffer(nil)
-		return fmt.Errorf("%s", errs.String())
-	}
-
-	return nil
+	cmd.PersistentFlags().StringVarP(&listoutput, "output", "o", "", "prints the output in the specified format. Allowed values: table, json, yaml (default table)")
+	return cmd
 }
 
-// PathVerifier receives a path and determines if it is valid or not
-type PathVerifier interface {
-	// Verify determines if a given path is valid
-	Verify(path string) []error
+func NewCmdPluginRepoAdd(f factory.Factory) *cobra.Command {
+	o := &plugin.RepoAddOption{
+		Log:     f.GetLog(),
+		RepoCfg: common.GetDefaultPluginRepoCfg(),
+	}
+	cmd := &cobra.Command{
+		Use:   "add [NAME] [URL]",
+		Short: "add plugin repo",
+		Args:  require.ExactArgs(2),
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			o.Name = args[0]
+			o.Url = args[1]
+			return o.Run()
+		},
+	}
+	return cmd
 }
 
-type CommandOverrideVerifier struct {
-	root        *cobra.Command
-	seenPlugins map[string]string
+func NewCmdPluginRepoDel(f factory.Factory) *cobra.Command {
+	o := &plugin.RepoDelOption{
+		Log:     f.GetLog(),
+		RepoCfg: common.GetDefaultPluginRepoCfg(),
+	}
+	cmd := &cobra.Command{
+		Use:     "del [REPO1 [REPO2 ...]]",
+		Short:   "del plugin repo",
+		Aliases: []string{"rm"},
+		Args:    require.MinimumNArgs(1),
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			o.Names = args
+			return o.Run()
+		},
+	}
+	return cmd
 }
 
-func (v *CommandOverrideVerifier) Verify(path string) []error {
-	if v.root == nil {
-		return []error{fmt.Errorf("unable to verify path with nil root")}
+func NewCmdPluginRepoUpdate(f factory.Factory) *cobra.Command {
+	o := &plugin.RepoUpdateOption{
+		Log:     f.GetLog(),
+		RepoCfg: common.GetDefaultPluginRepoCfg(),
 	}
-
-	// extract the plugin binary name
-	segs := strings.Split(path, "/")
-	binName := segs[len(segs)-1]
-
-	cmdPath := strings.Split(binName, "-")
-	if len(cmdPath) > 1 {
-		// the first argument is always "ergo" for a plugin binary
-		cmdPath = cmdPath[1:]
+	cmd := &cobra.Command{
+		Use:     "update [REPO1 [REPO2 ...]]",
+		Short:   "update plugin repo",
+		Aliases: []string{"up"},
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			o.Names = args
+			return o.Run()
+		},
 	}
-
-	var errors []error
-
-	if isExec, err := isExecutable(path); err == nil && !isExec {
-		errors = append(errors, fmt.Errorf("warning: %s identified as a ergo plugin, but it is not executable", path))
-	} else if err != nil {
-		errors = append(errors, fmt.Errorf("error: unable to identify %s as an executable file: %v", path, err))
-	}
-
-	if existingPath, ok := v.seenPlugins[binName]; ok {
-		errors = append(errors, fmt.Errorf("warning: %s is overshadowed by a similarly named plugin: %s", path, existingPath))
-	} else {
-		v.seenPlugins[binName] = path
-	}
-
-	if cmd, _, err := v.root.Find(cmdPath); err == nil {
-		errors = append(errors, fmt.Errorf("warning: %s overwrites existing command: %q", binName, cmd.CommandPath()))
-	}
-
-	return errors
-}
-
-func isExecutable(fullPath string) (bool, error) {
-	info, err := os.Stat(fullPath)
-	if err != nil {
-		return false, err
-	}
-
-	if runtime.GOOS == "windows" {
-		fileExt := strings.ToLower(filepath.Ext(fullPath))
-
-		switch fileExt {
-		case ".bat", ".cmd", ".com", ".exe", ".ps1":
-			return true, nil
-		}
-		return false, nil
-	}
-
-	if m := info.Mode(); !m.IsDir() && m&0111 != 0 {
-		return true, nil
-	}
-
-	return false, nil
-}
-
-// uniquePathsList deduplicates a given slice of strings without
-// sorting or otherwise altering its order in any way.
-func uniquePathsList(paths []string) []string {
-	seen := map[string]bool{}
-	var newPaths []string
-	for _, p := range paths {
-		if seen[p] {
-			continue
-		}
-		seen[p] = true
-		newPaths = append(newPaths, p)
-	}
-	newPaths = append(newPaths, common.GetDefaultBinDir())
-	return newPaths
-}
-
-func hasValidPrefix(filepath string, validPrefixes []string) bool {
-	for _, prefix := range validPrefixes {
-		if !strings.HasPrefix(filepath, prefix+"-") {
-			continue
-		}
-		return true
-	}
-	return false
+	return cmd
 }

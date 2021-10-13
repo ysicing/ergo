@@ -1,5 +1,9 @@
 ## Ergo CHANGELOG
 
+- v2.0.3
+  - 新增code命令,支持初始化crds/go项目
+  - plugin增强, 参考helm repo
+
 - v2.0.2
   - repo新增redis,etcd,mongodb,consul,minio,postgresql,rabbitmq
 
