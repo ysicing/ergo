@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"os"
 	"os/exec"
@@ -59,12 +60,14 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newOPSCmd(f))
 	rootCmd.AddCommand(newRepoCmd(f))
 	rootCmd.AddCommand(newPluginCmd(f))
+	rootCmd.AddCommand(newCodeGenCmd(f))
+	rootCmd.AddCommand(newCloudCommand(f))
 	// Add plugin commands
 
 	args := os.Args
 	if len(args) > 1 {
 
-		pluginHandler := NewDefaultPluginHandler(ValidPluginFilenamePrefixes)
+		pluginHandler := NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
 
 		cmdPathPieces := args[1:]
 		if _, _, err := rootCmd.Find(cmdPathPieces); err != nil {

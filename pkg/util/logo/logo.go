@@ -4,9 +4,9 @@
 package logo
 
 import (
+	"github.com/ergoapi/util/exhash"
 	goansi "github.com/k0kubun/go-ansi"
 	"github.com/mgutz/ansi"
-	"github.com/ysicing/ext/utils/exhash"
 )
 
 var stdout = goansi.NewAnsiStdout()

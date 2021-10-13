@@ -4,11 +4,11 @@
 package repo
 
 import (
+	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-	"github.com/ysicing/ext/utils/exfile"
 	"strings"
 )
 
@@ -92,5 +92,5 @@ func dump(name, mode, dumpbody string, log log.Logger) error {
 	}
 	dumpfile := common.GetDefaultDumpDir() + "/" + name + "." + ztime.GetTodayMin() + ".dump"
 	log.Infof("dump file: %v", dumpfile)
-	return exfile.WriteFile(dumpfile, dumpbody+"\n")
+	return file.Writefile(dumpfile, dumpbody+"\n")
 }

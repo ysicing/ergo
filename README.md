@@ -31,6 +31,7 @@ ergo upgrade
 
 ## 命令支持
 
+- [x] code 初始化项目
 - [x] completion
 - [x] debian
   - [x] `init` 初始化debian
@@ -40,12 +41,19 @@ ergo upgrade
   - [x] `nc` nc
   - [x] `exec` 执行命令
 - [x] plugin
+  - [x] `install` 安装插件
   - [x] `list` 列出ergo插件
+  - [x] `ls-remote` 列出远程插件
+  - [x] `repo` 插件仓库管理, 类似helm仓库
+     - [x] `add` 添加插件仓库
+     - [x] `list` 列出插件仓库列表
+     - [x] `del` 移除插件仓库
+     - [x] `update` 更新插件索引
 - [x] repo
   - [x] `list` 列出支持的软件包
   - [x] `install` 安装软件包
-    - [x] containerd
-    - [x] mysql,redis,etcd,mongodb,consul,minio,postgresql,rabbitmq
+    - [x] `containerd`
+    - [x] `mysql`等
   - [x] `dump` dump安装脚本 
 - [x] upgrade
 - [x] version
@@ -70,17 +78,30 @@ echo $@
 # 使用
 ergo doge haha  
 haha
+
+# 插件仓库列表
+ergo plugin repo list
+[info]   上次变更时间: 2021-10-13 15:37:18.782145 +0800 CST
+NAME    URL                                                           
+local   https://gitee.com/ysbot/ergoplugindemo/raw/master/default.yaml
+
+# 列出远程插件
+ergo plugin ls-remote 
+[done] √ "local"已经更新索引: /Users/ysicing/.ergo/.config/local.index.yaml
+[done] √ sync done.
+Repo    NAME            URL                                                     Desc    Available
+local   demo-linux      https://gitee.com/ysbot/ergoplugindemo/raw/master/demo  demo    false    
+local   demo-darwin     https://gitee.com/ysbot/ergoplugindemo/raw/master/demo  demo    true
 ```
 
 #### 其他开源项目
 
 > 感谢以下项目
 
-- [sealos](https://github.com/fanux/sealos)
-- [zzz](https://github.com/sohaha/zzz)
-- [devspace](https://github.com/loft-sh/devspace)
-- [CDK](https://github.com/cdk-team/CDK)
-- [kubectl](https://k8s.io/kubectl)
+- [loft-sh/devspace](https://github.com/loft-sh/devspace)
+- [cdk-team/CDK](https://github.com/cdk-team/CDK)
+- [kubernetes/kubectl](https://github.com/kubernetes/kubernetes)
+- [helm/helm](https://github.com/helm/helm)
 
 ## 🎉🎉 赞助商
 

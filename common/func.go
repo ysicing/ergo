@@ -3,7 +3,10 @@
 
 package common
 
-import "github.com/ergoapi/util/zos"
+import (
+	"fmt"
+	"github.com/ergoapi/util/zos"
+)
 
 func GetDefaultLogDir() string {
 	home := zos.GetHomeDir()
@@ -33,4 +36,13 @@ func GetDefaultDumpDir() string {
 func GetDefaultBinDir() string {
 	home := zos.GetHomeDir()
 	return home + "/" + DefaultBinDir
+}
+
+func GetDefaultCfgDir() string {
+	home := zos.GetHomeDir()
+	return home + "/" + DefaultCfgDir
+}
+
+func GetDefaultPluginRepoCfg() string {
+	return fmt.Sprintf("%v/plugin.repo.yaml", GetDefaultCfgDir())
 }
