@@ -236,7 +236,7 @@ func dnsshow() *cobra.Command {
 					if record.Status == "ENABLE" {
 						fmt.Fprintf(os.Stdout, "%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SGreen("*"))
 					} else {
-						fmt.Fprintf(os.Stdout,"%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SRed("x"))
+						fmt.Fprintf(os.Stdout, "%v %v.%v ---> %v %v", record.Type, record.RR, record.DomainName, record.Value, color.SRed("x"))
 					}
 				}
 			} else {

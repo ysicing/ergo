@@ -4,19 +4,19 @@
 package codegen
 
 import (
-	"errors"
+	"bytes"
 	"fmt"
 	"github.com/ergoapi/util/file"
-	"github.com/sohaha/zlsgo/zshell"
-)
-
-// COPY zzz https://github.com/sohaha/zzz/blob/master/cmd/init.go
-
-type (
-	stInitConf struct {
-		Command []string
-		Dir     string
-	}
+	"github.com/ergoapi/util/zos"
+	"github.com/ergoapi/util/ztime"
+	"github.com/go-git/go-git/v5"
+	"github.com/manifoldco/promptui"
+	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ysicing/ergo/pkg/util/ssh"
+	"os"
+	"strings"
+	"text/template"
 )
 
 var CodeType = []struct {
@@ -33,40 +33,121 @@ var CodeType = []struct {
 	},
 }
 
-var conf stInitConf
-
-func Clone(dir, name, branch string, mirror bool) (err error) {
-	var url string
-	url = "https://github.com/" + name
-	if mirror {
-		url = "https://gitee.com/" + name
-	}
-	code := 0
-	outStr := ""
-	errStr := ""
-	cmd := fmt.Sprintf("git clone -b %s --depth=1 %s %s", branch, url, dir)
-	code, outStr, errStr, err = zshell.Run(cmd)
-	if code != 0 {
-		if outStr != "" {
-			err = errors.New(outStr)
-		} else if errStr != "" {
-			err = errors.New(errStr)
-		} else {
-			err = errors.New("download failed, please check if the network is normal")
-		}
-	}
-	if err != nil {
-		return
-	}
-	file.Rmdir(dir + "/.git")
-
-	return
+type CodeGen struct {
+	Log log.Logger
 }
 
-func GoClone() error {
+var Project = []struct {
+	Name   string
+	Url    string
+	Slug   string
+	Branch string
+}{{
+	Name:   "ysicing/go-example",
+	Url:    "https://github.com/ysicing/go-example.git",
+	Slug:   "github.com/ysicing",
+	Branch: "master",
+},
+}
+
+func (code CodeGen) GoClone() error {
+	project := promptui.Select{
+		Label: "项目",
+		Items: Project,
+		Searcher: func(input string, index int) bool {
+			p := Project[index]
+			name := strings.Replace(strings.ToLower(p.Name), " ", "", -1)
+			input = strings.Replace(strings.ToLower(input), " ", "", -1)
+			return strings.Contains(name, input)
+		},
+		Size: 4,
+		Templates: &promptui.SelectTemplates{
+			Label:    "{{ . }}",
+			Active:   "\U0001F449 {{ .Name | cyan }}",
+			Inactive: "  {{ .Name | cyan }}",
+			Selected: "\U0001F389 {{ .Name | red | cyan }}",
+		},
+	}
+	pid, _, _ := project.Run()
+	p := Project[pid]
+	gopath := zos.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
+	code.Log.Debugf("GoPath: %v", gopath)
+	nameprompt := promptui.Prompt{
+		Label: "项目名, eg: ysicing/goexample",
+	}
+	name, _ := nameprompt.Run()
+	if name == "" {
+		s := strings.Split(p.Url, "/")
+		name = fmt.Sprintf("%v/%v", s[len(s)-2], s[len(s)-1])
+		name = strings.ReplaceAll(name, ".git", "")
+	}
+	dir := fmt.Sprintf("%v/%v/%v", gopath, "github.com", name)
+	if _, err := git.PlainClone(dir, false, &git.CloneOptions{
+		URL:               p.Url,
+		RemoteName:        p.Branch,
+		SingleBranch:      true,
+		Depth:             1,
+		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+		Progress:          os.Stdout,
+	}); err != nil {
+		return err
+	}
+	file.Rmdir(dir + "/.git")
+	code.Log.Donef("\U0001F389 Start Git Clone %v %v", p.Url, dir)
 	return nil
 }
 
-func GenCrds() error {
+type Crds struct {
+	Path       string
+	Name       string
+	Domain     string
+	License    string
+	Owner      string
+	Multigroup bool
+}
+
+const crdshell = `#!/bin/bash
+mkdir -p {{ .Path }}
+pushd {{ .Path }}
+kubebuilder init --domain {{ .Domain }} --repo {{ .Domain }}/{{ .Owner }}/{{ .Name }}  --license {{ .License }} --owner "{{ .Owner }}" --project-name {{ .Name }} --skip-go-version-check
+kubebuilder edit --multigroup={{ .Multigroup }}
+kubebuilder create api --group apps --version v1beta1 --kind Dubbo 
+# 已存在资源
+kubebuilder create api --group core --version v1 --kind Service --resource=false
+popd
+`
+
+func (code CodeGen) GenCrds() error {
+	var c Crds
+	domainpt := promptui.Prompt{
+		Label: "Domain",
+	}
+	c.Domain, _ = domainpt.Run()
+	namept := promptui.Prompt{
+		Label: "Name",
+	}
+	c.Name, _ = namept.Run()
+	if len(c.Name) == 0 {
+		c.Name = zos.GenUUID()
+	}
+	gopath := zos.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
+	code.Log.Debugf("GoPath: %v", gopath)
+	c.Path = fmt.Sprintf("%v/%v/%v", gopath, c.Domain, c.Name)
+	c.License = "apache2"
+	c.Owner = zos.GetUser().Username
+	c.Multigroup = true
+	var b bytes.Buffer
+	t := template.Must(template.New("crds").Parse(crdshell))
+	t.Execute(&b, c)
+	tmpfile := fmt.Sprintf("%v/crds.%v", common.GetDefaultTmpDir(), ztime.NowUnixString())
+	file.Writefile(tmpfile, b.String())
+	if err := ssh.RunCmd("/bin/bash", tmpfile); err != nil {
+		code.Log.WriteString(b.String())
+		code.Log.Failf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)
+		return err
+	}
+	file.RemoveFiles(tmpfile)
+	code.Log.Debugf("clean tmp file: %v", tmpfile)
+	code.Log.Donef("init crd project: %v", c.Path)
 	return nil
 }

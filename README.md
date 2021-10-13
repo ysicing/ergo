@@ -31,6 +31,7 @@ ergo upgrade
 
 ## 命令支持
 
+- [x] code 初始化项目
 - [x] completion
 - [x] debian
   - [x] `init` 初始化debian
@@ -76,11 +77,9 @@ haha
 
 > 感谢以下项目
 
-- [sealos](https://github.com/fanux/sealos)
-- [zzz](https://github.com/sohaha/zzz)
-- [devspace](https://github.com/loft-sh/devspace)
-- [CDK](https://github.com/cdk-team/CDK)
-- [kubectl](https://k8s.io/kubectl)
+- [loft-sh/devspace](https://github.com/loft-sh/devspace)
+- [cdk-team/CDK](https://github.com/cdk-team/CDK)
+- [kubernetes/kubectl](https://github.com/kubernetes/kubernetes)
 
 ## 🎉🎉 赞助商
 

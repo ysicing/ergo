@@ -32,7 +32,6 @@ func newCodeGenCmd(f factory.Factory) *cobra.Command {
 }
 
 func (code CodeOptions) Init() {
-	var dir string
 	searcher := func(input string, index int) bool {
 		p := codegen.CodeType[index]
 		name := strings.Replace(strings.ToLower(p.Key), " ", "", -1)
@@ -55,18 +54,18 @@ func (code CodeOptions) Init() {
 	codetypeid, _, _ := codetype.Run()
 	selectcodetypevalue := codegen.CodeType[codetypeid].Key
 	code.Log.Infof("\U0001F389 选择 %v", selectcodetypevalue)
+	codefunc := codegen.CodeGen{Log: code.Log}
 	if selectcodetypevalue == "go" {
 		code.Log.Infof("Start downloading the template...")
-		if err := codegen.GoClone(); err != nil {
+		if err := codefunc.GoClone(); err != nil {
 			code.Log.Fatal(err)
 			return
 		}
 	} else {
 		code.Log.Infof("Start Gen Crds template...")
-		if err := codegen.GenCrds(); err != nil {
+		if err := codefunc.GenCrds(); err != nil {
 			code.Log.Fatal(err)
 			return
 		}
 	}
-	code.Log.Infof("Init Done: %s", dir)
 }
