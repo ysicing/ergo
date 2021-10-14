@@ -11,7 +11,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.1.0 // indirect
-	github.com/gofrs/flock v0.8.1 // indirect
+	github.com/gofrs/flock v0.8.1
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4
@@ -35,7 +35,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.268
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.222
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.268 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.268
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.222
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
@@ -52,5 +52,5 @@ require (
 	k8s.io/klog/v2 v2.20.0 // indirect
 	k8s.io/kubectl v0.22.2
 	k8s.io/utils v0.0.0-20210820185131-d34e5cb4466e // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
+	sigs.k8s.io/yaml v1.3.0
 )

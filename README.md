@@ -82,16 +82,16 @@ haha
 # 插件仓库列表
 ergo plugin repo list
 [info]   上次变更时间: 2021-10-13 15:37:18.782145 +0800 CST
-NAME    URL                                                           
-local   https://gitee.com/ysbot/ergoplugindemo/raw/master/default.yaml
+NAME      URL                                                           
+default   https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml
 
 # 列出远程插件
 ergo plugin ls-remote 
-[done] √ "local"已经更新索引: /Users/ysicing/.ergo/.config/local.index.yaml
+[done] √ "local"已经更新索引: /Users/ysicing/.ergo/.config/default.index.yaml
 [done] √ sync done.
-Repo    NAME            URL                                                     Desc    Available
-local   demo-linux      https://gitee.com/ysbot/ergoplugindemo/raw/master/demo  demo    false    
-local   demo-darwin     https://gitee.com/ysbot/ergoplugindemo/raw/master/demo  demo    true
+Repo    NAME            URL                                                                                                             Desc                                                    Available
+default tgsend-linux    https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_linux_amd64   一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 false    
+default tgsend-darwin   https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_darwin_amd64  一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 true   
 ```
 
 #### 其他开源项目
