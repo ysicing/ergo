@@ -11,7 +11,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.1.0 // indirect
-	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd // indirect
+	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gofrs/flock v0.8.1
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
@@ -48,7 +48,7 @@ require (
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	helm.sh/helm/v3 v3.7.0
+	helm.sh/helm/v3 v3.7.1
 	k8s.io/apimachinery v0.22.2
 	k8s.io/klog/v2 v2.20.0 // indirect
 	k8s.io/kubectl v0.22.2
