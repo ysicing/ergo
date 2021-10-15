@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -xe
+
+name=$1
+version=$2
+
+pushd /builder/
+
+cat > ${name}/DEBIAN/control <<EOF
+Package:${name}
+Version:${version}
+Architecture:amd64
+Maintainer:ysicing
+Description:"一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本 ${version}"
+EOF
+
+[ -f "${name}/usr/local/bin/ergo" ] || exit 1
+
+dpkg-deb -b ${name} ${name}.${version}_amd64.deb
+popd

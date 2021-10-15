@@ -8,10 +8,12 @@ import (
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
 	"github.com/ysicing/ergo/pkg/ergo/ops/nc"
+	"github.com/ysicing/ergo/pkg/ergo/ops/ping"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ps"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
+	"helm.sh/helm/v3/cmd/helm/require"
 	"strings"
 	"sync"
 )
@@ -48,6 +50,7 @@ type InstallCmd struct {
 
 // newOPSCmd ergo ops
 func newOPSCmd(f factory.Factory) *cobra.Command {
+	var pingcount int
 	cmd := OPSCmd{
 		GlobalFlags: globalFlags,
 		log:         f.GetLog(),
@@ -68,14 +71,32 @@ func newOPSCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 
+	pingcmd := &cobra.Command{
+		Use:     "ping",
+		Short:   "ping",
+		Version: "2.0.6",
+		Args: require.MinimumNArgs(1),
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return cmd.ping(args[0], pingcount)
+		},
+	}
+
+	pingcmd.PersistentFlags().IntVar(&pingcount, "c", 4, "ping count")
+
+
 	ops.AddCommand(pscmd)
 	ops.AddCommand(ncCmd(cmd))
 	ops.AddCommand(execCmd(cmd))
+	ops.AddCommand(pingcmd)
 	return ops
 }
 
 func (cmd *OPSCmd) ps() error {
 	return ps.RunPS()
+}
+
+func (cmd *OPSCmd) ping(target string, count int) error {
+	return ping.DoPing(target, count)
 }
 
 func ncCmd(supercmd OPSCmd) *cobra.Command {

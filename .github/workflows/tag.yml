@@ -1,0 +1,48 @@
+name: tag
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    name: build ergo tools
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17.x
+      - name: install gox
+        run: |
+          echo "install gox"
+          go get -u github.com/mitchellh/gox
+      - name: install ghr
+        run: |
+          echo "install ghr"
+          go get -u github.com/tcnksm/ghr
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: build ergo
+        run: |
+          export TZ='Asia/Shanghai'
+          export PATH=$PATH:$(go env GOPATH)/bin
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          make dpush
+
+          pushd dist
+          sha256sum ergo_darwin_amd64 > ergo_darwin_amd64.sha256sum
+          sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
+          sha256sum ergo_windows_amd64.exe > ergo_windows_amd64.sha256sum
+          sha256sum ergo_darwin_arm64 > ergo_darwin_arm64.sha256sum
+          sha256sum ergo_linux_arm64 > ergo_linux_arm64.sha256sum
+          popd
+          ./gen.sh
+          docker logout
+          make release
+          make deb
+        env:
+          GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DEBTOKEN: ${{ secrets.APT }}

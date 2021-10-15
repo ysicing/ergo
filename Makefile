@@ -63,6 +63,9 @@ install: clean ## install
                         -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
                         -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
 
+deb: build ## build deb
+	./deb.sh
+
 .PHONY : build release clean install
 
 .EXPORT_ALL_VARIABLES:

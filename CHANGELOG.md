@@ -1,5 +1,14 @@
 ## Ergo CHANGELOG
 
+- v2.0.6
+  - ops添加ping子命令
+
+- v2.0.5
+  - 修复默认ergo插件库
+
+- v2.0.4
+  - 增强plugin子命令
+
 - v2.0.3
   - 新增code命令,支持初始化crds/go项目
   - plugin增强, 参考helm repo

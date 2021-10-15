@@ -11,3 +11,5 @@ dist
 .githubtoken
 release.sh
 ergo.rb
+
+hack/deb/*.deb
