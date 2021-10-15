@@ -1,0 +1,5 @@
+Package:opsergo
+Version:2.0.6
+Architecture:amd64
+Maintainer:ysicing
+Description:"一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本 2.0.6"

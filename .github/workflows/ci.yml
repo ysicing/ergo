@@ -1,10 +1,8 @@
-name: build ergo tools
+name: pre-ci
 on:
   push:
     branches:
     - develop
-      #  schedule:
-      #- cron: '0 */12 * * *'
 jobs:
   build:
     name: build ergo tools
@@ -41,7 +39,7 @@ jobs:
           popd
           ./gen.sh
           docker logout
-          cat version.txt | grep -E '(beta|rc)' && (make pre-release) || (make release)
+          cat version.txt | grep -E '(beta|rc)' && (make pre-release)
       env:
         GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

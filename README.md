@@ -1,8 +1,40 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
+![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/ci?style=flat-square)
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/ysicing/ergo?filename=go.mod&style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ysicing/ergo?style=flat-square)
+![GitHub all releases](https://img.shields.io/github/downloads/ysicing/ergo/total?style=flat-square)
+![GitHub](https://img.shields.io/github/license/ysicing/ergo?style=flat-square)
+
 
 ## ergo
 
-> 一个使用 Go 编写运维工具,尽量减少重复工作，同时降低维护脚本的成本
+> 一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本
+
+兼容性:
+
+- [x] 100%兼容`Debian 9+`系
+- [ ] macOS部分功能可用
+
+## 安装使用
+
+### 二进制安装
+
+可直接从 [release](https://github.com/ysicing/ergo/releases) 下载预编译的二进制文件
+
+### macOS安装
+
+```bash
+brew tap ysicing/tap
+brew install ergo
+```
+
+### macOS升级
+
+```bash
+brew upgrade
+或者
+ergo upgrade
+```
 
 ### 镜像使用
 
@@ -10,23 +42,14 @@
 ysicing/ergo
 ```
 
-### 二进制安装
-
-可直接从 [release](https://github.com/ysicing/ergo/releases) 页下载预编译的二进制文件
-
-### Mac OS安装
+### Debian使用
 
 ```bash
-brew tap ysicing/tap
-brew install ergo
-```
-
-### Mac OS升级
-
-```bash
-brew upgrade
-或者
-ergo upgrade
+echo "deb [trusted=yes] https://debian.ysicing.me/ /" | sudo tee /etc/apt/sources.list.d/ergo.list
+apt update
+# 避免与源里其他ergo混淆,deb包为opsergo
+apt-get install -y opsergo
+ergo version
 ```
 
 ## 命令支持
@@ -40,6 +63,7 @@ ergo upgrade
   - [x] `ps` 进程
   - [x] `nc` nc
   - [x] `exec` 执行命令
+  - [x] `ping`
 - [x] plugin
   - [x] `install` 安装插件
   - [x] `list` 列出ergo插件
@@ -55,6 +79,9 @@ ergo upgrade
     - [x] `containerd`
     - [x] `mysql`等
   - [x] `dump` dump安装脚本 
+- [x] sec
+  - [ ] `deny` 封禁sm
+    - [ ] `banip` 封禁ip
 - [x] upgrade
 - [x] version
 
