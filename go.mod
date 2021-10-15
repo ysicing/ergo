@@ -11,7 +11,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.1.0 // indirect
-	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd // indirect
+	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gofrs/flock v0.8.1
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
@@ -36,7 +36,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.268
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.222
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.268
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.222
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab

@@ -939,8 +939,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.268 h1:DvPY
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.268/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.222 h1:zzLAaWLjKx6hIy7pGpd6n32Ks4t8cJUS2yI1Ga8nhGU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.222/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.268 h1:m5AhFk57uEcN3hwrYHQFZ2H11RgVz65lTfD5/vXMW1w=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.268/go.mod h1:CuOaLxOQr477GhMWAQPYQFUJrsZbW+ZqkAgP2uHDZXg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.270 h1:Ap8FMmHxRGfbHNtRVM9+kZ0S6gSw9CK2JiU9UK5jvCo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.270/go.mod h1:CuOaLxOQr477GhMWAQPYQFUJrsZbW+ZqkAgP2uHDZXg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.222 h1:y6GsLaCdXZf9H6V+rQC1jQiFCYVuxEGAv5kNJguKxLc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.222/go.mod h1:r8txjlw4DjLDZFOpnPC/hOFHr1VckZc0jjBK6XIFLP0=
 github.com/tklauser/go-sysconf v0.3.9 h1:JeUVdAOWhhxVcU6Eqr/ATFHgXk/mmiItdKeJPev3vTo=
@@ -1151,8 +1151,6 @@ golang.org/x/net v0.0.0-20210326060303-6b1517762897/go.mod h1:uSPa2vr4CLtc/ILN5o
 golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4/go.mod h1:p54w0d4576C0XHj96bSt6lcn1PtDYWL6XObtHCRCNQM=
 golang.org/x/net v0.0.0-20210520170846-37e1c6afe023/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/net v0.0.0-20210825183410-e898025ed96a/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
-golang.org/x/net v0.0.0-20211011170408-caeb26a5c8c0 h1:qOfNqBm5gk93LjGZo1MJaKY6Bph39zOKz1Hz2ogHj1w=
-golang.org/x/net v0.0.0-20211011170408-caeb26a5c8c0/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/net v0.0.0-20211014222326-fd004c51d1d6 h1:XKcOi662tO09NMIfjF2bhAKD/sRnfDS6uK7GyZ2TsL8=
 golang.org/x/net v0.0.0-20211014222326-fd004c51d1d6/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
@@ -1277,8 +1275,6 @@ golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20210816074244-15123e1e1f71/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac h1:oN6lz7iLW/YC7un8pq+9bOLyXrprv2+DKfkJY+2LJJw=
-golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20211013075003-97ac67df715c h1:taxlMj0D/1sOAuv/CbSD+MMDof2vbyPTqz5FNYKpXt8=
 golang.org/x/sys v0.0.0-20211013075003-97ac67df715c/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201117132131-f5c789dd3221/go.mod h1:Nr5EML6q2oocZ2LXRh80K7BxOlk5/8JxuGnuhpl+muw=
