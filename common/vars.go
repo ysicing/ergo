@@ -17,3 +17,9 @@ const (
 	DefaultBinDir     = ".ergo/bin"
 	DefaultCfgDir     = ".ergo/.config"
 )
+
+const (
+	PluginRepoRemoteMode = "remote"
+	PluginRepoLocalMode = "local"
+	PluginGithubJiasu = "https://github.techoc.workers.dev"
+)

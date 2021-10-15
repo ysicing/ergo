@@ -13,6 +13,7 @@ import (
 	"github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/pkg/cli/output"
 	"os"
+	"runtime"
 )
 
 type ListRemoteOptions struct {
@@ -60,9 +61,13 @@ func (p *ListRemoteOptions) Run() {
 		}
 	}
 	table := uitable.New()
-	table.AddRow("Repo", "NAME", "URL", "Desc", "Available")
+	table.AddRow("repo", "name", "version", "homepage", "desc", "url")
 	for _, re := range res {
-		table.AddRow(re.Repo.Name, re.Name, re.Url, re.Desc, re.Os == zos.GetOS())
+		for _, r := range re.Url {
+			if r.Os == zos.GetOS() && r.Arch == runtime.GOARCH {
+				table.AddRow(re.Repo.Name, re.Name, re.Version, re.Homepage, re.Desc, r.PluginUrl(re.Version))
+			}
+		}
 	}
 	output.EncodeTable(os.Stdout, table)
 }

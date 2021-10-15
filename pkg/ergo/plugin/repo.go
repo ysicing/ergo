@@ -12,23 +12,26 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
+	"github.com/ysicing/ergo/pkg/util/util"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sigs.k8s.io/yaml"
 	"strings"
 	"time"
 )
 
 type File struct {
-	Generated    time.Time `json:"generated"`
-	Repositories []*Repo   `json:"repositories"`
+	Generated    time.Time `json:"generated" yaml:"generated"`
+	Repositories []*Repo   `json:"repositories" yaml:"repositories"`
 }
 
 type PFile struct {
-	Plugins []*Plugin `json:"plugins"`
+	Version string    `yaml:"version" json:"version"`
+	Plugins []*Plugin `json:"plugins" yaml:"plugins"`
 }
 
 func NewFile() *File {
@@ -197,9 +200,16 @@ func (o *RepoAddOption) Run() error {
 		o.Log.Errorf("解析 %v 失败: %v", o.RepoCfg, err)
 		return err
 	}
+
 	c := Repo{
 		Name: o.Name,
 		Url:  o.Url,
+	}
+
+	if strings.HasSuffix(o.Url, "http://") || strings.HasSuffix(o.Url, "https") {
+		c.Mode = common.PluginRepoRemoteMode
+	} else {
+		c.Name = common.PluginRepoLocalMode
 	}
 
 	if f.Has(o.Name) {
@@ -281,17 +291,30 @@ func (o *RepoUpdateOption) Run() error {
 		if file.CheckFileExists(index) {
 			file.RemoveFiles(index)
 		}
-		_, err := url.Parse(repo.Url)
-		if err != nil {
-			o.Log.Warnf("%v invalid chart URL format: %s", repo.Name, repo.Url)
-			// TODO
-			continue
-		}
-		err = httpget(repo.Url, index)
-		if err != nil {
-			o.Log.Failf("%q已经更新索引失败: %v", name, err)
+		if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.Url, "http") {
+			_, err := url.Parse(repo.Url)
+			if err != nil {
+				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.Url)
+				// TODO
+				continue
+			}
+			err = httpget(repo.Url, index)
+			if err != nil {
+				o.Log.Failf("%q 更新索引失败: %v", name, err)
+			} else {
+				o.Log.Donef("%q 已经更新索引: %v", name, index)
+			}
 		} else {
-			o.Log.Donef("%q已经更新索引: %v", name, index)
+			if !file.CheckFileExists(repo.Url) {
+				o.Log.Warnf("%v invalid local repo file: %s", repo.Name, repo.Url)
+				continue
+			}
+			file.RemoveFiles(index)
+			if err := util.Copy(index, repo.Url); err != nil {
+				o.Log.Failf("%q 更新索引失败: %v", name, err)
+			} else {
+				o.Log.Donef("%q 已经更新索引: %v", name, index)
+			}
 		}
 	}
 	return nil
@@ -330,17 +353,45 @@ func (r *RepoInstallOption) Run() error {
 		r.Log.Errorf("%v 插件不存在: %v", r.Repo, r.Name)
 		return nil
 	}
-	if plugin.Os != "" && plugin.Os != zos.GetOS() {
-		r.Log.Errorf("%v/%v 插件不支持当前系统: %v", r.Repo, r.Name, plugin.Os)
+	installallow := false
+	var installplugin PUrl
+	for _, pu := range plugin.Url {
+		if pu.Os == zos.GetOS() && pu.Arch == runtime.GOARCH {
+			installallow = true
+			installplugin = pu
+			break
+		}
+	}
+
+	if !installallow {
+		r.Log.Errorf("%v/%v 插件不支持当前系统", r.Repo, r.Name)
 		return nil
 	}
 	// 下载插件
 	binfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), plugin.Bin)
-	if err := httpget(plugin.Url, binfile); err != nil {
+	r.Log.StartWait(fmt.Sprintf("下载插件: %v", installplugin.PluginUrl(plugin.Version)))
+	err = httpget(installplugin.PluginUrl(plugin.Version), binfile)
+	r.Log.StopWait()
+	if err != nil {
 		r.Log.Error("下载插件失败")
 		return nil
 	}
 	os.Chmod(binfile, common.FileMode0755)
+	r.Log.Done("插件下载完成")
+
+	if installplugin.Sha256 != "" {
+		r.Log.StartWait("开始校验插件")
+		localhash := ssh.Sha256FromLocal(binfile)
+		r.Log.StopWait()
+		if localhash == installplugin.Sha256 {
+			r.Log.Donef("校验插件完成")
+		} else {
+			msg := fmt.Sprintf("插件校验失败, sha256不匹配: local: %v, remote: %v", localhash, installplugin.Sha256)
+			r.Log.Error(msg)
+			return nil
+		}
+
+	}
 	r.Log.Done("插件安装完成, 加载插件列表")
 	args := os.Args
 	ssh.RunCmd(args[0], "plugin", "list")
