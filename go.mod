@@ -7,7 +7,7 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1016
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/ergoapi/util v0.0.7
+	github.com/ergoapi/util v0.0.8
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.1.0 // indirect

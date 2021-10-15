@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
@@ -52,11 +53,21 @@ func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "install [Repo] [Name]",
 		Short:   "install plugin",
+		Long: `ergo install repo name or ergo install repo/name`,
 		Aliases: []string{"i"},
-		Args:    require.ExactArgs(2),
+		Args:    cobra.RangeArgs(1, 2),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			o.Repo = args[0]
-			o.Name = args[1]
+			if len(args) == 1 {
+				iargs := strings.Split(args[0], "/")
+				if len(iargs) != 2 {
+					return fmt.Errorf("ergo plugin install [repo/name] or [repo] [name]")
+				}
+				o.Repo = iargs[0]
+				o.Name = iargs[1]
+			} else {
+				o.Repo = args[0]
+				o.Name = args[1]
+			}
 			return o.Run()
 		},
 	}
