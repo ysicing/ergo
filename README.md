@@ -54,6 +54,16 @@ ergo version
 
 ## 命令支持
 
+- [x] cloud云服务商支持
+  - [ ] `dns`
+    - [ ] `domain`
+  - [ ] `ecs`
+    - `create`
+    - `destroy`
+    - `snapshot`
+    - `statu`
+    - `halt`
+    - `up`
 - [x] code 初始化项目
 - [x] completion
 - [x] debian
