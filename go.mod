@@ -24,7 +24,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
-	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6
 	github.com/pkg/sftp v1.13.4
 	github.com/rhysd/go-github-selfupdate v1.2.3
@@ -33,7 +32,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.8.1
+	github.com/spf13/viper v1.9.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.270
