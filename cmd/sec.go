@@ -33,7 +33,7 @@ func newSecCmd(f factory.Factory) *cobra.Command {
 
 func newDeny(f factory.Factory) *cobra.Command {
 	deny := &cobra.Command{
-		Use: "deny [OPTIONS] [flags]",
+		Use:   "deny [OPTIONS] [flags]",
 		Short: "deny sm",
 		Args:  cobra.ExactValidArgs(1),
 	}
@@ -41,7 +41,7 @@ func newDeny(f factory.Factory) *cobra.Command {
 	return deny
 }
 
-func denyIP(f factory.Factory) *cobra.Command  {
+func denyIP(f factory.Factory) *cobra.Command {
 	denyPingCmd := &cobra.Command{
 		Use:   "banip [flags]",
 		Short: "禁ip",

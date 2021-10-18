@@ -75,14 +75,13 @@ func newOPSCmd(f factory.Factory) *cobra.Command {
 		Use:     "ping",
 		Short:   "ping",
 		Version: "2.0.6",
-		Args: require.MinimumNArgs(1),
+		Args:    require.MinimumNArgs(1),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			return cmd.ping(args[0], pingcount)
 		},
 	}
 
 	pingcmd.PersistentFlags().IntVar(&pingcount, "c", 4, "ping count")
-
 
 	ops.AddCommand(pscmd)
 	ops.AddCommand(ncCmd(cmd))
