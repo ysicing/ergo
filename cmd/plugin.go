@@ -53,7 +53,7 @@ func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "install [Repo] [Name]",
 		Short:   "install plugin",
-		Long: `ergo install repo name or ergo install repo/name`,
+		Long:    `ergo install repo name or ergo install repo/name`,
 		Aliases: []string{"i"},
 		Args:    cobra.RangeArgs(1, 2),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {

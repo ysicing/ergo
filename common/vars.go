@@ -20,6 +20,6 @@ const (
 
 const (
 	PluginRepoRemoteMode = "remote"
-	PluginRepoLocalMode = "local"
-	PluginGithubJiasu = "https://github.techoc.workers.dev"
+	PluginRepoLocalMode  = "local"
+	PluginGithubJiasu    = "https://github.techoc.workers.dev"
 )

@@ -3,8 +3,6 @@
 
 package cloud
 
-import "context"
-
 type ProviderType string
 
 func (s ProviderType) Value() string {
@@ -32,15 +30,3 @@ var CloudType = []struct {
 		Value: "所有云服务商",
 	},
 }
-
-// DnsCloud cloud dns
-type DnsCloud interface {
-	DomainList(ctx context.Context) (DomainList, error)
-}
-
-type Domain struct {
-	Name     string `json:"name" yaml:"name"`
-	Provider string `json:"provider" yaml:"provider"`
-}
-
-type DomainList []Domain

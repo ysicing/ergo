@@ -16,7 +16,7 @@ type Plugin struct {
 	Homepage string `yaml:"homepage" json:"homepage"`
 	Desc     string `yaml:"desc" json:"desc"`
 	Bin      string `yaml:"bin" json:"bin"`
-	Url      []PUrl   `yaml:"url" json:"url"`
+	Url      []PUrl `yaml:"url" json:"url"`
 }
 
 type PUrl struct {

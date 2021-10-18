@@ -57,13 +57,14 @@ ergo version
 - [x] cloud云服务商支持
   - [ ] `dns`
     - [ ] `domain`
-  - [ ] `ecs`
-    - `create`
-    - `destroy`
-    - `snapshot`
-    - `statu`
-    - `halt`
-    - `up`
+- [ ] cvm 腾讯云开临时测试机器
+  - [x] `create` / `new` / `add`
+  - [x] `destroy` / `del` / `rm`
+  - [ ] `snapshot`
+  - [ ] `status`
+  - [ ] `halt`
+  - [ ] `up`
+  - [x] `ls` / `list`
 - [x] code 初始化项目
 - [x] completion
 - [x] debian

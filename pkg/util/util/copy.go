@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-type Copier struct {}
+type Copier struct{}
 
 // CopyFile copies the contents of src to dst atomically.
 func (c *Copier) CopyFile(dst, src string) error {
