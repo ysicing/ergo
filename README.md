@@ -1,9 +1,11 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
-![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/ci?style=flat-square)
+![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/tag?style=flat-square)
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/ysicing/ergo?filename=go.mod&style=flat-square)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ysicing/ergo?style=flat-square)
 ![GitHub all releases](https://img.shields.io/github/downloads/ysicing/ergo/total?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/ysicing/ergo?style=flat-square)
+[![Go Report Card](https://goreportcard.com/badge/ysicing/ergo)](https://goreportcard.com/report/ysicing/ergo)
+[![Releases](https://img.shields.io/github/release-pre/ysicing/ergo.svg)](https://github.com/ysicing/ergo/releases)
 
 
 ## ergo
@@ -14,6 +16,11 @@
 
 - [x] 100%兼容`Debian 9+`系
 - [ ] macOS部分功能可用
+
+## ergo能干什么 / What does Ergo do?
+
+- 将常用脚本或者公有云操作抽象成cli命令, 简化工作
+- 灵活的自定义插件管理工具,像使用`helm repo`方式管理插件
 
 ## 安装使用
 
