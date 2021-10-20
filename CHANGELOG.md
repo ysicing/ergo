@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.2.0
+  - 新增cloud子命令cr管理个人容器镜像服务
+
 - v2.1.0
   - 新增ext 清理github package功能
   - 暂时屏蔽sec子命令

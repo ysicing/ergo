@@ -20,7 +20,7 @@ jobs:
       run: |
           echo "install ghr"
           go get -u github.com/tcnksm/ghr
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       with:
         fetch-depth: 1
     - name: build ergo
