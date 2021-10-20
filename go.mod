@@ -7,7 +7,6 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1290
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/davecgh/go-spew v1.1.1
 	github.com/ergoapi/util v0.0.8
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
@@ -37,7 +36,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.8.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.270
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.270
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.272
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.270
