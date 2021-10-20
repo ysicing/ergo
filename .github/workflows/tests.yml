@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "install gox"
           go get -u github.com/mitchellh/gox
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.5
         with:
           fetch-depth: 1
       - name: build ergo
