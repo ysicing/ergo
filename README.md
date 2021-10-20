@@ -62,6 +62,8 @@ ergo version
 ## 命令支持
 
 - [x] cloud云服务商支持
+  - [ ] `cr` 容器镜像服务
+    - [x] `list`
   - [ ] `dns`
     - [ ] `domain`
 - [ ] cvm 腾讯云开临时测试机器
