@@ -13,6 +13,7 @@ require (
 	github.com/go-logr/logr v1.1.0 // indirect
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gofrs/flock v0.8.1
+	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4
@@ -37,14 +38,14 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.270
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.270
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.270
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.272
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.270
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/net v0.0.0-20211014222326-fd004c51d1d6 // indirect
-	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1 // indirect
+	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
 	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
@@ -56,3 +57,5 @@ require (
 	k8s.io/utils v0.0.0-20210820185131-d34e5cb4466e // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
+
+// replace github.com/google/go-github/v39 => ../go-github
