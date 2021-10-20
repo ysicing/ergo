@@ -4,9 +4,10 @@
 package log
 
 import (
+	"strings"
+
 	"github.com/mgutz/ansi"
 	"github.com/sirupsen/logrus"
-	"strings"
 )
 
 var defaultLog Logger = &stdoutLogger{

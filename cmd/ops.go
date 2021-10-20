@@ -4,6 +4,9 @@
 package cmd
 
 import (
+	"strings"
+	"sync"
+
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
@@ -14,8 +17,6 @@ import (
 	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/cmd/helm/require"
-	"strings"
-	"sync"
 )
 
 type OPSCmd struct {
@@ -39,14 +40,14 @@ type ExecCmd struct {
 	ips    []string
 }
 
-type InstallCmd struct {
-	OPSCmd
-	list   bool
-	dump   bool
-	local  bool
-	sshcfg sshutil.SSH
-	ips    []string
-}
+//type InstallCmd struct {
+//	OPSCmd
+//	list   bool
+//	dump   bool
+//	local  bool
+//	sshcfg sshutil.SSH
+//	ips    []string
+//}
 
 // newOPSCmd ergo ops
 func newOPSCmd(f factory.Factory) *cobra.Command {

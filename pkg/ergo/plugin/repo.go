@@ -6,6 +6,15 @@ package plugin
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"time"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/gofrs/flock"
@@ -13,15 +22,7 @@ import (
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ergo/pkg/util/util"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"os"
-	"path/filepath"
-	"runtime"
 	"sigs.k8s.io/yaml"
-	"strings"
-	"time"
 )
 
 type File struct {
@@ -161,7 +162,7 @@ func (r *PFile) Get(name string) *Plugin {
 type RepoAddOption struct {
 	Log     log.Logger
 	Name    string
-	Url     string
+	URL     string
 	RepoCfg string
 }
 
@@ -203,10 +204,10 @@ func (o *RepoAddOption) Run() error {
 
 	c := Repo{
 		Name: o.Name,
-		Url:  o.Url,
+		URL:  o.URL,
 	}
 
-	if strings.HasSuffix(o.Url, "http://") || strings.HasSuffix(o.Url, "https") {
+	if strings.HasSuffix(o.URL, "http://") || strings.HasSuffix(o.URL, "https") {
 		c.Mode = common.PluginRepoRemoteMode
 	} else {
 		c.Name = common.PluginRepoLocalMode
@@ -291,26 +292,26 @@ func (o *RepoUpdateOption) Run() error {
 		if file.CheckFileExists(index) {
 			file.RemoveFiles(index)
 		}
-		if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.Url, "http") {
-			_, err := url.Parse(repo.Url)
+		if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.URL, "http") {
+			_, err := url.Parse(repo.URL)
 			if err != nil {
-				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.Url)
+				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
 				// TODO
 				continue
 			}
-			err = httpget(repo.Url, index)
+			err = httpget(repo.URL, index)
 			if err != nil {
 				o.Log.Failf("%q 更新索引失败: %v", name, err)
 			} else {
 				o.Log.Donef("%q 已经更新索引: %v", name, index)
 			}
 		} else {
-			if !file.CheckFileExists(repo.Url) {
-				o.Log.Warnf("%v invalid local repo file: %s", repo.Name, repo.Url)
+			if !file.CheckFileExists(repo.URL) {
+				o.Log.Warnf("%v invalid local repo file: %s", repo.Name, repo.URL)
 				continue
 			}
 			file.RemoveFiles(index)
-			if err := util.Copy(index, repo.Url); err != nil {
+			if err := util.Copy(index, repo.URL); err != nil {
 				o.Log.Failf("%q 更新索引失败: %v", name, err)
 			} else {
 				o.Log.Donef("%q 已经更新索引: %v", name, index)
@@ -355,7 +356,7 @@ func (r *RepoInstallOption) Run() error {
 	}
 	installallow := false
 	var installplugin PUrl
-	for _, pu := range plugin.Url {
+	for _, pu := range plugin.URL {
 		if pu.Os == zos.GetOS() && pu.Arch == runtime.GOARCH {
 			installallow = true
 			installplugin = pu
@@ -369,8 +370,8 @@ func (r *RepoInstallOption) Run() error {
 	}
 	// 下载插件
 	binfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), plugin.Bin)
-	r.Log.StartWait(fmt.Sprintf("下载插件: %v", installplugin.PluginUrl(plugin.Version)))
-	err = httpget(installplugin.PluginUrl(plugin.Version), binfile)
+	r.Log.StartWait(fmt.Sprintf("下载插件: %v", installplugin.PluginURL(plugin.Version)))
+	err = httpget(installplugin.PluginURL(plugin.Version), binfile)
 	r.Log.StopWait()
 	if err != nil {
 		r.Log.Error("下载插件失败")
@@ -390,7 +391,6 @@ func (r *RepoInstallOption) Run() error {
 			r.Log.Error(msg)
 			return nil
 		}
-
 	}
 	r.Log.Done("插件安装完成, 加载插件列表")
 	args := os.Args

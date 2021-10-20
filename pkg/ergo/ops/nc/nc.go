@@ -6,9 +6,6 @@ package nc
 import (
 	"bufio"
 	"bytes"
-	"fmt"
-	"github.com/axgle/mahonia"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"io"
 	"io/ioutil"
 	"net"
@@ -16,10 +13,13 @@ import (
 	"os/exec"
 	"runtime"
 	"strconv"
+
+	"github.com/axgle/mahonia"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 const (
-	udpNetwork = "udp"
+	// udpNetwork = "udp"
 	udpBufSize = 64 * 1024
 )
 
@@ -140,7 +140,7 @@ func ListenPacket(protocol, host string, port int, command bool) error {
 		return nil
 	}
 	log.Debugf("Connection received : %s", addr.String())
-	fmt.Fprintf(os.Stdout, string(buf))
+	log.WriteString(string(buf))
 	return nil
 }
 

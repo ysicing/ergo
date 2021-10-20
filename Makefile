@@ -18,7 +18,7 @@ fmt:
 golint:
 
 	@echo golangci-lint run ./...
-	@OUTPUT=`command -v golangci-lint >/dev/null 2>&1 && golangci-lint run ./... 2>&1`; \
+	@OUTPUT=`command -v golangci-lint >/dev/null 2>&1 && golangci-lint run -v ./... 2>&1`; \
 	if [ "$$OUTPUT" ]; then \
 		echo "golint errors:"; \
 		echo "$$OUTPUT"; \

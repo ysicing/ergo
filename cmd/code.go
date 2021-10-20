@@ -5,12 +5,13 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/codegen"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/log"
-	"strings"
 )
 
 type CodeOptions struct {

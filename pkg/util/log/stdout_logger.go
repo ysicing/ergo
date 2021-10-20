@@ -5,14 +5,15 @@ package log
 
 import (
 	"fmt"
-	goansi "github.com/k0kubun/go-ansi"
-	"github.com/mgutz/ansi"
-	"github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"strconv"
 	"sync"
 	"time"
+
+	goansi "github.com/k0kubun/go-ansi"
+	"github.com/mgutz/ansi"
+	"github.com/sirupsen/logrus"
 )
 
 const ErgoLogTimestamps = "ERGO_LOG_TIMESTAMPS"
@@ -332,13 +333,11 @@ func (s *stdoutLogger) Done(args ...interface{}) {
 
 	s.writeMessage(doneFn, fmt.Sprintln(args...))
 	s.writeMessageToFileLogger(doneFn, args...)
-
 }
 
 func (s *stdoutLogger) Donef(format string, args ...interface{}) {
 	s.logMutex.Lock()
 	defer s.logMutex.Unlock()
-
 	s.writeMessage(doneFn, fmt.Sprintf(format, args...)+"\n")
 	s.writeMessageToFileLoggerf(doneFn, format, args...)
 }

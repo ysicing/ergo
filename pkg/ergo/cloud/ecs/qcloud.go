@@ -5,12 +5,13 @@ package ecs
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gosuri/uitable"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	"strings"
 )
 
 type CVM struct {
@@ -75,7 +76,7 @@ func (c *CVM) Reset(cvmid string) error {
 
 	response, err := client.ResetInstance(request)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		return fmt.Errorf("An API error has returned: %s", err)
+		return fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	if err != nil {
 		return err
@@ -95,7 +96,7 @@ func (c *CVM) List() error {
 	request := cvm.NewDescribeInstancesRequest()
 	response, err := client.DescribeInstances(request)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		return fmt.Errorf("An API error has returned: %s", err)
+		return fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	if err != nil {
 		return err

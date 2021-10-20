@@ -6,6 +6,7 @@ package qcloud
 import (
 	"context"
 	"fmt"
+
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -13,7 +14,7 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 )
 
-func NewDns(opts ...Option) (cloud.DnsCloud, error) {
+func NewDNS(opts ...Option) (cloud.DNSCloud, error) {
 	p := new(provider)
 	for _, opt := range opts {
 		opt(p)

@@ -5,15 +5,17 @@ package version
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+
 	"github.com/blang/semver"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/excmd"
+	"github.com/ergoapi/util/zos"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/logo"
-	"os"
-	"runtime"
 )
 
 var UsageTpl = `ergo ops 效能工具`
@@ -98,8 +100,11 @@ func Upgrade() {
 		log.Infof("当前已经是最新版本了: %v", Version)
 		return
 	}
-	if runtime.GOOS != "linux" {
-		excmd.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo")
+	// TODO linux brew
+	if zos.IsMacOS() {
+		if err := excmd.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo"); err != nil {
+			return
+		}
 	} else {
 		release, found, err := selfupdate.DetectVersion("ysicing/ergo", lastversion)
 		if err != nil {

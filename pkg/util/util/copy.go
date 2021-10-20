@@ -4,11 +4,12 @@
 package util
 
 import (
-	"github.com/ysicing/ergo/common"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/ysicing/ergo/common"
 )
 
 type Copier struct{}

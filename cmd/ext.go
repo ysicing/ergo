@@ -15,13 +15,13 @@ import (
 
 type ExtOptions struct {
 	*flags.GlobalFlags
-	Log    log.Logger
+	Log log.Logger
 }
 
 func newExtCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ext [flags]",
-		Short: "ext 功能",
+		Use:     "ext [flags]",
+		Short:   "ext 功能",
 		Version: "2.1.0",
 	}
 	cmd.AddCommand(ghClean(f))
@@ -31,8 +31,8 @@ func newExtCmd(f factory.Factory) *cobra.Command {
 func ghClean(f factory.Factory) *cobra.Command {
 	ext := ExtOptions{Log: f.GetLog()}
 	cmd := &cobra.Command{
-		Use:   "gh [flags]",
-		Short: "gh清理package",
+		Use:     "gh [flags]",
+		Short:   "gh清理package",
 		Version: "2.1.0",
 		Run: func(cobraCmd *cobra.Command, args []string) {
 			ext.githubClean()
@@ -49,7 +49,7 @@ func (ext *ExtOptions) githubClean() {
 		ext.Log.Info("load user token from env GHCRIO")
 	} else {
 		p := promptui.Prompt{
-			Label:       "token",
+			Label: "token",
 		}
 		token, _ = p.Run()
 	}

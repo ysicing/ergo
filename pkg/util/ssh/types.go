@@ -5,10 +5,11 @@ package ssh
 
 import (
 	"fmt"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type SSH struct {

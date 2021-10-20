@@ -6,14 +6,15 @@ package plugin
 import (
 	"bytes"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/spf13/cobra"
+	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 var (
@@ -28,13 +29,12 @@ type ListOptions struct {
 	PluginPaths []string
 }
 
-func (o *ListOptions) Complete(cmd *cobra.Command) error {
+func (o *ListOptions) Complete(cmd *cobra.Command) {
 	o.Verifier = &CommandOverrideVerifier{
 		root:        cmd.Root(),
 		seenPlugins: make(map[string]string),
 	}
 	o.PluginPaths = filepath.SplitList(os.Getenv("PATH"))
-	return nil
 }
 
 func (o *ListOptions) Run() error {

@@ -5,12 +5,21 @@ package github
 
 import (
 	"context"
-	"github.com/davecgh/go-spew/spew"
+	"strings"
+
 	"github.com/ergoapi/util/ptr"
 	"github.com/google/go-github/v39/github"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"golang.org/x/oauth2"
 )
+
+func getNameFromURL(name, url string) string {
+	if strings.Contains(name, "/") {
+		s := strings.Split(url, "/")
+		return s[len(s)-1]
+	}
+	return name
+}
 
 func CleanPackage(user, token string) {
 	ghlog := log.GetInstance()
@@ -20,26 +29,42 @@ func CleanPackage(user, token string) {
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
-	packages, _, err  := client.Users.ListPackages(ctx, user, &github.PackageListOptions{
+	packages, _, err := client.Users.ListPackages(ctx, user, &github.PackageListOptions{
 		PackageType: ptr.StringPtr("container"),
 		ListOptions: github.ListOptions{
 			PerPage: 300,
 		},
 	})
 	if err != nil {
-		ghlog.Panicf("list package err: %v",err)
+		ghlog.Panicf("list package err: %v", err)
 	}
 	for _, p := range packages {
-		spew.Dump(p)
-		ghlog.Debugf("package %v count: %v", p.GetName(), p.GetVersionCount())
-		if p.GetVersionCount() <= 5 {
-			ghlog.Debugf("skip %v, count: %v", p.GetName(), p.GetVersionCount())
+		ghlog.Debugf("package %v", p.GetName())
+		packagesversions, _, err := client.Users.PackageGetAllVersions(ctx, user, "container", getNameFromURL(p.GetName(), p.GetHTMLURL()))
+		if err != nil {
+			ghlog.Debugf("list package version err: %v, skip", err)
 			continue
 		}
-		go clean(client, ghlog, p)
+		for _, pv := range packagesversions {
+			clean(ctx, client, ghlog, pv, p.GetOwner().GetName(), p.GetName(), getNameFromURL(p.GetName(), p.GetHTMLURL()))
+		}
 	}
 }
 
-func clean(client *github.Client, log log.Logger, p *github.Package)  {
-	log.Debugf("start clean %v", p.Name)
+func clean(ctx context.Context, client *github.Client, log log.Logger, p *github.PackageVersion, user, name, urlname string) {
+	for _, v := range p.Metadata.Container.Tags {
+		if strings.Contains(v, "-") {
+			if resp, err := client.Users.PackageDeleteVersion(ctx, user, "container", urlname, p.GetID()); err != nil {
+				if resp.StatusCode == 400 {
+					log.Warnf("%v cannot delete the last tagged version [ %v ] of %v.", user, v, name)
+				} else if resp.StatusCode == 404 {
+					log.Warnf("%v package %v version [%v] not found", user, name, v)
+				} else {
+					log.Errorf("start clean user %v package %v version %v, err: %v", user, name, v, err)
+				}
+			} else {
+				log.Donef("clean user %v package %v version %v done", user, name, v)
+			}
+		}
+	}
 }

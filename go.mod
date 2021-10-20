@@ -14,7 +14,7 @@ require (
 	github.com/go-logr/logr v1.1.0 // indirect
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gofrs/flock v0.8.1
-	github.com/google/go-github/v39 v39.2.1-0.20211018222732-72ec8bbea471
+	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4

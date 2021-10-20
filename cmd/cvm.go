@@ -6,6 +6,9 @@ package cmd
 
 import (
 	"context"
+	"os"
+	"strings"
+
 	"github.com/ergoapi/util/file"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -16,8 +19,6 @@ import (
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"os"
-	"strings"
 )
 
 type CvmOption struct {
@@ -149,7 +150,7 @@ func (c *CvmOption) Init() error {
 		if !strings.HasPrefix(region, "ap") {
 			region = "ap-nanjing"
 		}
-		p, err := qcloud.NewCvm(qcloud.WithLog(c.log), qcloud.WithApi(aid, akey), qcloud.WithRegion(region))
+		p, err := qcloud.NewCvm(qcloud.WithLog(c.log), qcloud.WithAPI(aid, akey), qcloud.WithRegion(region))
 		if err != nil {
 			return err
 		}

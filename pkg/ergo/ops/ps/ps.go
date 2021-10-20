@@ -5,6 +5,7 @@ package ps
 
 import (
 	"fmt"
+
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/ysicing/ergo/pkg/util/log"
 )

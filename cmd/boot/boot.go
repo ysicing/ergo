@@ -5,9 +5,10 @@ package boot
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/ergoapi/util/zos"
 	"github.com/ysicing/ergo/common"
-	"os"
 )
 
 var rootDirs = []string{

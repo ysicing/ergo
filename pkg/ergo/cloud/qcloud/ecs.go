@@ -7,6 +7,9 @@ package qcloud
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/gopasspw/gopass/pkg/pwgen"
 	"github.com/gosuri/uitable"
 	"github.com/manifoldco/promptui"
@@ -17,8 +20,6 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 	"helm.sh/helm/v3/pkg/cli/output"
-	"os"
-	"strings"
 )
 
 func NewCvm(opts ...Option) (cloud.EcsCloud, error) {
@@ -88,11 +89,11 @@ func (p *provider) createpre() cvmOption {
 	cvmclient := p.NewCvmClient()
 	cvmrequest := cvm.NewDescribeZoneInstanceConfigInfosRequest()
 	cvmrequest.Filters = []*cvm.Filter{
-		&cvm.Filter{
+		{
 			Name:   common.StringPtr("instance-charge-type"),
 			Values: common.StringPtrs([]string{"SPOTPAID"}),
 		},
-		&cvm.Filter{
+		{
 			Name:   common.StringPtr("zone"),
 			Values: common.StringPtrs([]string{c.zone}),
 		},
@@ -181,7 +182,7 @@ func (p *provider) Destroy(ctx context.Context, option cloud.DestroyOption) erro
 		Label: "竞价实例",
 		Items: cvmids,
 	}
-	_, value, err := cvmprompt.Run()
+	_, value, _ := cvmprompt.Run()
 	trequest := cvm.NewTerminateInstancesRequest()
 	if value == "all" {
 		trequest.InstanceIds = common.StringPtrs(cvmidx)

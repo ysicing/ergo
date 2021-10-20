@@ -5,17 +5,18 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"syscall"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"os"
-	"os/exec"
-	"runtime"
-	"strings"
-	"syscall"
 )
 
 const (
@@ -69,9 +70,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 
 	args := os.Args
 	if len(args) > 1 {
-
 		pluginHandler := NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
-
 		cmdPathPieces := args[1:]
 		if _, _, err := rootCmd.Find(cmdPathPieces); err != nil {
 			var cmdName string // first "non-flag" arguments
@@ -81,7 +80,6 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 					break
 				}
 			}
-
 			switch cmdName {
 			case "help", cobra.ShellCompRequestCmd, cobra.ShellCompNoDescRequestCmd:
 				// Don't search for a plugin
@@ -132,7 +130,6 @@ func (h *DefaultPluginHandler) Lookup(filename string) (string, bool) {
 
 // Execute implements PluginHandler
 func (h *DefaultPluginHandler) Execute(executablePath string, cmdArgs, environment []string) error {
-
 	// Windows does not support exec syscall.
 	if runtime.GOOS == "windows" {
 		cmd := exec.Command(executablePath, cmdArgs...)

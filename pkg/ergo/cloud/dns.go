@@ -6,8 +6,8 @@ package cloud
 
 import "context"
 
-// DnsCloud cloud dns
-type DnsCloud interface {
+// DNSCloud cloud dns
+type DNSCloud interface {
 	DomainList(ctx context.Context) (DomainList, error)
 }
 
