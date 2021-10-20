@@ -7,12 +7,14 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1290
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
+	github.com/davecgh/go-spew v1.1.1
 	github.com/ergoapi/util v0.0.8
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.1.0 // indirect
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gofrs/flock v0.8.1
+	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4
@@ -44,7 +46,7 @@ require (
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/net v0.0.0-20211014222326-fd004c51d1d6 // indirect
-	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1 // indirect
+	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
 	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
@@ -56,3 +58,5 @@ require (
 	k8s.io/utils v0.0.0-20210820185131-d34e5cb4466e // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
+
+// replace github.com/google/go-github/v39 => ../go-github

@@ -7,7 +7,7 @@ import "github.com/ysicing/ergo/pkg/util/log"
 
 type Option func(*provider)
 
-func WithApi(key, secret string) Option {
+func WithAPI(key, secret string) Option {
 	return func(p *provider) {
 		p.apikey = key
 		p.apisecret = secret

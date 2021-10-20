@@ -5,12 +5,13 @@ package log
 
 import (
 	"fmt"
-	"github.com/mgutz/ansi"
-	"github.com/ysicing/ergo/pkg/util/terminal"
 	"io"
 	"os"
 	"runtime"
 	"time"
+
+	"github.com/mgutz/ansi"
+	"github.com/ysicing/ergo/pkg/util/terminal"
 )
 
 const waitInterval = time.Millisecond * 150

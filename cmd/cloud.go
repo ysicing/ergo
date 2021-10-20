@@ -7,6 +7,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/ergoapi/util/file"
 	"github.com/gosuri/uitable"
 	"github.com/manifoldco/promptui"
@@ -17,7 +19,6 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/cloud/qcloud"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"helm.sh/helm/v3/pkg/cli/output"
-	"os"
 	"sigs.k8s.io/yaml"
 )
 
@@ -28,7 +29,7 @@ func newCloudCommand(f factory.Factory) *cobra.Command {
 		Short: "云服务商支持",
 	}
 	cloud.AddCommand(newCloudCofig(f))
-	cloud.AddCommand(newCloudDns(f))
+	cloud.AddCommand(newCloudDNS(f))
 	return cloud
 }
 
@@ -37,21 +38,21 @@ func newCloudCofig(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-func newCloudDns(f factory.Factory) *cobra.Command {
+func newCloudDNS(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "dns [flags]",
 		Short: "dns",
 	}
-	cmd.AddCommand(newDnsList(f))
+	cmd.AddCommand(newDNSList(f))
 	return cmd
 }
 
-func newDnsList(f factory.Factory) *cobra.Command {
+func newDNSList(f factory.Factory) *cobra.Command {
 	l := f.GetLog()
 	cmd := &cobra.Command{
 		Use:   "domain",
 		Short: "域名列表",
-		Run: func(cobraCmd *cobra.Command, args []string) {
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			templates := &promptui.SelectTemplates{
 				Label:    "{{ . }}",
 				Active:   "\U0001F449 {{ .Value | cyan }}",
@@ -70,7 +71,7 @@ func newDnsList(f factory.Factory) *cobra.Command {
 			if ct.Key == "all" || ct.Key == cloud.ProviderQcloud.Value() {
 				l.Debugf("load qcloud domain")
 				// 腾讯云
-				p, err := qcloud.NewDns(qcloud.WithLog(l), qcloud.WithApi(os.Getenv("TX_Key"), os.Getenv("TX_Secret")))
+				p, err := qcloud.NewDNS(qcloud.WithLog(l), qcloud.WithAPI(os.Getenv("TX_Key"), os.Getenv("TX_Secret")))
 				if err != nil {
 					l.Errorf("create qcloud api client err: %v", err)
 				} else {
@@ -85,7 +86,7 @@ func newDnsList(f factory.Factory) *cobra.Command {
 			if ct.Key == "all" || ct.Key == cloud.ProviderAliyun.Value() {
 				l.Debugf("load aliyun domain")
 				// 阿里云
-				p, err := aliyun.NewDns(aliyun.WithLog(l), aliyun.WithApi(os.Getenv("Ali_Key"), os.Getenv("Ali_Secret")))
+				p, err := aliyun.NewDNS(aliyun.WithLog(l), aliyun.WithAPI(os.Getenv("Ali_Key"), os.Getenv("Ali_Secret")))
 				if err != nil {
 					l.Errorf("create aliyun api client err: %v", err)
 				} else {
@@ -102,14 +103,15 @@ func newDnsList(f factory.Factory) *cobra.Command {
 			for _, re := range domainlist {
 				table.AddRow(re.Provider, re.Name)
 			}
-			output.EncodeTable(os.Stdout, table)
+			_ = output.EncodeTable(os.Stdout, table)
 			domainfile := fmt.Sprintf("%v/.domain", common.GetDefaultCfgDir())
 			if file.CheckFileExists(domainfile) {
 				file.RemoveFiles(domainfile)
 			}
 			resp, _ := yaml.Marshal(domainlist)
-			file.Writefile(domainfile, string(resp))
+			_ = file.Writefile(domainfile, string(resp))
 			l.Donef("域名缓存成功: %v", domainfile)
+			return nil
 		},
 	}
 	return cmd

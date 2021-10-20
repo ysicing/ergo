@@ -6,10 +6,11 @@ package repo
 import (
 	"bytes"
 	"fmt"
+	"text/template"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"text/template"
 )
 
 const (
@@ -45,7 +46,7 @@ func (c *Etcd) name() string {
 func (c *Etcd) parse() {
 	var b bytes.Buffer
 	t := template.Must(template.New(c.name()).Parse(etcdcompose))
-	t.Execute(&b, c)
+	_ = t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
@@ -72,9 +73,12 @@ func (c *Etcd) Install() error {
 	remotefile := fmt.Sprintf("/%v/%v/%v.yaml", c.meta.SSH.User, common.DefaultComposeDir, c.name())
 	tempfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultTmpDir(), c.name())
 	for _, ip := range c.meta.IPs {
-		err := file.Writefile(tempfile, c.tpl)
+		if err := file.Writefile(tempfile, c.tpl); err != nil {
+			c.meta.SSH.Log.Errorf("%v write file err: %v", ip, err)
+			continue
+		}
 		c.meta.SSH.CopyLocalToRemote(ip, tempfile, remotefile)
-		err = c.meta.SSH.CmdAsync(ip, fmt.Sprintf("docker compose -f %v up -d", remotefile))
+		err := c.meta.SSH.CmdAsync(ip, fmt.Sprintf("docker compose -f %v up -d", remotefile))
 		if err != nil {
 			c.meta.SSH.Log.Debugf("err msg: %v", err)
 			c.meta.SSH.Log.Failf("%v install %v failed", ip, c.name())

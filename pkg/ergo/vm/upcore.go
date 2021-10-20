@@ -5,12 +5,13 @@ package vm
 
 import (
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-	"sync"
-	"time"
 )
 
 const UpgradeCore = `

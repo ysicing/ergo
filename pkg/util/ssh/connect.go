@@ -5,12 +5,13 @@ package ssh
 
 import (
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"net"
 	"os"
 	"strings"
 	"time"
+
+	"golang.org/x/crypto/ssh"
 )
 
 func (ss *SSH) sshAuthMethod(passwd, pkFile, pkPasswd string) (auth []ssh.AuthMethod) {

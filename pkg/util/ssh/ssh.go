@@ -6,9 +6,10 @@ package ssh
 import (
 	"bufio"
 	"fmt"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"io"
 	"strings"
+
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 //Cmd is in host exec cmd

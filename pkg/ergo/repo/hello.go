@@ -5,10 +5,11 @@ package repo
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"os"
 )
 
 const (

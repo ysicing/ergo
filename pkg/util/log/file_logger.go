@@ -4,12 +4,13 @@
 package log
 
 import (
+	"strings"
+	"sync"
+
 	"github.com/sirupsen/logrus"
 	"github.com/ysicing/ergo/common"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"k8s.io/apimachinery/pkg/util/runtime"
-	"strings"
-	"sync"
 )
 
 var logs = map[string]Logger{}

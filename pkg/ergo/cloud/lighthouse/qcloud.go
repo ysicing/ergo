@@ -5,12 +5,13 @@ package lighthouse
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gosuri/uitable"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
-	"strings"
 )
 
 type Lighthouse struct {
@@ -38,7 +39,7 @@ func (c *Lighthouse) Reset(cvmid string) error {
 	request.InstanceId = common.StringPtr(cvmid)
 	response, err := client.ResetInstance(request)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		return fmt.Errorf("An API error has returned: %s", err)
+		return fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	if err != nil {
 		return err
@@ -89,7 +90,7 @@ func (c *Lighthouse) BindKey(cvmid string) error {
 
 	response, err := client.AssociateInstancesKeyPairs(request)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		return fmt.Errorf("An API error has returned: %s", err)
+		return fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	if err != nil {
 		return err
@@ -109,7 +110,7 @@ func (c *Lighthouse) List() error {
 	request := lighthouse.NewDescribeInstancesRequest()
 	response, err := client.DescribeInstances(request)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		return fmt.Errorf("An API error has returned: %s", err)
+		return fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	if err != nil {
 		return err

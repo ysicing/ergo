@@ -4,12 +4,13 @@
 package repo
 
 import (
+	"strings"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-	"strings"
 )
 
 type InstallInterface interface {

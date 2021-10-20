@@ -5,6 +5,9 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
@@ -12,8 +15,6 @@ import (
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"helm.sh/helm/v3/cmd/helm/require"
 	"helm.sh/helm/v3/pkg/cli/output"
-	"os"
-	"strings"
 )
 
 // newPluginCmd ergo plugin
@@ -82,9 +83,9 @@ func NewCmdPluginList(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all visible plugin executables on a user's PATH",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			o.Complete(cmd)
-			o.Run()
+			return o.Run()
 		},
 	}
 	cmd.Flags().BoolVar(&o.NameOnly, "name-only", o.NameOnly, "If true, display only the binary name of each plugin, rather than its full path")
@@ -111,25 +112,25 @@ func NewCmdPluginRepoList(f factory.Factory) *cobra.Command {
 		Use:     "list",
 		Short:   "list plugin repositories",
 		Aliases: []string{"ls"},
-		Run: func(cobraCmd *cobra.Command, args []string) {
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			f, err := plugin.LoadFile(common.GetDefaultPluginRepoCfg())
 			if err != nil || len(f.Repositories) == 0 {
 				log.Warnf("no repositories to show")
-				return
+				return nil
 			}
 			switch strings.ToLower(listoutput) {
 			case "json":
-				output.EncodeJSON(os.Stdout, f.Repositories)
+				return output.EncodeJSON(os.Stdout, f.Repositories)
 			case "yaml":
-				output.EncodeYAML(os.Stdout, f.Repositories)
+				return output.EncodeYAML(os.Stdout, f.Repositories)
 			default:
 				log.Infof("上次变更时间: %v", f.Generated)
 				table := uitable.New()
 				table.AddRow("NAME", "URL")
 				for _, re := range f.Repositories {
-					table.AddRow(re.Name, re.Url)
+					table.AddRow(re.Name, re.URL)
 				}
-				output.EncodeTable(os.Stdout, table)
+				return output.EncodeTable(os.Stdout, table)
 			}
 		},
 	}
@@ -148,7 +149,7 @@ func NewCmdPluginRepoAdd(f factory.Factory) *cobra.Command {
 		Args:  require.ExactArgs(2),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			o.Name = args[0]
-			o.Url = args[1]
+			o.URL = args[1]
 			return o.Run()
 		},
 	}

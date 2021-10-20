@@ -6,6 +6,10 @@ package codegen
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"strings"
+	"text/template"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/ergoapi/util/ztime"
@@ -14,9 +18,6 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"os"
-	"strings"
-	"text/template"
 )
 
 var CodeType = []struct {
@@ -39,12 +40,12 @@ type CodeGen struct {
 
 var Project = []struct {
 	Name   string
-	Url    string
+	URL    string
 	Slug   string
 	Branch string
 }{{
 	Name:   "ysicing/go-example",
-	Url:    "https://github.com/ysicing/go-example.git",
+	URL:    "https://github.com/ysicing/go-example.git",
 	Slug:   "github.com/ysicing",
 	Branch: "master",
 },
@@ -77,13 +78,13 @@ func (code CodeGen) GoClone() error {
 	}
 	name, _ := nameprompt.Run()
 	if name == "" {
-		s := strings.Split(p.Url, "/")
+		s := strings.Split(p.URL, "/")
 		name = fmt.Sprintf("%v/%v", s[len(s)-2], s[len(s)-1])
 		name = strings.ReplaceAll(name, ".git", "")
 	}
 	dir := fmt.Sprintf("%v/%v/%v", gopath, "github.com", name)
 	if _, err := git.PlainClone(dir, false, &git.CloneOptions{
-		URL:               p.Url,
+		URL:               p.URL,
 		RemoteName:        p.Branch,
 		SingleBranch:      true,
 		Depth:             1,
@@ -93,7 +94,7 @@ func (code CodeGen) GoClone() error {
 		return err
 	}
 	file.Rmdir(dir + "/.git")
-	code.Log.Donef("\U0001F389 Start Git Clone %v %v", p.Url, dir)
+	code.Log.Donef("\U0001F389 Start Git Clone %v %v", p.URL, dir)
 	return nil
 }
 
@@ -140,7 +141,9 @@ func (code CodeGen) GenCrds() error {
 	t := template.Must(template.New("crds").Parse(crdshell))
 	t.Execute(&b, c)
 	tmpfile := fmt.Sprintf("%v/crds.%v", common.GetDefaultTmpDir(), ztime.NowUnixString())
-	file.Writefile(tmpfile, b.String())
+	if err := file.Writefile(tmpfile, b.String()); err != nil {
+		return err
+	}
 	if err := ssh.RunCmd("/bin/bash", tmpfile); err != nil {
 		code.Log.WriteString(b.String())
 		code.Log.Failf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)

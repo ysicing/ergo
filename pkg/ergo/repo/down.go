@@ -5,11 +5,12 @@ package repo
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"strings"
 )
 
 func DownService(name []string, volume bool) error {

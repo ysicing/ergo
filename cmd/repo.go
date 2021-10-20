@@ -5,13 +5,14 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	install "github.com/ysicing/ergo/pkg/ergo/repo"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-	"strings"
 )
 
 type RepoCmd struct {

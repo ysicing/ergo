@@ -4,12 +4,13 @@
 package cmd
 
 import (
+	"sync"
+
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/vm"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-	"sync"
 )
 
 type DebianCmd struct {

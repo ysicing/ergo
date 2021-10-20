@@ -5,11 +5,12 @@ package ping
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+
 	"github.com/ergoapi/util/zos"
 	"github.com/go-ping/ping"
 	"github.com/ysicing/ergo/pkg/util/log"
-	"os"
-	"os/signal"
 )
 
 func DoPing(target string, count int) error {

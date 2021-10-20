@@ -4,10 +4,11 @@
 package repo
 
 import (
-	"github.com/gosuri/uitable"
-	"helm.sh/helm/v3/pkg/cli/output"
 	"io"
 	"os"
+
+	"github.com/gosuri/uitable"
+	"helm.sh/helm/v3/pkg/cli/output"
 )
 
 var InstallPackages []OpsPackage

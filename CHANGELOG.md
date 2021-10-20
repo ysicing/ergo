@@ -1,5 +1,9 @@
 ## Ergo CHANGELOG
 
+- v2.1.0
+  - 新增ext 清理github package功能
+  - 暂时屏蔽sec子命令
+
 - v2.0.7
   - 新增cvm命令创建竞价云服务器机器, 目前支持创建销毁2核4G的腾讯云Debian10(默认南京1区), 目前腾讯云最便宜
 

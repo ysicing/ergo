@@ -5,16 +5,17 @@ package dns
 
 import (
 	"encoding/json"
+	"log"
+
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/alidns"
 	"github.com/spf13/viper"
-	"log"
 )
 
-type AliDns struct {
+type AliDNS struct {
 	client *alidns.Client
 }
 
-func NewAliDns(region, akey, asecret string) *AliDns {
+func NewAliDNS(region, akey, asecret string) *AliDNS {
 	if region == "" {
 		region = viper.GetString("cloud.aliyun.region")
 	}
@@ -27,7 +28,7 @@ func NewAliDns(region, akey, asecret string) *AliDns {
 		log.Fatal(err)
 		return nil
 	}
-	return &AliDns{client: client}
+	return &AliDNS{client: client}
 }
 
 type AliDomainRecordsResp struct {
@@ -53,7 +54,7 @@ type AliDomainRecord struct {
 	Weight     int    `json:"Weight"`
 }
 
-func (ali *AliDns) DomainRecords(domain string, keyword ...string) []AliDomainRecord {
+func (ali *AliDNS) DomainRecords(domain string, keyword ...string) []AliDomainRecord {
 	request := alidns.CreateDescribeDomainRecordsRequest()
 	request.Scheme = "https"
 	request.DomainName = domain
@@ -76,7 +77,7 @@ func (ali *AliDns) DomainRecords(domain string, keyword ...string) []AliDomainRe
 	return resp.DomainRecords.Record
 }
 
-func (ali *AliDns) AddDomainRecord(domain, rr, rtype, value string) error {
+func (ali *AliDNS) AddDomainRecord(domain, rr, rtype, value string) error {
 	request := alidns.CreateAddDomainRecordRequest()
 	request.Scheme = "https"
 	request.DomainName = domain
@@ -91,7 +92,7 @@ func (ali *AliDns) AddDomainRecord(domain, rr, rtype, value string) error {
 	return nil
 }
 
-func (ali *AliDns) UpdateDomainRecord(rid, rr, rtype, value string) error {
+func (ali *AliDNS) UpdateDomainRecord(rid, rr, rtype, value string) error {
 	request := alidns.CreateUpdateDomainRecordRequest()
 	request.Scheme = "https"
 	request.RecordId = rid

@@ -5,6 +5,9 @@ package plugin
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/gosuri/uitable"
@@ -12,8 +15,6 @@ import (
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/pkg/cli/output"
-	"os"
-	"runtime"
 )
 
 type ListRemoteOptions struct {
@@ -29,7 +30,6 @@ func (p *ListRemoteOptions) Run() {
 		if err := ssh.RunCmd(args[0], "plugin", "repo", "add", "default", "https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml"); err != nil {
 			return
 		}
-
 	}
 
 	err := ssh.RunCmd(args[0], "plugin", "repo", "update")
@@ -63,9 +63,9 @@ func (p *ListRemoteOptions) Run() {
 	table := uitable.New()
 	table.AddRow("repo", "name", "version", "homepage", "desc", "url")
 	for _, re := range res {
-		for _, r := range re.Url {
+		for _, r := range re.URL {
 			if r.Os == zos.GetOS() && r.Arch == runtime.GOARCH {
-				table.AddRow(re.Repo.Name, re.Name, re.Version, re.Homepage, re.Desc, r.PluginUrl(re.Version))
+				table.AddRow(re.Repo.Name, re.Name, re.Version, re.Homepage, re.Desc, r.PluginURL(re.Version))
 			}
 		}
 	}

@@ -5,8 +5,9 @@ package vm
 
 import (
 	"fmt"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"sync"
+
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 const InitSH = `
@@ -132,5 +133,4 @@ func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 		ssh.Log.Errorf("ip %v, err: %v", ip, err)
 		return
 	}
-
 }

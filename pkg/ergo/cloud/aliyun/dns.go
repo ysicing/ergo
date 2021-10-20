@@ -6,12 +6,13 @@ package aliyun
 import (
 	"context"
 	"fmt"
+
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/alidns"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 )
 
-func (p *provider) getDnsClient() *alidns.Client {
+func (p *provider) getDNSClient() *alidns.Client {
 	client, _ := alidns.NewClientWithAccessKey(
 		"cn-beijing",
 		p.apikey,
@@ -20,7 +21,7 @@ func (p *provider) getDnsClient() *alidns.Client {
 	return client
 }
 
-func NewDns(opts ...Option) (cloud.DnsCloud, error) {
+func NewDNS(opts ...Option) (cloud.DNSCloud, error) {
 	p := new(provider)
 	for _, opt := range opts {
 		opt(p)
@@ -29,14 +30,14 @@ func NewDns(opts ...Option) (cloud.DnsCloud, error) {
 }
 
 func (p *provider) DomainList(ctx context.Context) (cloud.DomainList, error) {
-	c := p.getDnsClient()
+	c := p.getDNSClient()
 	request := alidns.CreateDescribeDomainsRequest()
 	request.Scheme = "https"
 	request.PageSize = requests.NewInteger(100)
 
 	response, err := c.DescribeDomains(request)
 	if err != nil {
-		return nil, fmt.Errorf("An API error has returned: %s", err)
+		return nil, fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	var dls cloud.DomainList
 	p.zlog.Debugf("DomainTotal %v", response.TotalCount)

@@ -5,12 +5,13 @@ package exec
 
 import (
 	"fmt"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
 	"sync"
+
+	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 // ExecSh 执行shell

@@ -5,11 +5,9 @@ package qcloud
 
 import (
 	"github.com/ysicing/ergo/pkg/util/log"
-	"sync"
 )
 
 type provider struct {
-	init      sync.Once
 	region    string
 	apikey    string
 	apisecret string

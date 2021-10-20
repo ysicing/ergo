@@ -6,8 +6,6 @@ package ssh
 import (
 	"bytes"
 	"fmt"
-	"github.com/pkg/sftp"
-	"golang.org/x/crypto/ssh"
 	"io"
 	"io/ioutil"
 	"net"
@@ -16,6 +14,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 )
 
 // CopyForMD5 is

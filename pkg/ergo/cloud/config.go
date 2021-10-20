@@ -6,12 +6,13 @@ package cloud
 
 import (
 	"fmt"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"sigs.k8s.io/yaml"
 	"time"
+
+	"github.com/ysicing/ergo/pkg/util/log"
+	"sigs.k8s.io/yaml"
 )
 
 type Secrets struct {
