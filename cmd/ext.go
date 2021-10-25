@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/zos"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -44,7 +45,7 @@ func ghClean(f factory.Factory) *cobra.Command {
 func (ext *ExtOptions) githubClean() {
 	user := zos.GetUserName()
 	ext.Log.Infof("user: %v", user)
-	token := zos.GetEnv("GHCRIO", "")
+	token := environ.GetEnv("GHCRIO", "")
 	if token != "" {
 		ext.Log.Info("load user token from env GHCRIO")
 	} else {

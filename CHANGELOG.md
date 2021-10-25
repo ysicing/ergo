@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.2.1
+  - 新增`debian apt`添加debian源
+
 - v2.2.0
   - 新增cloud子命令cr管理个人容器镜像服务
 

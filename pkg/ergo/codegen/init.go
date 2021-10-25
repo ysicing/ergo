@@ -10,6 +10,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/ergoapi/util/environ"
+
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/ergoapi/util/ztime"
@@ -71,7 +73,7 @@ func (code CodeGen) GoClone() error {
 	}
 	pid, _, _ := project.Run()
 	p := Project[pid]
-	gopath := zos.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
+	gopath := environ.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
 	code.Log.Debugf("GoPath: %v", gopath)
 	nameprompt := promptui.Prompt{
 		Label: "项目名, eg: ysicing/goexample",
@@ -131,7 +133,7 @@ func (code CodeGen) GenCrds() error {
 	if len(c.Name) == 0 {
 		c.Name = zos.GenUUID()
 	}
-	gopath := zos.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
+	gopath := environ.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
 	code.Log.Debugf("GoPath: %v", gopath)
 	c.Path = fmt.Sprintf("%v/%v/%v", gopath, c.Domain, c.Name)
 	c.License = "apache2"

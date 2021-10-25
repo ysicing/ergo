@@ -141,6 +141,11 @@ default tgsend-linux    https://github.techoc.workers.dev/https://github.com/mri
 default tgsend-darwin   https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_darwin_amd64  一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 true   
 ```
 
+#### 已知问题
+
+- Q: docker compose命令不识别
+  - A: 需要使用compose v2版本 [配置文档](https://github.com/docker/compose#linux)
+
 #### 其他开源项目
 
 > 感谢以下项目

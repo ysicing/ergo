@@ -67,6 +67,25 @@ func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	}
 }
 
+// RunAddDebSource 添加ergo deb源
+func RunAddDebSource(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
+	defer func() {
+		ssh.Log.StopWait()
+		wg.Done()
+	}()
+	ssh.Log.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
+	err := ssh.CmdAsync(ip, AddDebSource)
+	if err != nil {
+		ssh.Log.Fatal(ip, err.Error())
+		return
+	}
+	for i := 0; i <= 10; i++ {
+		if RunWait(ssh, ip) {
+			break
+		}
+	}
+}
+
 func RunWait(ssh sshutil.SSH, ip string) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
@@ -84,6 +103,8 @@ func RunLocalShell(runtype string, log log.Logger) {
 		shelldata = InitSH
 	case "upcore":
 		shelldata = UpgradeCore
+	case "apt":
+		shelldata = AddDebSource
 	default:
 		shelldata = "uname -a"
 	}
@@ -98,3 +119,10 @@ func RunLocalShell(runtype string, log log.Logger) {
 		return
 	}
 }
+
+const AddDebSource = `#!/bin/bash
+
+echo "deb [trusted=yes] https://debian.ysicing.me/ /" | tee /etc/apt/sources.list.d/ergo.list
+apt update
+echo "apt-get install -y opsergo"
+`
