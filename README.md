@@ -77,8 +77,12 @@ ergo version
 - [x] code 初始化项目
 - [x] completion
 - [x] debian
+  - [x] `apt` 添加ergo debian源
   - [x] `init` 初始化debian
   - [x] `upcore` 升级debian内核
+- [x] ext
+  - [x] `gh` 清理github package
+  - [x] `sync` 同步镜像
 - [x] ops
   - [x] `ps` 进程
   - [x] `nc` nc
@@ -98,10 +102,7 @@ ergo version
   - [x] `install` 安装软件包
     - [x] `containerd`
     - [x] `mysql`等
-  - [x] `dump` dump安装脚本 
-- [x] sec
-  - [ ] `deny` 封禁sm
-    - [ ] `banip` 封禁ip
+  - [x] `dump` dump安装脚本
 - [x] upgrade
 - [x] version
 

@@ -79,6 +79,8 @@ func NewInstall(m Meta, t string) InstallInterface {
 		return &Rabbitmq{meta: m}
 	case redis:
 		return &Redis{meta: m}
+	case coredns:
+		return &CoreDNS{meta: m}
 	default:
 		m.SSH.Log.Errorf("not support [%v], will show default package hello", t)
 		return &Hello{meta: m}

@@ -150,7 +150,7 @@ func (c *Rabbitmq) Dump(mode string) error {
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "Rabbitmq",
+		Name:     "rabbitmq",
 		Describe: "Bitnami Rabbitmq https://github.com/bitnami/bitnami-docker-rabbitmq",
 		Version:  "3.9.7-debian-10-r15",
 	})
