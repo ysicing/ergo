@@ -24,6 +24,7 @@ services:
   mongodb:
     image: docker.io/bitnami/mongodb:5.0.3-debian-10-r17
     container_name: mongodb
+    restart: always
     ports:
       - '27017:27017'
     volumes:

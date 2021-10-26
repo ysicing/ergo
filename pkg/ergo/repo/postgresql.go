@@ -24,6 +24,7 @@ services:
   postgresql:
     image: docker.io/bitnami/postgresql:13.4.0-debian-10-r58
     container_name: postgresql
+    restart: always
     ports:
       - '5432:5432'
     volumes:

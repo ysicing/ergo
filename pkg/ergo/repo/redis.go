@@ -24,6 +24,7 @@ services:
   redis:
     image: docker.io/bitnami/redis:6.2.6-debian-10-r6
     container_name: redis
+    restart: always
     ports:
       - '6379:6379'
     volumes:

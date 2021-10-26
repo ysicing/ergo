@@ -22,6 +22,7 @@ services:
   etcd:
     image: docker.io/bitnami/etcd:3.5.0-debian-10-r111
     container_name: etcd
+    restart: always
     ports:
       - '2379:2379'
       - '2380:2380'

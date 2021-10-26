@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.2.2
+  - 优化`repo install`添加`restart always`参数
+
 - v2.2.1
   - 新增`debian apt`添加debian源
 

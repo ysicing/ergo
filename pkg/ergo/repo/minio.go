@@ -24,6 +24,7 @@ services:
   minio:
     image: docker.io/bitnami/minio:2021.10.6-debian-10-r1
     container_name: minio
+    restart: always
     ports:
       - '9000:9000'
       - '9001:9001'

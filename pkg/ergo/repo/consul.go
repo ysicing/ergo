@@ -22,6 +22,7 @@ services:
   consul:
     image: docker.io/bitnami/consul:1.10.3-debian-10-r11
     container_name: consul
+    restart: always
     ports:
       - '8300:8300'
       - '8301:8301'

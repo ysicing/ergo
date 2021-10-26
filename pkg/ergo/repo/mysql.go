@@ -24,6 +24,7 @@ services:
   mysql:
     image: docker.io/bitnami/mysql:8.0.26-debian-10-r74
 	container_name: mysql
+    restart: always
     ports:
       - '3306:3306'
     volumes:

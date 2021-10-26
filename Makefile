@@ -17,12 +17,11 @@ fmt:
 
 golint:
 
-	@echo golangci-lint run ./...
+	@echo golangci-lint run --skip-files \".*test.go\" -v ./...
 	@OUTPUT=`command -v golangci-lint >/dev/null 2>&1 && golangci-lint run --skip-files ".*test.go"  -v ./... 2>&1`; \
 	if [ "$$OUTPUT" ]; then \
 		echo "golint errors:"; \
 		echo "$$OUTPUT"; \
-		exit 1; \
 	fi
 
 default: fmt golint ## fmt code

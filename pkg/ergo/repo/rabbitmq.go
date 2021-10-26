@@ -24,6 +24,7 @@ services:
   rabbitmq:
     image: docker.io/bitnami/rabbitmq:3.9.7-debian-10-r15
     container_name: rabbitmq
+    restart: always
     ports:
       - '4369:4369'
       - '5672:5672'
