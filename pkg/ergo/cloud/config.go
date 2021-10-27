@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ergoapi/log"
 	"sigs.k8s.io/yaml"
 )
 

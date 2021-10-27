@@ -12,9 +12,9 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ergoapi/log"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 var (

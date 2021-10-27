@@ -9,12 +9,12 @@ import (
 	"runtime"
 
 	"github.com/blang/semver"
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/zos"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/logo"
 )
 

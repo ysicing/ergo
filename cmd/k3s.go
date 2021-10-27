@@ -4,10 +4,10 @@
 package cmd
 
 import (
+	"github.com/ergoapi/log"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type K3sOption struct {

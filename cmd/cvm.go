@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -17,7 +18,6 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/qcloud"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 )
 

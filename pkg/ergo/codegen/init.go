@@ -12,13 +12,13 @@ import (
 
 	"github.com/ergoapi/util/environ"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/ergoapi/util/ztime"
 	"github.com/go-git/go-git/v5"
 	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 )
 

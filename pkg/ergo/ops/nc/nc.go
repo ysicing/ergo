@@ -15,7 +15,7 @@ import (
 	"strconv"
 
 	"github.com/axgle/mahonia"
-	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ergoapi/log"
 )
 
 const (

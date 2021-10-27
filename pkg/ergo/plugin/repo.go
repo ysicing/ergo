@@ -15,11 +15,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/gofrs/flock"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ergo/pkg/util/util"
 	"sigs.k8s.io/yaml"
