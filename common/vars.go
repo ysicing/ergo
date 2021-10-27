@@ -22,4 +22,6 @@ const (
 	PluginRepoRemoteMode = "remote"
 	PluginRepoLocalMode  = "local"
 	PluginGithubJiasu    = "https://github.techoc.workers.dev"
+	PluginRepoType       = "plugin"
+	ServiceRepoType      = "service"
 )

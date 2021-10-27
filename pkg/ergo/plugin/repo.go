@@ -83,9 +83,11 @@ func (o *RepoAddOption) Run() error {
 
 	if f.Has(o.Name) {
 		existing := f.Get(o.Name)
-		if c != *existing {
-			o.Log.Warnf("Repo(%s)已经存在", o.Name)
-			return nil
+		for _, r := range existing {
+			if c != *r {
+				o.Log.Warnf("Repo(%s)已经存在", o.Name)
+				return nil
+			}
 		}
 		o.Log.Warnf("已经存在%q相同的配置, skipping", o.Name)
 		return nil
@@ -107,8 +109,8 @@ type RepoDelOption struct {
 
 func (o *RepoDelOption) Run() error {
 	r, err := LoadFile(o.RepoCfg)
-	if err != nil || len(r.Repositories) == 0 {
-		o.Log.Warn("no repositories configured")
+	if err != nil || (len(r.Plugins) == 0 && len(r.Services) == 0) {
+		o.Log.Warn("no plugin or service configured")
 		return nil
 	}
 
@@ -139,52 +141,64 @@ type RepoUpdateOption struct {
 
 func (o *RepoUpdateOption) Run() error {
 	r, err := LoadFile(o.RepoCfg)
-	if err != nil || len(r.Repositories) == 0 {
-		return fmt.Errorf("no repositories configured")
+	if err != nil || (len(r.Plugins) == 0 && len(r.Services) == 0) {
+		return fmt.Errorf("no plugin or service configured")
 	}
 
 	updateall := len(o.Names) == 0
 
 	if updateall {
-		for _, repo := range r.Repositories {
+		// TODO 全部更新，判断是plugin还是service
+		for _, repo := range r.Plugins {
+			o.Names = append(o.Names, repo.Name)
+		}
+		for _, repo := range r.Services {
 			o.Names = append(o.Names, repo.Name)
 		}
 	}
 
 	for _, name := range o.Names {
-		repo := r.Get(name)
-		if repo == nil {
-			return fmt.Errorf("不存在 %q", name)
+		repos := r.Get(name)
+		if repos == nil {
+			o.Log.Warnf("不存在 %q 插件或者服务", name)
+			continue
 		}
-		index := fmt.Sprintf("%v/%v.index.yaml", common.GetDefaultCfgDir(), repo.Name)
-		if file.CheckFileExists(index) {
-			file.RemoveFiles(index)
-		}
-		if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.URL, "http") {
-			_, err := url.Parse(repo.URL)
-			if err != nil {
-				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
-				// TODO
-				continue
+		for _, repo := range repos {
+			t := repo.Type
+			if t == "" {
+				t = common.PluginRepoType
 			}
-			err = httpget(repo.URL, index)
-			if err != nil {
-				o.Log.Debugf("%q 更新索引失败: %v", name, err)
+			index := fmt.Sprintf("%v/%v.%v.index.yaml", t, common.GetDefaultCfgDir(), repo)
+			if file.CheckFileExists(index) {
+				file.RemoveFiles(index)
+			}
+			if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.URL, "http") {
+				_, err := url.Parse(repo.URL)
+				if err != nil {
+					o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
+					// TODO
+					continue
+				}
+				err = httpget(repo.URL, index)
+				if err != nil {
+					o.Log.Debugf("%q 更新索引失败: %v", name, err)
+				} else {
+					o.Log.Debugf("%q 已经更新索引: %v", name, index)
+				}
 			} else {
-				o.Log.Debugf("%q 已经更新索引: %v", name, index)
-			}
-		} else {
-			if !file.CheckFileExists(repo.URL) {
-				o.Log.Warnf("%v invalid local repo file: %s", repo.Name, repo.URL)
-				continue
-			}
-			file.RemoveFiles(index)
-			if err := util.Copy(index, repo.URL); err != nil {
-				o.Log.Debugf("%q 更新索引失败: %v", name, err)
-			} else {
-				o.Log.Debugf("%q 已经更新索引: %v", name, index)
+				if !file.CheckFileExists(repo.URL) {
+					o.Log.Warnf("%v invalid local repo file: %s", repo.Name, repo.URL)
+					continue
+				}
+				file.RemoveFiles(index)
+				if err := util.Copy(index, repo.URL); err != nil {
+					o.Log.Debugf("%q 更新索引失败: %v", name, err)
+				} else {
+					o.Log.Debugf("%q 已经更新索引: %v", name, index)
+				}
 			}
 		}
+
 	}
 	return nil
 }

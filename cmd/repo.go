@@ -4,6 +4,9 @@
 package cmd
 
 import (
+	"os"
+	"strings"
+
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
@@ -11,8 +14,6 @@ import (
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"helm.sh/helm/v3/cmd/helm/require"
 	"helm.sh/helm/v3/pkg/cli/output"
-	"os"
-	"strings"
 )
 
 func newRepoCmd(f factory.Factory) *cobra.Command {
@@ -113,20 +114,20 @@ func newRepoList(f factory.Factory) *cobra.Command {
 		Aliases: []string{"ls"},
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			f, err := plugin.LoadFile(common.GetDefaultRepoCfg())
-			if err != nil || len(f.Repositories) == 0 {
+			if err != nil || (len(f.Plugins) == 0 && len(f.Services) == 0) {
 				log.Warnf("no repositories to show")
 				return nil
 			}
 			switch strings.ToLower(listoutput) {
 			case "json":
-				return output.EncodeJSON(os.Stdout, f.Repositories)
+				return output.EncodeJSON(os.Stdout, f.Plugins)
 			case "yaml":
-				return output.EncodeYAML(os.Stdout, f.Repositories)
+				return output.EncodeYAML(os.Stdout, f.Plugins)
 			default:
 				log.Infof("上次变更时间: %v", f.Generated)
 				table := uitable.New()
 				table.AddRow("name", "path", "source", "type")
-				for _, re := range f.Repositories {
+				for _, re := range f.Plugins {
 					if re.Mode == "" {
 						re.Mode = "remote"
 					}

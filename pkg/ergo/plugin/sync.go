@@ -41,12 +41,13 @@ func (p *ListRemoteOptions) Run() {
 	}
 	p.Log.Done("加载完成.")
 	r, err := LoadFile(p.RepoCfg)
-	if err != nil || len(r.Repositories) == 0 {
-		p.Log.Warn("no found remote plugin")
+	if err != nil || (len(r.Plugins) == 0 && len(r.Services) == 0) {
+		p.Log.Warn("no found remote plugin or service")
 		return
 	}
 	var res []*Plugin
-	for _, i := range r.Repositories {
+	// TODO 列出插件
+	for _, i := range r.Plugins {
 		index := fmt.Sprintf("%v/%v.index.yaml", common.GetDefaultCfgDir(), i.Name)
 		if !file.CheckFileExists(index) {
 			p.Log.Debugf("not found %n index", i.Name)

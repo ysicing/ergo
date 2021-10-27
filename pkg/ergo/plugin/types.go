@@ -5,20 +5,21 @@ package plugin
 
 import (
 	"fmt"
-	"github.com/ergoapi/log"
-	"github.com/ysicing/ergo/common"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"sigs.k8s.io/yaml"
 	"strings"
 	"time"
+
+	"github.com/ergoapi/log"
+	"github.com/ysicing/ergo/common"
+	"sigs.k8s.io/yaml"
 )
 
 type File struct {
-	Generated    time.Time `json:"generated" yaml:"generated"`
-	Repositories []*Repo   `json:"repositories,omitempty" yaml:"repositories,omitempty"`
-	Services     []*Repo   `json:"services,omitempty" yaml:"services,omitempty"`
+	Generated time.Time `json:"generated" yaml:"generated"`
+	Plugins   []*Repo   `json:"plugins,omitempty" yaml:"plugins,omitempty"`
+	Services  []*Repo   `json:"services,omitempty" yaml:"services,omitempty"`
 }
 
 type PFile struct {
@@ -28,8 +29,9 @@ type PFile struct {
 
 func NewFile() *File {
 	return &File{
-		Generated:    time.Now(),
-		Repositories: []*Repo{},
+		Generated: time.Now(),
+		Plugins:   []*Repo{},
+		Services:  []*Repo{},
 	}
 }
 
@@ -69,7 +71,13 @@ func LoadIndexFile(path string) (*PFile, error) {
 
 // Add adds one or more repo entries to a repo file.
 func (r *File) Add(re ...*Repo) {
-	r.Repositories = append(r.Repositories, re...)
+	for _, rx := range re {
+		if rx.Type == "" || rx.Type == common.PluginRepoType {
+			r.Plugins = append(r.Plugins, rx)
+		} else {
+			r.Services = append(r.Services, rx)
+		}
+	}
 }
 
 // Update attempts to replace one or more repo entries in a repo file. If an
@@ -82,10 +90,19 @@ func (r *File) Update(re ...*Repo) {
 }
 
 func (r *File) update(e *Repo) {
-	for j, repo := range r.Repositories {
-		if repo.Name == e.Name {
-			r.Repositories[j] = e
-			return
+	if e.Type == "" || e.Type == common.PluginRepoType {
+		for j, repo := range r.Plugins {
+			if repo.Name == e.Name {
+				r.Plugins[j] = e
+				return
+			}
+		}
+	} else {
+		for j, repo := range r.Services {
+			if repo.Name == e.Name {
+				r.Services[j] = e
+				return
+			}
 		}
 	}
 	r.Add(e)
@@ -98,8 +115,25 @@ func (r *File) Has(name string) bool {
 }
 
 // Get returns an entry with the given name if it exists, otherwise returns nil
-func (r *File) Get(name string) *Repo {
-	for _, entry := range r.Repositories {
+func (r *File) Get(name string) []*Repo {
+	// TODO
+	var repo []*Repo
+	for _, entry := range r.Plugins {
+		if entry.Name == name {
+			repo = append(repo, entry)
+		}
+	}
+	for _, entry := range r.Services {
+		if entry.Name == name {
+			repo = append(repo, entry)
+		}
+	}
+	return repo
+}
+
+// GetPlugin returns an entry with the given name if it exists, otherwise returns nil
+func (r *File) GetPlugin(name string) *Repo {
+	for _, entry := range r.Plugins {
 		if entry.Name == name {
 			return entry
 		}
@@ -107,19 +141,56 @@ func (r *File) Get(name string) *Repo {
 	return nil
 }
 
-// Remove removes the entry from the list of repositories.
-func (r *File) Remove(name string) bool {
+// GetService returns an entry with the given name if it exists, otherwise returns nil
+func (r *File) GetService(name string) *Repo {
+	for _, entry := range r.Services {
+		if entry.Name == name {
+			return entry
+		}
+	}
+	return nil
+}
+
+// RemovePlugin removes the entry from the list of repositories.
+func (r *File) RemovePlugin(name string) bool {
 	cp := []*Repo{}
 	found := false
-	for _, rf := range r.Repositories {
+	for _, rf := range r.Plugins {
 		if rf.Name == name {
 			found = true
 			continue
 		}
 		cp = append(cp, rf)
 	}
-	r.Repositories = cp
+	r.Plugins = cp
 	return found
+}
+
+// RemoveService removes the entry from the list of repositories.
+func (r *File) RemoveService(name string) bool {
+	cp := []*Repo{}
+	found := false
+	for _, rf := range r.Services {
+		if rf.Name == name {
+			found = true
+			continue
+		}
+		cp = append(cp, rf)
+	}
+	r.Services = cp
+	return found
+}
+
+// Remove removes the entry from the list of repositories.
+func (r *File) Remove(name string) bool {
+	code := 0
+	if r.RemoveService(name) {
+		code += 1
+	}
+	if r.RemovePlugin(name) {
+		code += 1
+	}
+	return code > 0
 }
 
 // WriteFile writes a repositories file to the given path.

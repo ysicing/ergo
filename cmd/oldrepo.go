@@ -5,8 +5,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/ergoapi/log"
 	"strings"
+
+	"github.com/ergoapi/log"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
