@@ -5,16 +5,12 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
-	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"helm.sh/helm/v3/cmd/helm/require"
-	"helm.sh/helm/v3/pkg/cli/output"
 )
 
 // newPluginCmd ergo plugin
@@ -26,7 +22,6 @@ func newPluginCmd(f factory.Factory) *cobra.Command {
 	}
 	cmd.AddCommand(NewCmdPluginList(f))
 	cmd.AddCommand(NewCmdPluginListRemote(f))
-	cmd.AddCommand(NewCmdPluginRepo(f))
 	cmd.AddCommand(NewCmdPluginInstall(f))
 	return cmd
 }
@@ -34,11 +29,12 @@ func newPluginCmd(f factory.Factory) *cobra.Command {
 func NewCmdPluginListRemote(f factory.Factory) *cobra.Command {
 	o := &plugin.ListRemoteOptions{
 		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultPluginRepoCfg(),
+		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
-		Use:   "ls-remote",
-		Short: "List remote versions available for install",
+		Use:     "ls-remote",
+		Aliases: []string{"lr"},
+		Short:   "List remote versions available for install",
 		Run: func(cmd *cobra.Command, args []string) {
 			o.Run()
 		},
@@ -49,7 +45,7 @@ func NewCmdPluginListRemote(f factory.Factory) *cobra.Command {
 func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
 	o := &plugin.RepoInstallOption{
 		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultPluginRepoCfg(),
+		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
 		Use:     "install [Repo] [Name]",
@@ -89,104 +85,5 @@ func NewCmdPluginList(f factory.Factory) *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolVar(&o.NameOnly, "name-only", o.NameOnly, "If true, display only the binary name of each plugin, rather than its full path")
-	return cmd
-}
-
-func NewCmdPluginRepo(f factory.Factory) *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "repo [flags]",
-		Short: "Provides utilities for interacting with plugin repos",
-	}
-	cmd.AddCommand(NewCmdPluginRepoList(f))
-	cmd.AddCommand(NewCmdPluginRepoAdd(f))
-	cmd.AddCommand(NewCmdPluginRepoDel(f))
-	cmd.AddCommand(NewCmdPluginRepoUpdate(f))
-	return cmd
-}
-
-var listoutput string
-
-func NewCmdPluginRepoList(f factory.Factory) *cobra.Command {
-	log := f.GetLog()
-	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "list plugin repositories",
-		Aliases: []string{"ls"},
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			f, err := plugin.LoadFile(common.GetDefaultPluginRepoCfg())
-			if err != nil || len(f.Repositories) == 0 {
-				log.Warnf("no repositories to show")
-				return nil
-			}
-			switch strings.ToLower(listoutput) {
-			case "json":
-				return output.EncodeJSON(os.Stdout, f.Repositories)
-			case "yaml":
-				return output.EncodeYAML(os.Stdout, f.Repositories)
-			default:
-				log.Infof("上次变更时间: %v", f.Generated)
-				table := uitable.New()
-				table.AddRow("NAME", "URL")
-				for _, re := range f.Repositories {
-					table.AddRow(re.Name, re.URL)
-				}
-				return output.EncodeTable(os.Stdout, table)
-			}
-		},
-	}
-	cmd.PersistentFlags().StringVarP(&listoutput, "output", "o", "", "prints the output in the specified format. Allowed values: table, json, yaml (default table)")
-	return cmd
-}
-
-func NewCmdPluginRepoAdd(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoAddOption{
-		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultPluginRepoCfg(),
-	}
-	cmd := &cobra.Command{
-		Use:   "add [NAME] [URL]",
-		Short: "add plugin repo",
-		Args:  require.ExactArgs(2),
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			o.Name = args[0]
-			o.URL = args[1]
-			return o.Run()
-		},
-	}
-	return cmd
-}
-
-func NewCmdPluginRepoDel(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoDelOption{
-		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultPluginRepoCfg(),
-	}
-	cmd := &cobra.Command{
-		Use:     "del [REPO1 [REPO2 ...]]",
-		Short:   "del plugin repo",
-		Aliases: []string{"rm"},
-		Args:    require.MinimumNArgs(1),
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			o.Names = args
-			return o.Run()
-		},
-	}
-	return cmd
-}
-
-func NewCmdPluginRepoUpdate(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoUpdateOption{
-		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultPluginRepoCfg(),
-	}
-	cmd := &cobra.Command{
-		Use:     "update [REPO1 [REPO2 ...]]",
-		Short:   "update plugin repo",
-		Aliases: []string{"up"},
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			o.Names = args
-			return o.Run()
-		},
-	}
 	return cmd
 }

@@ -27,12 +27,15 @@ func (p *ListRemoteOptions) Run() {
 	args := os.Args
 	if !file.CheckFileExists(p.RepoCfg) {
 		p.Log.Debugf("not found, will gen default repo")
-		if err := ssh.RunCmd(args[0], "plugin", "repo", "add", "default", "https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml"); err != nil {
+		if err := ssh.RunCmd(args[0], "repo", "add-plugin", "default-plugin", "https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml"); err != nil {
+			return
+		}
+		if err := ssh.RunCmd(args[0], "repo", "add-service", "default-service", "https://raw.githubusercontent.com/ysicing/ergo-service/master/default.yaml"); err != nil {
 			return
 		}
 	}
 
-	err := ssh.RunCmd(args[0], "plugin", "repo", "update")
+	err := ssh.RunCmd(args[0], "repo", "update")
 	if err != nil {
 		return
 	}

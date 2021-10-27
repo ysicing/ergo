@@ -44,8 +44,8 @@ func GetDefaultCfgDir() string {
 	return home + "/" + DefaultCfgDir
 }
 
-func GetDefaultPluginRepoCfg() string {
-	return fmt.Sprintf("%v/plugin.repo.yaml", GetDefaultCfgDir())
+func GetDefaultRepoCfg() string {
+	return fmt.Sprintf("%v/.repo.yaml", GetDefaultCfgDir())
 }
 
 // GetDefaultCfgPathByName 配置文件名
