@@ -36,7 +36,7 @@ func (p *ListRemoteOptions) Run() {
 	if err != nil {
 		return
 	}
-	p.Log.Done("sync done.")
+	p.Log.Done("加载完成.")
 	r, err := LoadFile(p.RepoCfg)
 	if err != nil || len(r.Repositories) == 0 {
 		p.Log.Warn("no found remote plugin")

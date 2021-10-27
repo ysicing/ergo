@@ -301,9 +301,9 @@ func (o *RepoUpdateOption) Run() error {
 			}
 			err = httpget(repo.URL, index)
 			if err != nil {
-				o.Log.Failf("%q 更新索引失败: %v", name, err)
+				o.Log.Debugf("%q 更新索引失败: %v", name, err)
 			} else {
-				o.Log.Donef("%q 已经更新索引: %v", name, index)
+				o.Log.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		} else {
 			if !file.CheckFileExists(repo.URL) {
@@ -312,9 +312,9 @@ func (o *RepoUpdateOption) Run() error {
 			}
 			file.RemoveFiles(index)
 			if err := util.Copy(index, repo.URL); err != nil {
-				o.Log.Failf("%q 更新索引失败: %v", name, err)
+				o.Log.Debugf("%q 更新索引失败: %v", name, err)
 			} else {
-				o.Log.Donef("%q 已经更新索引: %v", name, index)
+				o.Log.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		}
 	}

@@ -135,7 +135,6 @@ default   https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.y
 
 # 列出远程插件
 ergo plugin ls-remote 
-[done] √ "local"已经更新索引: /Users/ysicing/.ergo/.config/default.index.yaml
 [done] √ sync done.
 Repo    NAME            URL                                                                                                             Desc                                                    Available
 default tgsend-linux    https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_linux_amd64   一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 false    
