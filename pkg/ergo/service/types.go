@@ -14,7 +14,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-type PFile struct {
+type SFile struct {
 	Version  string     `yaml:"version" json:"version"`
 	Services []*Service `yaml:"services" json:"services"`
 }
@@ -38,13 +38,13 @@ func (s Service) GetURL() string {
 }
 
 // Has returns true if the given name is already a repository name.
-func (r *PFile) Has(name string) bool {
+func (r *SFile) Has(name string) bool {
 	entry := r.Get(name)
 	return entry != nil
 }
 
 // Get returns an entry with the given name if it exists, otherwise returns nil
-func (r *PFile) Get(name string) *Service {
+func (r *SFile) Get(name string) *Service {
 	for _, entry := range r.Services {
 		if entry.Name == name {
 			return entry
@@ -53,10 +53,10 @@ func (r *PFile) Get(name string) *Service {
 	return nil
 }
 
-func LoadIndexFile(path string) (*PFile, error) {
+func LoadIndexFile(path string) (*SFile, error) {
 	f := log.GetInstance()
 	f.Debugf("path: %v", path)
-	r := new(PFile)
+	r := new(SFile)
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		f.Debugf("couldn't load service index file (%s), err: %v", path, err)
