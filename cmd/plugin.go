@@ -43,7 +43,7 @@ func NewCmdPluginListRemote(f factory.Factory) *cobra.Command {
 }
 
 func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoInstallOption{
+	o := &plugin.InstallOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}

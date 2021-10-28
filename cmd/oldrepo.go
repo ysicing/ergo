@@ -12,7 +12,7 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
-	install "github.com/ysicing/ergo/pkg/ergo/repo"
+	install "github.com/ysicing/ergo/pkg/ergo/oldrepo"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )

@@ -6,6 +6,7 @@ package cloud
 
 import (
 	"fmt"
+	"github.com/ysicing/ergo/common"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -58,8 +59,8 @@ func (c *Configs) Save(path string) error {
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), common.FileMode0600); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path, data, 0755)
+	return ioutil.WriteFile(path, data, common.FileMode0600)
 }

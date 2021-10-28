@@ -4,13 +4,15 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/ysicing/ergo/pkg/ergo/repo"
+	"github.com/ysicing/ergo/pkg/util/ssh"
 	"os"
 	"strings"
 
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"helm.sh/helm/v3/cmd/helm/require"
 	"helm.sh/helm/v3/pkg/cli/output"
@@ -27,11 +29,12 @@ func newRepoCmd(f factory.Factory) *cobra.Command {
 	cmd.AddCommand(newRepoList(f))
 	cmd.AddCommand(newRepoDel(f))
 	cmd.AddCommand(newRepoUpdate(f))
+	cmd.AddCommand(newRepoInit(f))
 	return cmd
 }
 
 func newAddPluginRepo(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoAddOption{
+	o := &repo.RepoAddOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
@@ -43,6 +46,7 @@ func newAddPluginRepo(f factory.Factory) *cobra.Command {
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			o.Name = args[0]
 			o.URL = args[1]
+			o.Type = common.PluginRepoType
 			return o.Run()
 		},
 	}
@@ -50,7 +54,7 @@ func newAddPluginRepo(f factory.Factory) *cobra.Command {
 }
 
 func newAddServiceRepo(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoAddOption{
+	o := &repo.RepoAddOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
@@ -62,7 +66,7 @@ func newAddServiceRepo(f factory.Factory) *cobra.Command {
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			o.Name = args[0]
 			o.URL = args[1]
-			o.Type = "service"
+			o.Type = common.ServiceRepoType
 			return o.Run()
 		},
 	}
@@ -70,14 +74,14 @@ func newAddServiceRepo(f factory.Factory) *cobra.Command {
 }
 
 func newRepoDel(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoDelOption{
+	o := &repo.RepoDelOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
 		Use:     "del [REPO1 [REPO2 ...]]",
 		Short:   "del plugin or service repo",
-		Aliases: []string{"rm"},
+		Aliases: []string{"rm", "delete"},
 		Args:    require.MinimumNArgs(1),
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			o.Names = args
@@ -88,7 +92,7 @@ func newRepoDel(f factory.Factory) *cobra.Command {
 }
 
 func newRepoUpdate(f factory.Factory) *cobra.Command {
-	o := &plugin.RepoUpdateOption{
+	o := &repo.RepoUpdateOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
@@ -113,26 +117,26 @@ func newRepoList(f factory.Factory) *cobra.Command {
 		Short:   "list repo",
 		Aliases: []string{"ls"},
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			f, err := plugin.LoadFile(common.GetDefaultRepoCfg())
-			if err != nil || (len(f.Plugins) == 0 && len(f.Services) == 0) {
-				log.Warnf("no repositories to show")
+			f, err := repo.LoadFile(common.GetDefaultRepoCfg())
+			if err != nil || len(f.Repos) == 0 {
+				log.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
 				return nil
 			}
 			switch strings.ToLower(listoutput) {
 			case "json":
-				return output.EncodeJSON(os.Stdout, f.Plugins)
+				return output.EncodeJSON(os.Stdout, f.Repos)
 			case "yaml":
-				return output.EncodeYAML(os.Stdout, f.Plugins)
+				return output.EncodeYAML(os.Stdout, f.Repos)
 			default:
 				log.Infof("上次变更时间: %v", f.Generated)
 				table := uitable.New()
 				table.AddRow("name", "path", "source", "type")
-				for _, re := range f.Plugins {
+				for _, re := range f.Repos {
 					if re.Mode == "" {
-						re.Mode = "remote"
+						re.Mode = common.PluginRepoRemoteMode
 					}
 					if re.Type == "" {
-						re.Type = "plugin"
+						re.Type = common.PluginRepoType
 					}
 					table.AddRow(re.Name, re.URL, re.Mode, re.Type)
 				}
@@ -141,5 +145,31 @@ func newRepoList(f factory.Factory) *cobra.Command {
 		},
 	}
 	cmd.PersistentFlags().StringVarP(&listoutput, "output", "o", "", "prints the output in the specified format. Allowed values: table, json, yaml (default table)")
+	return cmd
+}
+
+func newRepoInit(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
+	cmd := &cobra.Command{
+		Use:   "init",
+		Short: "添加ergo默认插件库或服务库",
+		Long: `
+
+ergo插件库 https://github.com/ysicing/ergo-plugin
+ergo服务库 https://github.com/ysicing/ergo-service
+`,
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			cmdargs := os.Args
+			if err := ssh.RunCmd(cmdargs[0], "repo", "add-plugin", "default-plugin", "https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml"); err != nil {
+				log.Debugf("添加默认插件库失败: %v", err)
+				return fmt.Errorf("添加默认插件库失败")
+			}
+			if err := ssh.RunCmd(cmdargs[0], "repo", "add-service", "default-service", "https://raw.githubusercontent.com/ysicing/ergo-service/master/default.yaml"); err != nil {
+				log.Debugf("添加默认服务库失败: %v", err)
+				return fmt.Errorf("添加默认服务库失败")
+			}
+			return nil
+		},
+	}
 	return cmd
 }

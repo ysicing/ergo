@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -9,40 +9,71 @@ import (
 	"text/template"
 
 	"github.com/ergoapi/util/file"
+	"github.com/gopasspw/gopass/pkg/pwgen"
+	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 const (
-	coredns = "coredns"
+	redis = "redis"
 )
 
-const corednscompose = `version: '2.1'
+const rediscompose = `version: '2.1'
 services:
-  coredns:
-    image: coredns/coredns:1.8.6
-    container_name: coredns
+  redis:
+    image: docker.io/bitnami/redis:6.2.6-debian-10-r6
+    container_name: redis
     restart: always
-    network_mode: "host"
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+    environment:
+      - REDIS_PASSWORD={{ .Password }}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+volumes:
+  redis_data:
+    driver: local
 `
 
-type CoreDNS struct {
-	meta Meta
-	tpl  string
+type Redis struct {
+	meta     Meta
+	Password string
+	tpl      string
 }
 
-func (c *CoreDNS) name() string {
-	return coredns
+func (c *Redis) name() string {
+	return redis
 }
 
-func (c *CoreDNS) parse() {
+func (c *Redis) parse() {
+	prompt := promptui.Select{
+		Label: "配置",
+		Items: PackageCfg,
+	}
+	selectid, _, _ := prompt.Run()
+	c.meta.SSH.Log.Debugf("选择: %v", PackageCfg[selectid].Key)
+	if PackageCfg[selectid].Value != "0" {
+		// 手动配置
+		passwordprompt := promptui.Prompt{
+			Label: "Password",
+			Mask:  '*',
+		}
+		c.Password, _ = passwordprompt.Run()
+	}
+
+	if c.Password == "" {
+		c.Password = pwgen.GeneratePassword(16, false)
+		c.meta.SSH.Log.Infof("Generate default password: %v", c.Password)
+	}
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(corednscompose))
-	_ = t.Execute(&b, c)
+	t := template.Must(template.New(c.name()).Parse(rediscompose))
+	t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *CoreDNS) Install() error {
+func (c *Redis) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -82,15 +113,15 @@ func (c *CoreDNS) Install() error {
 	return nil
 }
 
-func (c *CoreDNS) Dump(mode string) error {
+func (c *Redis) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "coredns",
-		Describe: "https://github.com/coredns/coredns",
-		Version:  "1.8.6",
+		Name:     "redis",
+		Describe: "Bitnami Redis https://github.com/bitnami/bitnami-docker-redis",
+		Version:  "6.2.6-debian-10-r6",
 	})
 }

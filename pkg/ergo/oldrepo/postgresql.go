@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -16,38 +16,43 @@ import (
 )
 
 const (
-	redis = "redis"
+	postgresql = "postgresql"
 )
 
-const rediscompose = `version: '2.1'
+const postgresqlcompose = `version: '2.1'
 services:
-  redis:
-    image: docker.io/bitnami/redis:6.2.6-debian-10-r6
-    container_name: redis
+  postgresql:
+    image: docker.io/bitnami/postgresql:13.4.0-debian-10-r58
+    container_name: postgresql
     restart: always
     ports:
-      - '6379:6379'
+      - '5432:5432'
     volumes:
-      - 'redis_data:/bitnami/redis/data'
+      - 'postgresql_data:/bitnami/postgresql'
     environment:
-      - REDIS_PASSWORD={{ .Password }}
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+      - POSTGRESQL_PASSWORD={{ .Password }}
+      - POSTGRESQL_DATABASE={{ .Database }}
+{{ if .User }}
+      - POSTGRESQL_USERNAME={{ .User }}
+{{ end }}
 volumes:
-  redis_data:
+  postgresql_data:
     driver: local
 `
 
-type Redis struct {
+type Postgresql struct {
 	meta     Meta
 	Password string
+	Database string
+	User     string
 	tpl      string
 }
 
-func (c *Redis) name() string {
-	return redis
+func (c *Postgresql) name() string {
+	return postgresql
 }
 
-func (c *Redis) parse() {
+func (c *Postgresql) parse() {
 	prompt := promptui.Select{
 		Label: "配置",
 		Items: PackageCfg,
@@ -56,24 +61,43 @@ func (c *Redis) parse() {
 	c.meta.SSH.Log.Debugf("选择: %v", PackageCfg[selectid].Key)
 	if PackageCfg[selectid].Value != "0" {
 		// 手动配置
+		userprompt := promptui.Prompt{
+			Label: "user",
+		}
+		c.User, _ = userprompt.Run()
 		passwordprompt := promptui.Prompt{
-			Label: "Password",
+			Label: "password",
 			Mask:  '*',
 		}
 		c.Password, _ = passwordprompt.Run()
+		dbprompt := promptui.Prompt{
+			Label: "database",
+		}
+		c.Database, _ = dbprompt.Run()
+	}
+
+	if c.Database == "" {
+		c.Database = "ergodb"
+	}
+
+	if c.User == "" {
+		c.meta.SSH.Log.Warnf("默认用户拥有全部数据库权限")
+	} else {
+		c.meta.SSH.Log.Warnf("用户 %v 仅拥有 %v数据库权限", c.User, c.Database)
 	}
 
 	if c.Password == "" {
 		c.Password = pwgen.GeneratePassword(16, false)
 		c.meta.SSH.Log.Infof("Generate default password: %v", c.Password)
 	}
+
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(rediscompose))
+	t := template.Must(template.New(c.name()).Parse(postgresqlcompose))
 	t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *Redis) Install() error {
+func (c *Postgresql) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -113,15 +137,15 @@ func (c *Redis) Install() error {
 	return nil
 }
 
-func (c *Redis) Dump(mode string) error {
+func (c *Postgresql) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "redis",
-		Describe: "Bitnami Redis https://github.com/bitnami/bitnami-docker-redis",
-		Version:  "6.2.6-debian-10-r6",
+		Name:     "postgresql",
+		Describe: "Bitnami Postgresql https://github.com/bitnami/bitnami-docker-postgresql",
+		Version:  "13.4.0-debian-10-r58",
 	})
 }

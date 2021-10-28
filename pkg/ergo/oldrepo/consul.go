@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -14,44 +14,46 @@ import (
 )
 
 const (
-	etcd = "etcd"
+	consul = "consul"
 )
 
-const etcdcompose = `version: '2.1'
+const consulcompose = `version: '2.1'
 services:
-  etcd:
-    image: docker.io/bitnami/etcd:3.5.0-debian-10-r111
-    container_name: etcd
+  consul:
+    image: docker.io/bitnami/consul:1.10.3-debian-10-r11
+    container_name: consul
     restart: always
     ports:
-      - '2379:2379'
-      - '2380:2380'
-    environment:
-      - ALLOW_NONE_AUTHENTICATION=yes
+      - '8300:8300'
+      - '8301:8301'
+      - '8301:8301/udp'
+      - '8500:8500'
+      - '8600:8600'
+      - '8600:8600/udp'
     volumes:
-      - 'etcd_data:/bitnami/etcd'
+      - 'consul_data:/bitnami/consul'
 volumes:
-  etcd_data:
+  consul_data:
     driver: local
 `
 
-type Etcd struct {
+type Consul struct {
 	meta Meta
 	tpl  string
 }
 
-func (c *Etcd) name() string {
-	return etcd
+func (c *Consul) name() string {
+	return consul
 }
 
-func (c *Etcd) parse() {
+func (c *Consul) parse() {
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(etcdcompose))
-	_ = t.Execute(&b, c)
+	t := template.Must(template.New(c.name()).Parse(consulcompose))
+	t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *Etcd) Install() error {
+func (c *Consul) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -91,15 +93,15 @@ func (c *Etcd) Install() error {
 	return nil
 }
 
-func (c *Etcd) Dump(mode string) error {
+func (c *Consul) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "etcd",
-		Describe: "Bitnami Etcd https://github.com/bitnami/bitnami-docker-etcd",
-		Version:  "3.5.0-debian-10-r111",
+		Name:     "consul",
+		Describe: "Bitnami Consul https://github.com/bitnami/bitnami-docker-consul",
+		Version:  "1.10.3-debian-10-r11",
 	})
 }

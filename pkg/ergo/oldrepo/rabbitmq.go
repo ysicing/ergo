@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -16,43 +16,46 @@ import (
 )
 
 const (
-	mongodb = "mongodb"
+	rabbitmq = "rabbitmq"
 )
 
-const mongodbcompose = `version: '2.1'
+const rabbitmqcompose = `version: '2.1'
 services:
-  mongodb:
-    image: docker.io/bitnami/mongodb:5.0.3-debian-10-r17
-    container_name: mongodb
+  rabbitmq:
+    image: docker.io/bitnami/rabbitmq:3.9.7-debian-10-r15
+    container_name: rabbitmq
     restart: always
     ports:
-      - '27017:27017'
+      - '4369:4369'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
     volumes:
-      - 'mongodb_data:/bitnami/mongodb'
+      - 'rabbitmq_data:/bitnami'
     environment:
-      # - MONGODB_DISABLE_SYSTEM_LOG=false
-      # - MONGODB_SYSTEM_LOG_VERBOSITY=0
-      - MONGODB_DATABASE={{ .Database }}
-      - MONGODB_ROOT_USER={{ .User }}
-      - MONGODB_ROOT_PASSWORD={{ .Password }}
+      - RABBITMQ_PASSWORD={{ .Password }}
+      - RABBITMQ_VHOST={{ .Vhost }}
+      - RABBITMQ_USERNAME={{ .User }}
+      - RABBITMQ_ERL_COOKIE={{ .Cookie }}
 volumes:
-  mongodb_data:
+  rabbitmq_data:
     driver: local
 `
 
-type Mongodb struct {
+type Rabbitmq struct {
 	meta     Meta
-	Database string
-	User     string
 	Password string
+	Vhost    string
+	User     string
+	Cookie   string
 	tpl      string
 }
 
-func (c *Mongodb) name() string {
-	return mongodb
+func (c *Rabbitmq) name() string {
+	return rabbitmq
 }
 
-func (c *Mongodb) parse() {
+func (c *Rabbitmq) parse() {
 	prompt := promptui.Select{
 		Label: "配置",
 		Items: PackageCfg,
@@ -62,36 +65,45 @@ func (c *Mongodb) parse() {
 	if PackageCfg[selectid].Value != "0" {
 		// 手动配置
 		userprompt := promptui.Prompt{
-			Label: "user",
+			Label: "User",
 		}
 		c.User, _ = userprompt.Run()
 		passwordprompt := promptui.Prompt{
-			Label: "password",
+			Label: "Password",
 			Mask:  '*',
 		}
 		c.Password, _ = passwordprompt.Run()
-		dbprompt := promptui.Prompt{
-			Label: "database",
+		vhostprompt := promptui.Prompt{
+			Label: "vhost",
 		}
-		c.Database, _ = dbprompt.Run()
+		c.Vhost, _ = vhostprompt.Run()
+		cookieprompt := promptui.Prompt{
+			Label: "cookie",
+		}
+		c.Cookie, _ = cookieprompt.Run()
 	}
 	if c.User == "" {
-		c.User = "root"
+		c.User = "ergoapi"
 	}
 	if c.Password == "" {
 		c.Password = pwgen.GeneratePassword(16, false)
-		c.meta.SSH.Log.Infof("Generate default mongodb %v password: %v", c.User, c.Password)
+		c.meta.SSH.Log.Infof("Generate default %v password: %v", c.User, c.Password)
 	}
-	if c.Database == "" {
-		c.Database = "ergodb"
+	if c.Vhost == "" {
+		c.Vhost = "/"
+	}
+
+	if c.Cookie == "" {
+		c.Cookie = pwgen.GeneratePassword(16, false)
+		c.meta.SSH.Log.Infof("Generate default cookie: %v", c.Cookie)
 	}
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(mongodbcompose))
+	t := template.Must(template.New(c.name()).Parse(rabbitmqcompose))
 	t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *Mongodb) Install() error {
+func (c *Rabbitmq) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -131,15 +143,15 @@ func (c *Mongodb) Install() error {
 	return nil
 }
 
-func (c *Mongodb) Dump(mode string) error {
+func (c *Rabbitmq) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "mongodb",
-		Describe: "Bitnami Mongodb https://github.com/bitnami/bitnami-docker-mongodb",
-		Version:  "5.0.3-debian-10-r17",
+		Name:     "rabbitmq",
+		Describe: "Bitnami Rabbitmq https://github.com/bitnami/bitnami-docker-rabbitmq",
+		Version:  "3.9.7-debian-10-r15",
 	})
 }

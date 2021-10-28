@@ -5,6 +5,7 @@ package plugin
 
 import (
 	"fmt"
+	"github.com/ysicing/ergo/pkg/ergo/repo"
 	"os"
 	"runtime"
 
@@ -27,10 +28,7 @@ func (p *ListRemoteOptions) Run() {
 	args := os.Args
 	if !file.CheckFileExists(p.RepoCfg) {
 		p.Log.Debugf("not found, will gen default repo")
-		if err := ssh.RunCmd(args[0], "repo", "add-plugin", "default-plugin", "https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml"); err != nil {
-			return
-		}
-		if err := ssh.RunCmd(args[0], "repo", "add-service", "default-service", "https://raw.githubusercontent.com/ysicing/ergo-service/master/default.yaml"); err != nil {
+		if err := ssh.RunCmd(args[0], "repo", "init"); err != nil {
 			return
 		}
 	}
@@ -40,15 +38,14 @@ func (p *ListRemoteOptions) Run() {
 		return
 	}
 	p.Log.Done("加载完成.")
-	r, err := LoadFile(p.RepoCfg)
-	if err != nil || (len(r.Plugins) == 0 && len(r.Services) == 0) {
-		p.Log.Warn("no found remote plugin or service")
+	r, err := repo.LoadFile(p.RepoCfg)
+	if err != nil || len(r.Repos) == 0 {
+		p.Log.Warn("no found remote plugin or service repo")
 		return
 	}
 	var res []*Plugin
-	// TODO 列出插件
-	for _, i := range r.Plugins {
-		index := fmt.Sprintf("%v/%v.index.yaml", common.GetDefaultCfgDir(), i.Name)
+	for _, i := range r.Repos {
+		index := common.GetRepoIndexFileByName(fmt.Sprintf("%v.%v", i.Type, i.Name))
 		if !file.CheckFileExists(index) {
 			p.Log.Debugf("not found %n index", i.Name)
 			continue

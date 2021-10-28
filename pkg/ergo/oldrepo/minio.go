@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -16,43 +16,40 @@ import (
 )
 
 const (
-	postgresql = "postgresql"
+	minio = "minio"
 )
 
-const postgresqlcompose = `version: '2.1'
+const miniocompose = `version: '2.1'
 services:
-  postgresql:
-    image: docker.io/bitnami/postgresql:13.4.0-debian-10-r58
-    container_name: postgresql
+  minio:
+    image: docker.io/bitnami/minio:2021.10.6-debian-10-r1
+    container_name: minio
     restart: always
     ports:
-      - '5432:5432'
+      - '9000:9000'
+      - '9001:9001'
     volumes:
-      - 'postgresql_data:/bitnami/postgresql'
+      - 'minio_data:/data'
     environment:
-      - POSTGRESQL_PASSWORD={{ .Password }}
-      - POSTGRESQL_DATABASE={{ .Database }}
-{{ if .User }}
-      - POSTGRESQL_USERNAME={{ .User }}
-{{ end }}
+      - MINIO_ACCESS_KEY={{ .MinioAKey }}
+      - MINIO_SECRET_KEY={{ .MinioSKey }}
 volumes:
-  postgresql_data:
+  minio_data:
     driver: local
 `
 
-type Postgresql struct {
-	meta     Meta
-	Password string
-	Database string
-	User     string
-	tpl      string
+type Minio struct {
+	meta      Meta
+	MinioAKey string
+	MinioSKey string
+	tpl       string
 }
 
-func (c *Postgresql) name() string {
-	return postgresql
+func (c *Minio) name() string {
+	return minio
 }
 
-func (c *Postgresql) parse() {
+func (c *Minio) parse() {
 	prompt := promptui.Select{
 		Label: "配置",
 		Items: PackageCfg,
@@ -61,43 +58,33 @@ func (c *Postgresql) parse() {
 	c.meta.SSH.Log.Debugf("选择: %v", PackageCfg[selectid].Key)
 	if PackageCfg[selectid].Value != "0" {
 		// 手动配置
-		userprompt := promptui.Prompt{
-			Label: "user",
+		akeyprompt := promptui.Prompt{
+			Label: "MINIO ACCESS KEY",
 		}
-		c.User, _ = userprompt.Run()
-		passwordprompt := promptui.Prompt{
-			Label: "password",
-			Mask:  '*',
+		c.MinioAKey, _ = akeyprompt.Run()
+		skeyprompt := promptui.Prompt{
+			Label: "MINIO SECRET KEY",
 		}
-		c.Password, _ = passwordprompt.Run()
-		dbprompt := promptui.Prompt{
-			Label: "database",
-		}
-		c.Database, _ = dbprompt.Run()
+		c.MinioSKey, _ = skeyprompt.Run()
 	}
 
-	if c.Database == "" {
-		c.Database = "ergodb"
+	if c.MinioAKey == "" {
+		c.MinioAKey = pwgen.GeneratePassword(8, false)
+		c.meta.SSH.Log.Infof("Generate default minio access key: %v", c.MinioAKey)
 	}
 
-	if c.User == "" {
-		c.meta.SSH.Log.Warnf("默认用户拥有全部数据库权限")
-	} else {
-		c.meta.SSH.Log.Warnf("用户 %v 仅拥有 %v数据库权限", c.User, c.Database)
-	}
-
-	if c.Password == "" {
-		c.Password = pwgen.GeneratePassword(16, false)
-		c.meta.SSH.Log.Infof("Generate default password: %v", c.Password)
+	if c.MinioSKey == "" {
+		c.MinioSKey = pwgen.GeneratePassword(16, false)
+		c.meta.SSH.Log.Infof("Generate default minio secret key: %v", c.MinioSKey)
 	}
 
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(postgresqlcompose))
+	t := template.Must(template.New(c.name()).Parse(miniocompose))
 	t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *Postgresql) Install() error {
+func (c *Minio) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -137,15 +124,15 @@ func (c *Postgresql) Install() error {
 	return nil
 }
 
-func (c *Postgresql) Dump(mode string) error {
+func (c *Minio) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "postgresql",
-		Describe: "Bitnami Postgresql https://github.com/bitnami/bitnami-docker-postgresql",
-		Version:  "13.4.0-debian-10-r58",
+		Name:     "minio",
+		Describe: "Bitnami Minio https://github.com/bitnami/bitnami-docker-minio",
+		Version:  "2021.10.6-debian-10-r1",
 	})
 }

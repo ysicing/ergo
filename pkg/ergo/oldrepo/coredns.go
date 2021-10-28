@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -14,46 +14,35 @@ import (
 )
 
 const (
-	consul = "consul"
+	coredns = "coredns"
 )
 
-const consulcompose = `version: '2.1'
+const corednscompose = `version: '2.1'
 services:
-  consul:
-    image: docker.io/bitnami/consul:1.10.3-debian-10-r11
-    container_name: consul
+  coredns:
+    image: coredns/coredns:1.8.6
+    container_name: coredns
     restart: always
-    ports:
-      - '8300:8300'
-      - '8301:8301'
-      - '8301:8301/udp'
-      - '8500:8500'
-      - '8600:8600'
-      - '8600:8600/udp'
-    volumes:
-      - 'consul_data:/bitnami/consul'
-volumes:
-  consul_data:
-    driver: local
+    network_mode: "host"
 `
 
-type Consul struct {
+type CoreDNS struct {
 	meta Meta
 	tpl  string
 }
 
-func (c *Consul) name() string {
-	return consul
+func (c *CoreDNS) name() string {
+	return coredns
 }
 
-func (c *Consul) parse() {
+func (c *CoreDNS) parse() {
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(consulcompose))
-	t.Execute(&b, c)
+	t := template.Must(template.New(c.name()).Parse(corednscompose))
+	_ = t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *Consul) Install() error {
+func (c *CoreDNS) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -93,15 +82,15 @@ func (c *Consul) Install() error {
 	return nil
 }
 
-func (c *Consul) Dump(mode string) error {
+func (c *CoreDNS) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "consul",
-		Describe: "Bitnami Consul https://github.com/bitnami/bitnami-docker-consul",
-		Version:  "1.10.3-debian-10-r11",
+		Name:     "coredns",
+		Describe: "https://github.com/coredns/coredns",
+		Version:  "1.8.6",
 	})
 }

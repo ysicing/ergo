@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package repo
+package oldrepo
 
 import (
 	"bytes"
@@ -9,82 +9,49 @@ import (
 	"text/template"
 
 	"github.com/ergoapi/util/file"
-	"github.com/gopasspw/gopass/pkg/pwgen"
-	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 const (
-	minio = "minio"
+	etcd = "etcd"
 )
 
-const miniocompose = `version: '2.1'
+const etcdcompose = `version: '2.1'
 services:
-  minio:
-    image: docker.io/bitnami/minio:2021.10.6-debian-10-r1
-    container_name: minio
+  etcd:
+    image: docker.io/bitnami/etcd:3.5.0-debian-10-r111
+    container_name: etcd
     restart: always
     ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - 'minio_data:/data'
+      - '2379:2379'
+      - '2380:2380'
     environment:
-      - MINIO_ACCESS_KEY={{ .MinioAKey }}
-      - MINIO_SECRET_KEY={{ .MinioSKey }}
+      - ALLOW_NONE_AUTHENTICATION=yes
+    volumes:
+      - 'etcd_data:/bitnami/etcd'
 volumes:
-  minio_data:
+  etcd_data:
     driver: local
 `
 
-type Minio struct {
-	meta      Meta
-	MinioAKey string
-	MinioSKey string
-	tpl       string
+type Etcd struct {
+	meta Meta
+	tpl  string
 }
 
-func (c *Minio) name() string {
-	return minio
+func (c *Etcd) name() string {
+	return etcd
 }
 
-func (c *Minio) parse() {
-	prompt := promptui.Select{
-		Label: "配置",
-		Items: PackageCfg,
-	}
-	selectid, _, _ := prompt.Run()
-	c.meta.SSH.Log.Debugf("选择: %v", PackageCfg[selectid].Key)
-	if PackageCfg[selectid].Value != "0" {
-		// 手动配置
-		akeyprompt := promptui.Prompt{
-			Label: "MINIO ACCESS KEY",
-		}
-		c.MinioAKey, _ = akeyprompt.Run()
-		skeyprompt := promptui.Prompt{
-			Label: "MINIO SECRET KEY",
-		}
-		c.MinioSKey, _ = skeyprompt.Run()
-	}
-
-	if c.MinioAKey == "" {
-		c.MinioAKey = pwgen.GeneratePassword(8, false)
-		c.meta.SSH.Log.Infof("Generate default minio access key: %v", c.MinioAKey)
-	}
-
-	if c.MinioSKey == "" {
-		c.MinioSKey = pwgen.GeneratePassword(16, false)
-		c.meta.SSH.Log.Infof("Generate default minio secret key: %v", c.MinioSKey)
-	}
-
+func (c *Etcd) parse() {
 	var b bytes.Buffer
-	t := template.Must(template.New(c.name()).Parse(miniocompose))
-	t.Execute(&b, c)
+	t := template.Must(template.New(c.name()).Parse(etcdcompose))
+	_ = t.Execute(&b, c)
 	c.tpl = b.String()
 }
 
-func (c *Minio) Install() error {
+func (c *Etcd) Install() error {
 	c.parse()
 	c.meta.SSH.Log.Debugf("install %v", c.name())
 	if c.meta.Local {
@@ -124,15 +91,15 @@ func (c *Minio) Install() error {
 	return nil
 }
 
-func (c *Minio) Dump(mode string) error {
+func (c *Etcd) Dump(mode string) error {
 	c.parse()
 	return dump(c.name(), mode, c.tpl, c.meta.SSH.Log)
 }
 
 func init() {
 	InstallPackage(OpsPackage{
-		Name:     "minio",
-		Describe: "Bitnami Minio https://github.com/bitnami/bitnami-docker-minio",
-		Version:  "2021.10.6-debian-10-r1",
+		Name:     "etcd",
+		Describe: "Bitnami Etcd https://github.com/bitnami/bitnami-docker-etcd",
+		Version:  "3.5.0-debian-10-r111",
 	})
 }

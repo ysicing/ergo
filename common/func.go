@@ -45,10 +45,14 @@ func GetDefaultCfgDir() string {
 }
 
 func GetDefaultRepoCfg() string {
-	return fmt.Sprintf("%v/.repo.yaml", GetDefaultCfgDir())
+	return fmt.Sprintf("%v/repo.yaml", GetDefaultCfgDir())
 }
 
 // GetDefaultCfgPathByName 配置文件名
 func GetDefaultCfgPathByName(name string) string {
 	return fmt.Sprintf("%v/%v.yml", GetDefaultCfgDir(), name)
+}
+
+func GetRepoIndexFileByName(name string) string {
+	return fmt.Sprintf("%v/.%v.indexfile", GetDefaultCfgDir(), name)
 }
