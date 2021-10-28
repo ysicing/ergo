@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ergoapi/log"
 )
 
 type SSH struct {

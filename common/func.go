@@ -44,11 +44,19 @@ func GetDefaultCfgDir() string {
 	return home + "/" + DefaultCfgDir
 }
 
-func GetDefaultPluginRepoCfg() string {
-	return fmt.Sprintf("%v/plugin.repo.yaml", GetDefaultCfgDir())
+func GetDefaultRepoCfg() string {
+	return fmt.Sprintf("%v/repo.yaml", GetDefaultCfgDir())
 }
 
 // GetDefaultCfgPathByName 配置文件名
 func GetDefaultCfgPathByName(name string) string {
 	return fmt.Sprintf("%v/%v.yml", GetDefaultCfgDir(), name)
+}
+
+func GetRepoIndexFileByName(name string) string {
+	return fmt.Sprintf("%v/.%v.indexfile", GetDefaultCfgDir(), name)
+}
+
+func GetLockfile() string {
+	return fmt.Sprintf("%v/.install.lockfile", GetDefaultCfgDir())
 }

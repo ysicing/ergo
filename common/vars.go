@@ -6,6 +6,7 @@ package common
 const (
 	FileMode0755 = 0755
 	FileMode0644 = 0644
+	FileMode0600 = 0600
 )
 
 const (
@@ -22,4 +23,7 @@ const (
 	PluginRepoRemoteMode = "remote"
 	PluginRepoLocalMode  = "local"
 	PluginGithubJiasu    = "https://github.techoc.workers.dev"
+	PluginRepoType       = "plugin"
+	ServiceRepoType      = "service"
+	ServiceRunType       = "compose"
 )

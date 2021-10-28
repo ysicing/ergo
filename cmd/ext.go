@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/zos"
 	"github.com/gosuri/uitable"
@@ -18,7 +19,6 @@ import (
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"helm.sh/helm/v3/pkg/cli/output"
 )
 

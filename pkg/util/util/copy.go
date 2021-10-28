@@ -35,7 +35,7 @@ func (c *Copier) CopyFile(dst, src string) error {
 		os.Remove(tmp.Name())
 		return err
 	}
-	if err := os.Chmod(tmp.Name(), common.FileMode0755); err != nil {
+	if err := os.Chmod(tmp.Name(), common.FileMode0600); err != nil {
 		os.Remove(tmp.Name())
 		return err
 	}

@@ -3,7 +3,7 @@
 
 package aliyun
 
-import "github.com/ysicing/ergo/pkg/util/log"
+import "github.com/ergoapi/log"
 
 type Option func(*provider)
 

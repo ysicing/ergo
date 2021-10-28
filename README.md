@@ -66,6 +66,8 @@ ergo version
     - [x] `list`
   - [ ] `dns`
     - [ ] `domain`
+- [x] code 初始化项目
+- [x] completion
 - [ ] cvm 腾讯云开临时测试机器
   - [x] `create` / `new` / `add`
   - [x] `destroy` / `del` / `rm`
@@ -74,8 +76,6 @@ ergo version
   - [ ] `halt`
   - [ ] `up`
   - [x] `ls` / `list`
-- [x] code 初始化项目
-- [x] completion
 - [x] debian
   - [x] `apt` 添加ergo debian源
   - [x] `init` 初始化debian
@@ -83,6 +83,7 @@ ergo version
 - [x] ext
   - [x] `gh` 清理github package
   - [x] `sync` 同步镜像
+- [x] help
 - [x] ops
   - [x] `ps` 进程
   - [x] `nc` nc
@@ -92,17 +93,18 @@ ergo version
   - [x] `install` 安装插件
   - [x] `list` 列出ergo插件
   - [x] `ls-remote` 列出远程插件
-  - [x] `repo` 插件仓库管理, 类似helm仓库
-     - [x] `add` 添加插件仓库
-     - [x] `list` 列出插件仓库列表
-     - [x] `del` 移除插件仓库
-     - [x] `update` 更新插件索引
-- [x] repo
-  - [x] `list` 列出支持的软件包
-  - [x] `install` 安装软件包
-    - [x] `containerd`
-    - [x] `mysql`等
-  - [x] `dump` dump安装脚本
+- [x] `repo` 插件&服务仓库管理, 类似helm仓库
+   - [x] `add-plugin` 添加插件仓库
+   - [x] `add-service` 添加服务仓库
+   - [x] `del` 移除插件仓库
+   - [x] `init` 添加默认插件库或者服务库
+   - [x] `list` 列出插件仓库列表
+   - [x] `update` 更新插件索引
+- [x] service
+  - [x] `install` 安装服务
+  - [x] `list` 列出安装服务
+  - [x] `show` 列出远程服务
+  - [x] `dump` dump安装文件
 - [x] upgrade
 - [x] version
 
@@ -128,14 +130,13 @@ ergo doge haha
 haha
 
 # 插件仓库列表
-ergo plugin repo list
+ergo repo list
 [info]   上次变更时间: 2021-10-13 15:37:18.782145 +0800 CST
 NAME      URL                                                           
 default   https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml
 
 # 列出远程插件
 ergo plugin ls-remote 
-[done] √ "local"已经更新索引: /Users/ysicing/.ergo/.config/default.index.yaml
 [done] √ sync done.
 Repo    NAME            URL                                                                                                             Desc                                                    Available
 default tgsend-linux    https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_linux_amd64   一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 false    
