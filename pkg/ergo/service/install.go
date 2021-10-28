@@ -61,19 +61,6 @@ func (o *Option) Install() error {
 	if pn == nil {
 		return err
 	}
-	o.Log.Donef("%v 安装完成开始启动", o.Name)
-	if pn.Type == common.ServiceRunType {
-		shell := fmt.Sprintf(composeupshell, dfile, dfile, dfile, dfile)
-		tmpfile, _ := ioutil.TempFile(os.TempDir(), "ergo-svc-")
-		o.Log.Debugf("tmpfile path: %v", tmpfile.Name())
-		defer os.Remove(tmpfile.Name())
-		tmpfile.WriteString(shell)
-		if err := ssh.RunCmd("/bin/bash", "-x", tmpfile.Name()); err != nil {
-			o.Log.Error("启动失败: %v", err)
-			return err
-		}
-	}
-	o.Log.Donef("%v 已启动完成", pn.Name)
 	l.Add(&lock.Installed{
 		Name:    o.Name,
 		Repo:    o.Repo,
@@ -83,6 +70,19 @@ func (o *Option) Install() error {
 		Mode:    common.ServiceRepoType,
 	})
 	l.WriteFile(common.GetLockfile())
+	o.Log.Donef("%v 安装完成开始启动", o.Name)
+	if pn.Type == common.ServiceRunType {
+		shell := fmt.Sprintf(composeupshell, dfile, dfile, dfile, dfile)
+		tmpfile, _ := ioutil.TempFile(os.TempDir(), "ergo-svc-")
+		o.Log.Debugf("tmpfile path: %v", tmpfile.Name())
+		defer os.Remove(tmpfile.Name())
+		tmpfile.WriteString(shell)
+		if err := ssh.RunCmd("/bin/bash", "-x", tmpfile.Name()); err != nil {
+			o.Log.Errorf("%v 启动失败: %v", pn.Name, err)
+			return err
+		}
+	}
+	o.Log.Donef("%v 已启动完成", pn.Name)
 	return nil
 }
 

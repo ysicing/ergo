@@ -105,12 +105,6 @@ ergo version
   - [x] `list` 列出安装服务
   - [x] `show` 列出远程服务
   - [x] `dump` dump安装文件
-- [x] oldrepo
-   - [x] `list` 列出支持的软件包
-   - [x] `install` 安装软件包
-     - [x] `containerd`
-     - [x] `mysql`等
-   - [x] `dump` dump安装脚本
 - [x] upgrade
 - [x] version
 
@@ -136,7 +130,7 @@ ergo doge haha
 haha
 
 # 插件仓库列表
-ergo plugin repo list
+ergo repo list
 [info]   上次变更时间: 2021-10-13 15:37:18.782145 +0800 CST
 NAME      URL                                                           
 default   https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml

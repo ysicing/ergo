@@ -185,5 +185,6 @@ func (o *RepoUpdateOption) Run() error {
 			}
 		}
 	}
+	o.Log.Done("索引更新完成")
 	return nil
 }

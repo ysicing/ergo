@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"time"
+
+	"github.com/ysicing/ergo/pkg/util/lock"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/zos"
@@ -24,6 +27,12 @@ type InstallOption struct {
 
 func (r *InstallOption) Run() error {
 	r.Log.Debugf("repo: %v, name: %v", r.Repo, r.Name)
+	l, _ := lock.LoadFile(common.GetLockfile())
+	// TODO版本升级
+	if l.Has(r.Name, r.Repo) {
+		r.Log.Warnf("已经安装 %v, 跳过", r.Name)
+		return nil
+	}
 	pluginfilepath := common.GetRepoIndexFileByName(fmt.Sprintf("plugin.%v", r.Repo))
 	pf, err := LoadIndexFile(pluginfilepath)
 	if err != nil {
@@ -76,5 +85,14 @@ func (r *InstallOption) Run() error {
 	r.Log.Done("插件安装完成, 加载插件列表")
 	args := os.Args
 	ssh.RunCmd(args[0], "plugin", "list")
+	l.Add(&lock.Installed{
+		Name:    r.Name,
+		Repo:    r.Repo,
+		Type:    common.PluginRepoType,
+		Time:    time.Now(),
+		Version: pn.Version,
+		Mode:    pn.Bin,
+	})
+	l.WriteFile(common.GetLockfile())
 	return nil
 }
