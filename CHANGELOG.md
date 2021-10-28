@@ -1,5 +1,12 @@
 ## Ergo CHANGELOG
 
+- v2.4.0
+  - 重构repo&plugin&service功能
+
+- v2.3.0
+  - 新增`ext sync`同步镜像功能
+  - repo新增支持coredns
+
 - v2.2.2
   - 优化`repo install`添加`restart always`参数
 

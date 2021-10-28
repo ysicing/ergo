@@ -9,7 +9,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ergoapi/log"
 )
 
 //Cmd is in host exec cmd

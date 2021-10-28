@@ -4,7 +4,7 @@
 package qcloud
 
 import (
-	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ergoapi/log"
 )
 
 type provider struct {

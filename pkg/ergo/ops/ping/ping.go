@@ -8,9 +8,9 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/zos"
 	"github.com/go-ping/ping"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 func DoPing(target string, count int) error {

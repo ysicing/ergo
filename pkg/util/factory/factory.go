@@ -3,7 +3,7 @@
 
 package factory
 
-import "github.com/ysicing/ergo/pkg/util/log"
+import "github.com/ergoapi/log"
 
 // Factory is the main interface for various client creations
 type Factory interface {

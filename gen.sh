@@ -10,7 +10,6 @@ class Ergo < Formula
     desc "Devops tools 运维工具Ergo"
     homepage "https://github.com/ysicing/ergo"
     version "${version}"
-    bottle :unneeded
 
     if OS.mac?
       if Hardware::CPU.arm?

@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - develop
+    - feat*
 jobs:
   build:
     name: build ergo tools

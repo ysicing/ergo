@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/ergoapi/log"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
@@ -14,7 +15,6 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/ops/ping"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ps"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/cmd/helm/require"
 )
