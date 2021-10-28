@@ -6,13 +6,14 @@ package repo
 import (
 	"context"
 	"fmt"
-	"github.com/ysicing/ergo/pkg/util/util"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/ysicing/ergo/pkg/util/util"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
@@ -165,7 +166,7 @@ func (o *RepoUpdateOption) Run() error {
 				// TODO
 				continue
 			}
-			err = util.HttpGet(repo.URL, index)
+			err = util.HTTPGet(repo.URL, index)
 			if err != nil {
 				o.Log.Debugf("%q 更新索引失败: %v", name, err)
 			} else {

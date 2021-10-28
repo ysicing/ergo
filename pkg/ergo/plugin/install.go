@@ -5,13 +5,14 @@ package plugin
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/zos"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ergo/pkg/util/util"
-	"os"
-	"runtime"
 )
 
 type InstallOption struct {
@@ -51,7 +52,7 @@ func (r *InstallOption) Run() error {
 	// 下载插件
 	binfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), pn.Bin)
 	r.Log.StartWait(fmt.Sprintf("下载插件: %v", installplugin.PluginURL(pn.Version)))
-	err = util.HttpGet(installplugin.PluginURL(pn.Version), binfile)
+	err = util.HTTPGet(installplugin.PluginURL(pn.Version), binfile)
 	r.Log.StopWait()
 	if err != nil {
 		r.Log.Error("下载插件失败")

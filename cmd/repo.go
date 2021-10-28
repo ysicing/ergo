@@ -5,10 +5,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/ysicing/ergo/pkg/ergo/repo"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 	"os"
 	"strings"
+
+	"github.com/ysicing/ergo/pkg/ergo/repo"
+	"github.com/ysicing/ergo/pkg/util/ssh"
 
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
@@ -22,7 +23,7 @@ func newRepoCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "repo [flags]",
 		Aliases: []string{"r"},
-		Short:   "plugins & services repos",
+		Short:   "管理plugins & services repos",
 	}
 	cmd.AddCommand(newAddServiceRepo(f))
 	cmd.AddCommand(newAddPluginRepo(f))

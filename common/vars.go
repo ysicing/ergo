@@ -25,4 +25,5 @@ const (
 	PluginGithubJiasu    = "https://github.techoc.workers.dev"
 	PluginRepoType       = "plugin"
 	ServiceRepoType      = "service"
+	ServiceRunType       = "compose"
 )

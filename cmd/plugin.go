@@ -18,6 +18,7 @@ func newPluginCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "plugin [flags]",
 		DisableFlagsInUseLine: true,
+		Aliases:               []string{"p"},
 		Short:                 "Provides utilities for interacting with plugins",
 	}
 	cmd.AddCommand(NewCmdPluginList(f))

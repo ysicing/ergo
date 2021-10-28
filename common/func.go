@@ -56,3 +56,7 @@ func GetDefaultCfgPathByName(name string) string {
 func GetRepoIndexFileByName(name string) string {
 	return fmt.Sprintf("%v/.%v.indexfile", GetDefaultCfgDir(), name)
 }
+
+func GetLockfile() string {
+	return fmt.Sprintf("%v/.install.lockfile", GetDefaultCfgDir())
+}

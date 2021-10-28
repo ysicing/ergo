@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package plugin
+package service
 
 import (
 	"fmt"
@@ -15,33 +15,26 @@ import (
 )
 
 type PFile struct {
-	Version string    `yaml:"version" json:"version"`
-	Plugins []*Plugin `json:"plugins" yaml:"plugins"`
+	Version  string     `yaml:"version" json:"version"`
+	Services []*Service `yaml:"services" json:"services"`
 }
 
-type Plugin struct {
+type Service struct {
 	Repo     repo.Repo
 	Name     string `yaml:"name" json:"name"`
 	Version  string `yaml:"version" json:"version"`
 	Homepage string `yaml:"homepage" json:"homepage"`
 	Desc     string `yaml:"desc" json:"desc"`
-	Bin      string `yaml:"bin" json:"bin"`
-	URL      []PUrl `yaml:"url" json:"url"`
+	Type     string `yaml:"type" json:"type"`
+	URL      string `yaml:"url" json:"url"`
 }
 
-type PUrl struct {
-	Os     string `yaml:"os,omitempty" json:"os,omitempty"`
-	Arch   string `yaml:"arch" json:"arch"`
-	URL    string `yaml:"url" json:"url"`
-	Sha256 string `yaml:"sha256" json:"sha256"`
-}
-
-func (purl PUrl) PluginURL(v string) string {
-	localurl := purl.URL
+func (s Service) GetURL() string {
+	localurl := s.URL
 	if strings.HasPrefix(localurl, "https://github.com") {
 		localurl = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, localurl)
 	}
-	return strings.ReplaceAll(localurl, "${version}", v)
+	return localurl
 }
 
 // Has returns true if the given name is already a repository name.
@@ -51,8 +44,8 @@ func (r *PFile) Has(name string) bool {
 }
 
 // Get returns an entry with the given name if it exists, otherwise returns nil
-func (r *PFile) Get(name string) *Plugin {
-	for _, entry := range r.Plugins {
+func (r *PFile) Get(name string) *Service {
+	for _, entry := range r.Services {
 		if entry.Name == name {
 			return entry
 		}
@@ -66,8 +59,8 @@ func LoadIndexFile(path string) (*PFile, error) {
 	r := new(PFile)
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		f.Debugf("couldn't load plugin index file (%s), err: %v", path, err)
-		return r, fmt.Errorf("couldn't load plugin index file (%s)", path)
+		f.Debugf("couldn't load service index file (%s), err: %v", path, err)
+		return r, fmt.Errorf("couldn't load service index file (%s)", path)
 	}
 	err = yaml.Unmarshal(b, r)
 	if err != nil {

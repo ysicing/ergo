@@ -4,12 +4,13 @@
 package util
 
 import (
-	"github.com/ysicing/ergo/common"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/ysicing/ergo/common"
 )
 
-func HttpGet(url, indexFile string) error {
+func HTTPGet(url, indexFile string) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
