@@ -34,12 +34,12 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.278
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.278
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.281
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.281
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.272
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.278
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.278
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.281
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect

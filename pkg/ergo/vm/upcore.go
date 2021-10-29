@@ -25,8 +25,10 @@ sed -i 's/buster\/updates/bullseye-security/g;s/buster/bullseye/g' /etc/apt/sour
 version=$(cat /etc/os-release | grep VERSION_CODENAME | awk -F= '{print $2}')
 mirror=$(cat /etc/apt/sources.list | grep -vE "(^#|^$)" | head -1 | awk -F/ '{print $3}')
 
+[ -f "/etc/apt/sources.list.d/${version}-backports.list" ] && rm -rf /etc/apt/sources.list.d/${version}-backports.list
+
 cat /etc/apt/sources.list | grep -vE "(^#|^$)" | grep backports || (
-echo "deb http://${mirror}/debian ${version}-backports main contrib non-free" > /etc/apt/sources.list.d/${version}-backports.list
+echo "deb http://${mirror}/debian bullseye-backports main contrib non-free" > /etc/apt/sources.list.d/bullseye-backports.list
 )
 
 apt update
@@ -123,6 +125,7 @@ func RunLocalShell(runtype string, log log.Logger) {
 const AddDebSource = `#!/bin/bash
 
 echo "deb [trusted=yes] https://debian.ysicing.me/ /" | tee /etc/apt/sources.list.d/ergo.list
+echo "deb [trusted=yes] https://m.deb.ysicing.me/tailscale/stable/debian bullseye main" | tee /etc/apt/sources.list.d/tailscale.list
 apt update
 echo "apt-get install -y opsergo"
 `

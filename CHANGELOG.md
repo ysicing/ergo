@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.4.2
+  - 修复debian upcore初始化backports版本问题
+
 - v2.4.1
   - service执行脚本类型服务
 
