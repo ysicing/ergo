@@ -34,12 +34,12 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.278
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.278
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.281
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.281
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.272
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.278
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.278
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.281
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
@@ -49,7 +49,7 @@ require (
 	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
 	helm.sh/helm/v3 v3.7.1
 	k8s.io/klog/v2 v2.30.0 // indirect
-	k8s.io/kubectl v0.22.2
+	k8s.io/kubectl v0.22.3
 	k8s.io/utils v0.0.0-20210930125809-cb0fa318a74b // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
