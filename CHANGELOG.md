@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.4.1
+  - service执行脚本类型服务
+
 - v2.4.0
   - 重构repo&plugin&service功能
 

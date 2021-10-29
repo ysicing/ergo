@@ -5,15 +5,14 @@ package service
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-	"time"
-
 	"github.com/ergoapi/log"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/lock"
 	"github.com/ysicing/ergo/pkg/util/ssh"
 	"github.com/ysicing/ergo/pkg/util/util"
+	"io/ioutil"
+	"os"
+	"time"
 )
 
 type Option struct {
@@ -61,15 +60,6 @@ func (o *Option) Install() error {
 	if pn == nil {
 		return err
 	}
-	l.Add(&lock.Installed{
-		Name:    o.Name,
-		Repo:    o.Repo,
-		Type:    pn.Type,
-		Time:    time.Now(),
-		Version: pn.Version,
-		Mode:    common.ServiceRepoType,
-	})
-	l.WriteFile(common.GetLockfile())
 	o.Log.Donef("%v 安装完成开始启动", o.Name)
 	if pn.Type == common.ServiceRunType {
 		shell := fmt.Sprintf(composeupshell, dfile, dfile, dfile, dfile)
@@ -81,8 +71,23 @@ func (o *Option) Install() error {
 			o.Log.Errorf("%v 启动失败: %v", pn.Name, err)
 			return err
 		}
+	} else {
+		defer os.Remove(dfile)
+		if err := ssh.RunCmd("/bin/bash", dfile); err != nil {
+			o.Log.Errorf("%v 启动失败: %v", pn.Name, err)
+			return err
+		}
 	}
-	o.Log.Donef("%v 已启动完成", pn.Name)
+	o.Log.Donef("%v 已安装完成", pn.Name)
+	l.Add(&lock.Installed{
+		Name:    o.Name,
+		Repo:    o.Repo,
+		Type:    pn.Type,
+		Time:    time.Now(),
+		Version: pn.Version,
+		Mode:    common.ServiceRepoType,
+	})
+	l.WriteFile(common.GetLockfile())
 	return nil
 }
 
