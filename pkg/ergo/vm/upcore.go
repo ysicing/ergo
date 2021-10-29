@@ -124,8 +124,13 @@ func RunLocalShell(runtype string, log log.Logger) {
 
 const AddDebSource = `#!/bin/bash
 
+mkdir -p --mode=0755 /usr/share/keyrings
+
+curl -fsSL https://m.deb.ysicing.me/tailscale/stable/debian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+
 echo "deb [trusted=yes] https://debian.ysicing.me/ /" | tee /etc/apt/sources.list.d/ergo.list
-echo "deb [trusted=yes] https://m.deb.ysicing.me/tailscale/stable/debian bullseye main" | tee /etc/apt/sources.list.d/tailscale.list
+echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://m.deb.ysicing.me/tailscale/stable/debian bullseye main" | tee /etc/apt/sources.list.d/tailscale.list
 apt update
-echo "apt-get install -y opsergo"
+
+echo "apt-get install -y opsergo tailscale"
 `

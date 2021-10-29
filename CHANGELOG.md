@@ -2,6 +2,7 @@
 
 - v2.4.2
   - 修复debian upcore初始化backports版本问题
+  - 优化debian apt源, 新增tailscale源
 
 - v2.4.1
   - service执行脚本类型服务
