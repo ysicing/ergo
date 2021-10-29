@@ -3,15 +3,7 @@ updates:
   - package-ecosystem: gomod
     directory: /
     schedule:
-      interval: weekly
-  - package-ecosystem: gomod
-    directory: scrape
-    schedule:
-      interval: weekly
-  - package-ecosystem: gomod
-    directory: update-urls
-    schedule:
-      interval: weekly
+      interval: daily
   - package-ecosystem: github-actions
     directory: /
     schedule:
