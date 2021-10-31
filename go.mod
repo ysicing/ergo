@@ -49,7 +49,7 @@ require (
 	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
 	helm.sh/helm/v3 v3.7.1
 	k8s.io/klog/v2 v2.30.0 // indirect
-	k8s.io/kubectl v0.22.2
+	k8s.io/kubectl v0.22.3
 	k8s.io/utils v0.0.0-20210930125809-cb0fa318a74b // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
