@@ -4,7 +4,9 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -88,7 +90,7 @@ func (ext *ExtOptions) syncImage(args []string) {
 	ext.Log.StartWait("开始尝试同步镜像")
 	for _, image := range args {
 		ext.Log.Debugf("尝试同步镜像: %v", image)
-		err := getcr(image)
+		err := ext.doCR(image)
 		if err != nil {
 			ext.Log.Warnf("%v 同步失败", image)
 			continue
@@ -108,7 +110,31 @@ func (ext *ExtOptions) syncImage(args []string) {
 	}
 }
 
-func getcr(image string) error {
+type SyncCRResp struct {
+	Code int `json:"code"`
+	Data struct {
+		Actionlog string `json:"actionlog"`
+		Client    string `json:"client"`
+		Dockerlog string `json:"dockerlog"`
+		Image     string `json:"image"`
+		Message   string `json:"message"`
+		Taskid    string `json:"taskid"`
+	} `json:"data"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
+}
+
+type SyncLogResp struct {
+	Code int `json:"code"`
+	Data struct {
+		Logfile string `json:"logfile"`
+		Taskid  string `json:"taskid"`
+	} `json:"data"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
+}
+
+func (ext *ExtOptions) doCR(image string) error {
 	params := url.Values{}
 	u, _ := url.Parse("https://cr.hk1.godu.dev/pull")
 	params.Set("image", image)
@@ -116,6 +142,14 @@ func getcr(image string) error {
 	resp, err := http.Get(u.String())
 	if err != nil || resp.StatusCode != 200 {
 		return fmt.Errorf("同步失败")
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var crresp SyncCRResp
+	json.Unmarshal(body, &crresp)
+	if crresp.Code == 200 {
+		ext.Log.Info(crresp.Message)
+		ext.Log.Infof("check sync log: https://cr.hk1.godu.dev%v", crresp.Data.Actionlog)
 	}
 	return nil
 }
