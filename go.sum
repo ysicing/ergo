@@ -994,8 +994,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.281 h1:WPj2y7j
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.281/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.281 h1:vCXIOsuOeMIH8DfwJmCU8cln6lUkvjAaZYRrajE2jaA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.281/go.mod h1:CuOaLxOQr477GhMWAQPYQFUJrsZbW+ZqkAgP2uHDZXg=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.281 h1:kEmaJJjZ1s3W2CMVxVQ6klN8Jgn6rXvSsvR4q6YBNl8=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.281/go.mod h1:r8txjlw4DjLDZFOpnPC/hOFHr1VckZc0jjBK6XIFLP0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.282 h1:J8sANz+6Wgzxe5kwGg+9518hFKgXuESaN13dOFPmqfs=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.282/go.mod h1:r8txjlw4DjLDZFOpnPC/hOFHr1VckZc0jjBK6XIFLP0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.281 h1:psfiS57rGqWnm476xKq7NH0I6tWzJ+c1ACHuKxUhzyA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.281/go.mod h1:SEUO10oGtg+4AGCfpJDn9ynf47P+ZiyvhzOyXLt0mOY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.281 h1:MZbwvm6jg/1hmkj+r2udNrZSgD8O+jYc7F+jF2hgD0o=
