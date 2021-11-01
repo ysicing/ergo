@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210920160938-87db9fbc61c7 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1311
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1312
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/ergoapi/log v0.0.0-20211027064103-103783bd0168
