@@ -39,7 +39,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.281
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.281
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.281
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.281
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.282
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
