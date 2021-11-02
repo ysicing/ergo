@@ -5,14 +5,13 @@ go 1.16
 require (
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210920160938-87db9fbc61c7 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1311
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1313
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/ergoapi/log v0.0.0-20211027064103-103783bd0168
 	github.com/ergoapi/util v0.0.9
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
-	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gofrs/flock v0.8.1
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
@@ -29,7 +28,7 @@ require (
 	github.com/pkg/sftp v1.13.4
 	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/shirou/gopsutil/v3 v3.21.9
+	github.com/shirou/gopsutil/v3 v3.21.10
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
