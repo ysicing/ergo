@@ -105,7 +105,7 @@ func (r *File) WriteFile(path string, perm os.FileMode) error {
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(path), common.FileMode0600); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), common.FileMode0755); err != nil {
 		return err
 	}
 	return ioutil.WriteFile(path, data, perm)

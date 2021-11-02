@@ -1,5 +1,9 @@
 ## Ergo CHANGELOG
 
+- v2.4.3
+  - 优化`ext sync`
+  - 优化`.ergo`目录权限
+
 - v2.4.2
   - 修复debian upcore初始化backports版本问题
   - 优化debian apt源, 新增tailscale源
