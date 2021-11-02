@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.5.0
+  - 增强`exp install`, 下载`ergo`二进制后安装
+
 - v2.4.3
   - 优化`ext sync`
   - 优化`.ergo`目录权限

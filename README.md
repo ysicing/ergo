@@ -80,6 +80,8 @@ ergo version
   - [x] `apt` 添加ergo debian源
   - [x] `init` 初始化debian
   - [x] `upcore` 升级debian内核
+- [x] experimental
+  - [x] `install` 安装ergo二进制
 - [x] ext
   - [x] `gh` 清理github package
   - [x] `sync` 同步镜像

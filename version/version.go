@@ -26,7 +26,7 @@ var versionTpl = `效能工具: ergo
  Git commit:        %v
  Built:             %v
  OS/Arch:           %v
- Experimental:      false
+ Experimental:      true
  Repo: https://github.com/ysicing/ergo/releases/tag/%v
 `
 
