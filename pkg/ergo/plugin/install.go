@@ -61,10 +61,11 @@ func (r *InstallOption) Run() error {
 	// 下载插件
 	binfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), pn.Bin)
 	r.Log.StartWait(fmt.Sprintf("下载插件: %v", installplugin.PluginURL(pn.Version)))
+	r.Log.Debugf("下载地址: %v", installplugin.PluginURL(pn.Version))
 	err = util.HTTPGet(installplugin.PluginURL(pn.Version), binfile)
 	r.Log.StopWait()
 	if err != nil {
-		r.Log.Error("下载插件失败")
+		r.Log.Errorf("下载插件失败: %v", err)
 		return nil
 	}
 	os.Chmod(binfile, common.FileMode0755)
