@@ -22,7 +22,7 @@ const (
 const (
 	PluginRepoRemoteMode = "remote"
 	PluginRepoLocalMode  = "local"
-	PluginGithubJiasu    = "https://github.techoc.workers.dev"
+	PluginGithubJiasu    = "https://mirror.ghproxy.com"
 	PluginRepoType       = "plugin"
 	ServiceRepoType      = "service"
 	ServiceRunType       = "compose"

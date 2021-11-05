@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.5.1
+  - 优化下载github资源, 支持`NO_MIRROR`环境变量不使用proxy加速
+
 - v2.5.0
   - 增强`exp install`, 下载`ergo`二进制后安装
 

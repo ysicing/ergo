@@ -5,11 +5,12 @@
 package experimental
 
 import (
-	"github.com/ysicing/ergo/common"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/ysicing/ergo/common"
 )
 
 func (exp *Options) Install() {
