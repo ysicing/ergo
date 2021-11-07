@@ -1,0 +1,16 @@
+arch: "x86_64"
+
+images:
+  - location: "~/hack/iso/debian-11-generic-amd64-20211011-792.qcow2"
+    arch: "x86_64"
+  - location: "https://cloud.debian.org/images/cloud/bullseye/20211011-792/debian-11-generic-amd64-20211011-792.qcow2"
+    arch: "x86_64"
+cpus: 2
+memory: "4GiB"
+disk: "40GiB"
+
+mounts: []
+
+containerd:
+  system: false
+  user: false

@@ -66,6 +66,11 @@ install: clean ## install
 deb: build ## build deb
 	./deb.sh
 
+vm: ## local vm
+	limactl start hack/lima/debian.yml
+
+shell: ## shell debian
+	limactl shell debian
 .PHONY : build release clean install
 
 .EXPORT_ALL_VARIABLES:

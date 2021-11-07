@@ -20,6 +20,7 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/juju/ansiterm v0.0.0-20210929141451-8b71cc96ebdc // indirect
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
+	github.com/kardianos/service v1.2.0
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
 	github.com/manifoldco/promptui v0.8.0
 	github.com/mattn/go-runewidth v0.0.13 // indirect
@@ -45,7 +46,7 @@ require (
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
 	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
-	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
+	golang.org/x/sys v0.0.0-20211107104306-e0b2ad06fe42 // indirect
 	helm.sh/helm/v3 v3.7.1
 	k8s.io/klog/v2 v2.30.0 // indirect
 	k8s.io/kubectl v0.22.3

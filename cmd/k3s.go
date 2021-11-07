@@ -10,6 +10,7 @@ import (
 	"github.com/ergoapi/util/zos"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
+	es "github.com/ysicing/ergo/pkg/daemon/service"
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
@@ -46,8 +47,31 @@ func NewK3sCmd(f factory.Factory) *cobra.Command {
 }
 
 func initAction(cmd *cobra.Command, args []string) error {
+	klog := log.GetInstance()
 	// check k3s bin
+	k3sCfg := &es.Config{
+		Name:   "k3s",
+		Desc:   "k3s server",
+		Exec:   "/usr/local/bin/k3s",
+		Args:   []string{"server", "--docker", "--flannel-backend=none", "--disable=servicelb,traefik"},
+		Stderr: "/tmp/k3s.init.err.log",
+		Stdout: "/tmp/k3s.init.std.log",
+	}
+	prg := &es.ErgoService{
+		Exit:   make(chan struct{}),
+		Config: k3sCfg,
+	}
 	// check k3s service
+	s, err := es.New(k3sCfg)
+	if err != nil {
+		klog.Error(err)
+		return err
+	}
+	prg.Service = s
 	// start k3s
+	if err := s.Run(); err != nil {
+		klog.Error(err)
+		return err
+	}
 	return nil
 }
