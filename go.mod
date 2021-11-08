@@ -17,6 +17,7 @@ require (
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4
+	github.com/hashicorp/go-version v1.3.0
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/juju/ansiterm v0.0.0-20210929141451-8b71cc96ebdc // indirect
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213

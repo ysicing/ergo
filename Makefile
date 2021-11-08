@@ -66,11 +66,18 @@ install: clean ## install
 deb: build ## build deb
 	./deb.sh
 
-vm: ## local vm
+cleanvm: ## clem lima vm
+	limactl ls | grep debian && limactl rm debian || echo "not found"
+
+vm: cleanvm ## start lima vm
 	limactl start hack/lima/debian.yml
 
 shell: ## shell debian
 	limactl shell debian
+
+local-test: build ## 本地测试
+	limactl cp ./dist/ergo_linux_amd64 debian:/tmp
+
 .PHONY : build release clean install
 
 .EXPORT_ALL_VARIABLES:
