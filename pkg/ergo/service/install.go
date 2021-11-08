@@ -38,8 +38,8 @@ func (o *Option) downfile(dfile string) (*Service, error) {
 	}
 
 	// 下载
-	o.Log.StartWait(fmt.Sprintf("下载服务脚本: %v", pn.GetURL()))
-	o.Log.Debugf("脚本: %v", pn.GetURL())
+	o.Log.StartWait(fmt.Sprintf("下载服务脚本: %v", pn.URL))
+	o.Log.Debugf("脚本: %v", pn.URL)
 	err = util.HTTPGet(pn.URL, dfile)
 	o.Log.StopWait()
 	if err != nil {

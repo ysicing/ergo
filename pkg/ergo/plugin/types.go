@@ -9,8 +9,6 @@ import (
 	"strings"
 
 	"github.com/ergoapi/log"
-	"github.com/ergoapi/util/environ"
-	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
 	"sigs.k8s.io/yaml"
 )
@@ -39,9 +37,6 @@ type PUrl struct {
 
 func (purl PUrl) PluginURL(v string) string {
 	localurl := purl.URL
-	if strings.Contains(localurl, "github") && environ.GetEnv("NO_MIRROR") == "" {
-		localurl = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, localurl)
-	}
 	return strings.ReplaceAll(localurl, "${version}", v)
 }
 

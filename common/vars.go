@@ -27,3 +27,9 @@ const (
 	ServiceRepoType      = "service"
 	ServiceRunType       = "compose"
 )
+
+const (
+	K3sBinPath    = "/usr/local/bin/k3s"
+	K3sBinVersion = "v1.22.3+k3s1"
+	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.22.3%2Bk3s1/k3s"
+)

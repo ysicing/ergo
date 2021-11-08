@@ -21,7 +21,7 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/juju/ansiterm v0.0.0-20210929141451-8b71cc96ebdc // indirect
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
-	github.com/kardianos/service v1.2.0
+	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
 	github.com/manifoldco/promptui v0.8.0
 	github.com/mattn/go-runewidth v0.0.13 // indirect
@@ -56,3 +56,4 @@ require (
 )
 
 // replace github.com/google/go-github/v39 => ../go-github
+replace github.com/kardianos/service => ../service

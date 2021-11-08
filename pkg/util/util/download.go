@@ -4,13 +4,19 @@
 package util
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
+	"github.com/ergoapi/util/environ"
 	"github.com/ysicing/ergo/common"
 )
 
 func HTTPGet(url, indexFile string) error {
+	if strings.Contains(url, "github") && environ.GetEnv("NO_MIRROR") == "" {
+		url = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, url)
+	}
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
