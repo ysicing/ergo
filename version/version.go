@@ -7,12 +7,14 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/blang/semver"
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/zos"
+	gv "github.com/hashicorp/go-version"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/logo"
@@ -80,11 +82,15 @@ func ShowVersion() {
 		log.Errorf("从github获取版本失败: %v", err)
 		return
 	}
-	if lastversion != "" {
-		log.Infof("当前最新版本 %v, 可以使用 %v 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
-	} else {
-		log.Infof("当前已经是最新版本")
+	if lastversion != "" && !strings.Contains(lastversion, defaultVersion) {
+		nowversion, _ := gv.NewVersion(Version)
+		needupgrade := nowversion.LessThan(gv.Must(gv.NewVersion(lastversion)))
+		if needupgrade {
+			log.Infof("当前最新版本 %v, 可以使用 %v 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
+			return
+		}
 	}
+	log.Infof("当前已经是最新版本")
 }
 
 func Upgrade() {

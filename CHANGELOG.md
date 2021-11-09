@@ -1,5 +1,9 @@
 ## Ergo CHANGELOG
 
+- v2.6.0
+  - 支持k3s安装
+  - 优化version消息展示
+
 - v2.5.1
   - 优化下载github资源, 支持`NO_MIRROR`环境变量不使用proxy加速
 
