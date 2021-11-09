@@ -1,7 +1,7 @@
 // MIT License
 // Copyright (c) 2020 ysicing <i@ysicing.me>
 
-package vm
+package debian
 
 import (
 	"fmt"
@@ -14,9 +14,23 @@ const InitSH = `
 
 [ -f "/.initdone" ] && exit 0
 
-apt remove -y ufw lxd lxd-client lxcfs lxc-common
+mirror=$(cat /etc/apt/sources.list | grep -vE "(^#|^$)" | head -1 | awk -F/ '{print $3}')
+
+cat > /etc/apt/sources.list <<EOF
+deb http://${mirror}/debian/ bullseye main contrib non-free
+# deb-src http://${mirror}/debian/ bullseye main contrib non-free
+deb http://${mirror}/debian/ bullseye-updates main contrib non-free
+# deb-src http://${mirror}/debian/ bullseye-updates main contrib non-free
+deb http://${mirror}/debian/ bullseye-backports main contrib non-free
+# deb-src http://${mirror}/debian/ bullseye-backports main contrib non-free
+deb http://${mirror}/debian-security bullseye-security main contrib non-free
+# deb-src http://${mirror}/debian-security bullseye-security main contrib non-free
+EOF
 
 apt update
+
+apt remove -y ufw lxd lxd-client lxcfs lxc-common
+
 apt install -y nfs-common conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
 
 mkdir -pv /etc/systemd/journald.conf.d /var/log/journal 

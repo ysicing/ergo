@@ -1,5 +1,8 @@
 ## Ergo CHANGELOG
 
+- v2.6.1
+  - 优化`debian init`
+
 - v2.6.0
   - 支持k3s安装
   - 优化version消息展示

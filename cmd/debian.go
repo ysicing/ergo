@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
-	"github.com/ysicing/ergo/pkg/ergo/vm"
+	"github.com/ysicing/ergo/pkg/ergo/debian"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
@@ -77,7 +77,7 @@ func (cmd *DebianCmd) Init(f factory.Factory) error {
 	// cmd.log = f.GetLog()
 	cmd.sshcfg.Log = f.GetLog()
 	if cmd.local || len(cmd.ips) == 0 {
-		vm.RunLocalShell("init", cmd.sshcfg.Log)
+		debian.RunLocalShell("init", cmd.sshcfg.Log)
 		return nil
 	}
 
@@ -85,7 +85,7 @@ func (cmd *DebianCmd) Init(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm.RunInit(cmd.sshcfg, ip, &wg)
+		go debian.RunInit(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil
@@ -95,14 +95,14 @@ func (cmd *DebianCmd) UpCore(f factory.Factory) error {
 	cmd.sshcfg.Log = f.GetLog()
 	// 本地
 	if cmd.local || len(cmd.ips) == 0 {
-		vm.RunLocalShell("upcore", cmd.sshcfg.Log)
+		debian.RunLocalShell("upcore", cmd.sshcfg.Log)
 		return nil
 	}
 	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm.RunUpgradeCore(cmd.sshcfg, ip, &wg)
+		go debian.RunUpgradeCore(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil
@@ -113,7 +113,7 @@ func (cmd *DebianCmd) Apt(f factory.Factory) error {
 	// 本地
 	if cmd.local || len(cmd.ips) == 0 {
 		if file.CheckFileExists("/etc/apt/sources.list") {
-			vm.RunLocalShell("apt", cmd.sshcfg.Log)
+			debian.RunLocalShell("apt", cmd.sshcfg.Log)
 			return nil
 		}
 		return fmt.Errorf("仅支持Debian系")
@@ -122,7 +122,7 @@ func (cmd *DebianCmd) Apt(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		go vm.RunAddDebSource(cmd.sshcfg, ip, &wg)
+		go debian.RunAddDebSource(cmd.sshcfg, ip, &wg)
 	}
 	wg.Wait()
 	return nil

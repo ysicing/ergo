@@ -1,7 +1,7 @@
 // MIT License
 // Copyright (c) 2020 ysicing <i@ysicing.me>
 
-package vm
+package debian
 
 import (
 	"fmt"
@@ -43,7 +43,7 @@ apt install nfs-common -y
 
 arch=$(dpkg --print-architecture)
 
-apt install -t ${version}-backports linux-image-${arch} -y
+apt install -t bullseye-backports linux-image-${arch} -y
 
 update-grub
 
