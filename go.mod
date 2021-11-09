@@ -49,6 +49,8 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
 	golang.org/x/sys v0.0.0-20211107104306-e0b2ad06fe42 // indirect
 	helm.sh/helm/v3 v3.7.1
+	k8s.io/apimachinery v0.22.3
+	k8s.io/client-go v0.22.3
 	k8s.io/klog/v2 v2.30.0 // indirect
 	k8s.io/kubectl v0.22.3
 	k8s.io/utils v0.0.0-20210930125809-cb0fa318a74b // indirect
@@ -56,4 +58,5 @@ require (
 )
 
 // replace github.com/google/go-github/v39 => ../go-github
-replace github.com/kardianos/service => ../service
+// github.com/kardianos/service => ../service
+replace github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
