@@ -25,6 +25,7 @@ type Plugin struct {
 	Homepage string `yaml:"homepage" json:"homepage"`
 	Desc     string `yaml:"desc" json:"desc"`
 	Bin      string `yaml:"bin" json:"bin"`
+	Symlink  bool   `yaml:"symlink" json:"symlink"`
 	URL      []PUrl `yaml:"url" json:"url"`
 }
 

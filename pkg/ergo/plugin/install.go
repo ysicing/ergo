@@ -5,8 +5,11 @@ package plugin
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+	"os/exec"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/ysicing/ergo/pkg/util/lock"
@@ -60,13 +63,36 @@ func (r *InstallOption) Run() error {
 	}
 	// 下载插件
 	binfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), pn.Bin)
-	r.Log.StartWait(fmt.Sprintf("下载插件: %v", installplugin.PluginURL(pn.Version)))
-	r.Log.Debugf("下载地址: %v", installplugin.PluginURL(pn.Version))
-	err = util.HTTPGet(installplugin.PluginURL(pn.Version), binfile)
+	dlurl := installplugin.PluginURL(pn.Version)
+	r.Log.StartWait(fmt.Sprintf("下载插件: %v", dlurl))
+	r.Log.Debugf("下载地址: %v", dlurl)
+	tmpfile, _ := ioutil.TempFile("", "plugin")
+	err = util.HTTPGet(dlurl, tmpfile.Name())
+	defer func() {
+		os.Remove(tmpfile.Name())
+	}()
 	r.Log.StopWait()
 	if err != nil {
 		r.Log.Errorf("下载插件失败: %v", err)
 		return nil
+	}
+	if strings.Contains(dlurl, "tar.gz") || strings.Contains(dlurl, "tgz") {
+		tarbin, err := exec.LookPath("tar")
+		if err != nil {
+			return fmt.Errorf("not found tar cmd: %v", err)
+		}
+		tmpdir, _ := ioutil.TempDir("", "ptgz")
+		defer func() {
+			os.Remove(tmpdir)
+		}()
+		output, err := exec.Command(tarbin, "xf", tmpfile.Name(), "--strip-components", "1", "-C", tmpdir).CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("run tar cmd err: %v, %v", err, string(output))
+		}
+		r.Log.Donef("解压完成")
+		util.Copy(binfile, fmt.Sprintf("%v/%v", tmpdir, pn.Bin))
+	} else {
+		util.Copy(binfile, tmpfile.Name())
 	}
 	os.Chmod(binfile, common.FileMode0755)
 	r.Log.Done("插件下载完成")
@@ -81,6 +107,15 @@ func (r *InstallOption) Run() error {
 			msg := fmt.Sprintf("插件校验失败, sha256不匹配: local: %v, remote: %v", localhash, installplugin.Sha256)
 			r.Log.Error(msg)
 			return nil
+		}
+	}
+	if pn.Symlink {
+		linkbin := fmt.Sprintf("/usr/local/bin/%v", pn.Bin)
+		err := os.Symlink(binfile, linkbin)
+		if err != nil {
+			r.Log.Warnf("创建软链接失败: %v", err)
+		} else {
+			r.Log.Donef("创建软链接 %v ---> %v", binfile, linkbin)
 		}
 	}
 	r.Log.Done("插件安装完成, 加载插件列表")
