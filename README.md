@@ -86,6 +86,9 @@ ergo version
   - [x] `gh` 清理github package
   - [x] `sync` 同步镜像
 - [x] help
+- [x] k3s
+  - [x] `init` 初始化k3s集群
+  - [x] `join` 加入集群
 - [x] ops
   - [x] `ps` 进程
   - [x] `nc` nc
