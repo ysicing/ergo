@@ -9,7 +9,7 @@ require (
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/ergoapi/log v0.0.0-20211027064103-103783bd0168
-	github.com/ergoapi/util v0.0.9
+	github.com/ergoapi/util v0.1.0
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
@@ -17,9 +17,11 @@ require (
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/gopasspw/gopass v1.12.8
 	github.com/gosuri/uitable v0.0.4
+	github.com/hashicorp/go-version v1.3.0
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/juju/ansiterm v0.0.0-20210929141451-8b71cc96ebdc // indirect
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
+	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
 	github.com/manifoldco/promptui v0.8.0
 	github.com/mattn/go-runewidth v0.0.13 // indirect
@@ -33,7 +35,7 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.283
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.287
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.283
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.283
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.283
@@ -45,8 +47,10 @@ require (
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
 	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
-	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
+	golang.org/x/sys v0.0.0-20211107104306-e0b2ad06fe42 // indirect
 	helm.sh/helm/v3 v3.7.1
+	k8s.io/apimachinery v0.22.3
+	k8s.io/client-go v0.22.3
 	k8s.io/klog/v2 v2.30.0 // indirect
 	k8s.io/kubectl v0.22.3
 	k8s.io/utils v0.0.0-20210930125809-cb0fa318a74b // indirect
@@ -54,3 +58,5 @@ require (
 )
 
 // replace github.com/google/go-github/v39 => ../go-github
+// github.com/kardianos/service => ../service
+replace github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
