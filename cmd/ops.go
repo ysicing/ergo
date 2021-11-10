@@ -4,18 +4,22 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 	"sync"
 
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
+	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
 	"github.com/ysicing/ergo/pkg/ergo/ops/nc"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ping"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ps"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
+	"github.com/ysicing/ergo/pkg/util/util"
 	"helm.sh/helm/v3/cmd/helm/require"
 )
 
@@ -82,12 +86,23 @@ func newOPSCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 
+	wgetcmd := &cobra.Command{
+		Use:     "wget",
+		Short:   "wget",
+		Version: "2.6.3",
+		Args:    require.MinimumNArgs(1),
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return cmd.wget(args[0])
+		},
+	}
+
 	pingcmd.PersistentFlags().IntVar(&pingcount, "c", 4, "ping count")
 
 	ops.AddCommand(pscmd)
 	ops.AddCommand(ncCmd(cmd))
 	ops.AddCommand(execCmd(cmd))
 	ops.AddCommand(pingcmd)
+	ops.AddCommand(wgetcmd)
 	return ops
 }
 
@@ -97,6 +112,24 @@ func (cmd *OPSCmd) ps() error {
 
 func (cmd *OPSCmd) ping(target string, count int) error {
 	return ping.DoPing(target, count)
+}
+
+func (cmd *OPSCmd) wget(target string) error {
+	cmd.log.Debugf("wget %v", target)
+	s := strings.Split(target, "/")
+	dst := fmt.Sprintf("%v/%v", common.GetDefaultTmpDir(), s[len(s)-1])
+	if file.CheckFileExists(dst) {
+		cmd.log.Warnf("已存在 %v", dst)
+		return nil
+	}
+	cmd.log.StartWait(fmt.Sprintf("开始下载: %v", s[len(s)-1]))
+	err := util.HTTPGet(target, dst)
+	if err != nil {
+		return err
+	}
+	cmd.log.StopWait()
+	cmd.log.Donef("下载完成, 保存在: %v", dst)
+	return nil
 }
 
 func ncCmd(supercmd OPSCmd) *cobra.Command {

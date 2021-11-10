@@ -5,8 +5,9 @@ package util
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/ergoapi/log"
@@ -25,9 +26,19 @@ func HTTPGet(url, indexFile string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	indexFiletmp, err := os.OpenFile(indexFile, os.O_CREATE|os.O_RDWR|os.O_TRUNC, common.FileMode0600)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get file info: %s: %s", indexFile, err)
 	}
-	return ioutil.WriteFile(indexFile, data, common.FileMode0600)
+	defer func() { _ = indexFiletmp.Close() }()
+	_, err = io.Copy(indexFiletmp, resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed to copy file: %s: %s", indexFile, err)
+	}
+	// data, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	return err
+	// }
+	// return ioutil.WriteFile(indexFile, data, common.FileMode0600)
+	return nil
 }

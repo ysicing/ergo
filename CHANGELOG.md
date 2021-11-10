@@ -1,5 +1,9 @@
 ## Ergo CHANGELOG
 
+- v2.6.3
+  - 优化下载
+  - 添加`ops wget`
+
 - v2.6.2
   - 优化`plugin install`, 支持tar.gz/tgz压缩包, 支持将 `/root/.ergo/bin/ergo-<plugin>` 软连接到 `/usr/local/bin/<plugin>`
 

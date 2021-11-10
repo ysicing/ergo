@@ -82,8 +82,8 @@ func LoadFile(path string) (*LockFile, error) {
 	r := new(LockFile)
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		f.Debugf("couldn't load repositories file (%s), err: %v", path, err)
-		return r, fmt.Errorf("couldn't load repositories file (%s)", path)
+		f.Debugf("couldn't load install lockfile (%s), err: %v", path, err)
+		return r, fmt.Errorf("couldn't load install lockfile (%s)", path)
 	}
 	err = yaml.Unmarshal(b, r)
 	if err != nil {
