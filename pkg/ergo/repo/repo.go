@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ysicing/ergo/pkg/util/util"
+	"github.com/ysicing/ergo/pkg/downloader"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
@@ -159,6 +159,7 @@ func (o *RepoUpdateOption) Run() error {
 		if file.CheckFileExists(index) {
 			file.RemoveFiles(index)
 		}
+		// TODO 不单独判断,通过downloader判断
 		if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.URL, "http") {
 			_, err := url.Parse(repo.URL)
 			if err != nil {
@@ -166,7 +167,7 @@ func (o *RepoUpdateOption) Run() error {
 				// TODO
 				continue
 			}
-			err = util.HTTPGet(repo.URL, index)
+			_, err = downloader.Download(repo.URL, index)
 			if err != nil {
 				o.Log.Debugf("%q 更新索引失败: %v", name, err)
 			} else {
@@ -178,13 +179,13 @@ func (o *RepoUpdateOption) Run() error {
 				continue
 			}
 			file.RemoveFiles(index)
-			if err := util.Copy(index, repo.URL); err != nil {
+			if err := downloader.CopyLocal(index, repo.URL); err != nil {
 				o.Log.Debugf("%q 更新索引失败: %v", name, err)
 			} else {
 				o.Log.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		}
 	}
-	o.Log.Done("索引更新完成")
+	o.Log.Done("索引全部更新完成")
 	return nil
 }

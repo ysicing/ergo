@@ -12,13 +12,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ysicing/ergo/pkg/downloader"
 	"github.com/ysicing/ergo/pkg/util/lock"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/zos"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"github.com/ysicing/ergo/pkg/util/util"
 )
 
 type InstallOption struct {
@@ -64,14 +64,14 @@ func (r *InstallOption) Run() error {
 	// 下载插件
 	binfile := fmt.Sprintf("%v/ergo-%v", common.GetDefaultBinDir(), pn.Bin)
 	dlurl := installplugin.PluginURL(pn.Version)
-	r.Log.StartWait(fmt.Sprintf("下载插件: %v", dlurl))
-	r.Log.Debugf("下载地址: %v", dlurl)
+	// r.Log.StartWait(fmt.Sprintf("下载插件: %v", dlurl))
+	r.Log.Infof("下载插件: %v", dlurl)
 	tmpfile, _ := ioutil.TempFile("", "plugin")
-	err = util.HTTPGet(dlurl, tmpfile.Name())
-	defer func() {
-		os.Remove(tmpfile.Name())
-	}()
-	r.Log.StopWait()
+	_, err = downloader.Download(dlurl, tmpfile.Name())
+	// defer func() {
+	// 	os.Remove(tmpfile.Name())
+	// }()
+	// r.Log.StopWait()
 	if err != nil {
 		r.Log.Errorf("下载插件失败: %v", err)
 		return nil
@@ -90,9 +90,13 @@ func (r *InstallOption) Run() error {
 			return fmt.Errorf("run tar cmd err: %v, %v", err, string(output))
 		}
 		r.Log.Donef("解压完成")
-		util.Copy(binfile, fmt.Sprintf("%v/%v", tmpdir, pn.Bin))
+		if err := downloader.CopyLocal(binfile, fmt.Sprintf("%v/%v", tmpdir, pn.Bin)); err != nil {
+			return err
+		}
 	} else {
-		util.Copy(binfile, tmpfile.Name())
+		if err := downloader.CopyLocal(binfile, tmpfile.Name()); err != nil {
+			return err
+		}
 	}
 	os.Chmod(binfile, common.FileMode0755)
 	r.Log.Done("插件下载完成")

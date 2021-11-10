@@ -13,13 +13,13 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/downloader"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
 	"github.com/ysicing/ergo/pkg/ergo/ops/nc"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ping"
 	"github.com/ysicing/ergo/pkg/ergo/ops/ps"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-	"github.com/ysicing/ergo/pkg/util/util"
 	"helm.sh/helm/v3/cmd/helm/require"
 )
 
@@ -122,12 +122,11 @@ func (cmd *OPSCmd) wget(target string) error {
 		cmd.log.Warnf("已存在 %v", dst)
 		return nil
 	}
-	cmd.log.StartWait(fmt.Sprintf("开始下载: %v", s[len(s)-1]))
-	err := util.HTTPGet(target, dst)
+	cmd.log.Infof("开始下载: %v", s[len(s)-1])
+	_, err := downloader.Download(target, dst)
 	if err != nil {
 		return err
 	}
-	cmd.log.StopWait()
 	cmd.log.Donef("下载完成, 保存在: %v", dst)
 	return nil
 }

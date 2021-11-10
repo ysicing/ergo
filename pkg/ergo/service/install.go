@@ -11,9 +11,9 @@ import (
 
 	"github.com/ergoapi/log"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/downloader"
 	"github.com/ysicing/ergo/pkg/util/lock"
 	"github.com/ysicing/ergo/pkg/util/ssh"
-	"github.com/ysicing/ergo/pkg/util/util"
 )
 
 type Option struct {
@@ -38,10 +38,10 @@ func (o *Option) downfile(dfile string) (*Service, error) {
 	}
 
 	// 下载
-	o.Log.StartWait(fmt.Sprintf("下载服务脚本: %v", pn.URL))
-	o.Log.Debugf("脚本: %v", pn.URL)
-	err = util.HTTPGet(pn.URL, dfile)
-	o.Log.StopWait()
+	// o.Log.StartWait(fmt.Sprintf("下载服务脚本: %v", pn.URL))
+	o.Log.Debugf("下载脚本: %v", pn.URL)
+	_, err = downloader.Download(pn.URL, dfile)
+	// o.Log.StopWait()
 	if err != nil {
 		o.Log.Errorf("下载服务脚本失败: %v", err)
 		return nil, nil

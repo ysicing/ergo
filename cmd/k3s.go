@@ -18,8 +18,8 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/kube"
 	es "github.com/ysicing/ergo/pkg/daemon/service"
+	"github.com/ysicing/ergo/pkg/downloader"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -66,7 +66,7 @@ func initAction(cmd *cobra.Command, args []string) error {
 	filebin, err := exec.LookPath(common.K3sBinName)
 	if err != nil {
 		klog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
-		if err := util.HTTPGet(common.K3sBinURL, common.K3sBinPath); err != nil {
+		if _, err := downloader.Download(common.K3sBinURL, common.K3sBinPath); err != nil {
 			return err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)
@@ -178,7 +178,7 @@ func joinAction(cmd *cobra.Command, args []string) error {
 	filebin, err := exec.LookPath(common.K3sBinName)
 	if err != nil {
 		klog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
-		if err := util.HTTPGet(common.K3sBinURL, common.K3sBinPath); err != nil {
+		if _, err := downloader.Download(common.K3sBinURL, common.K3sBinPath); err != nil {
 			return err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)

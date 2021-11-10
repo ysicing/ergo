@@ -1,4 +1,7 @@
-## Ergo CHANGELOG
+# Ergo CHANGELOG
+
+- v2.6.4
+  - 优化下载, 参考[lima-vm/lima](https://github.com/lima-vm/lima/blob/19e79df9673c5122fbe3e3418b6297c6296ec8eb/pkg/downloader/downloader.go)
 
 - v2.6.3
   - 优化下载
