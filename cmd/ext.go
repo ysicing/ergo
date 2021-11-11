@@ -26,6 +26,7 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/pkg/cli/output"
 )
 
@@ -78,9 +79,9 @@ func lima(f factory.Factory) *cobra.Command {
 	lima := &cobra.Command{
 		Use:   "lima [flags]",
 		Short: "Linux virtual machines on macOS",
-		Long: `
-		https://ysicing.me/posts/lima-vm-on-macos/
-		https://ysicing.me/posts/lima-vm-on-macos-m1/
+		Long: `在macOS跑Linux虚拟机
+https://ysicing.me/posts/lima-vm-on-macos/
+https://ysicing.me/posts/lima-vm-on-macos-m1/
 		`,
 		Version: "2.6.5",
 		PreRunE: ext.limaPre,
@@ -187,16 +188,14 @@ func (ext *ExtOptions) limaPre(cobraCmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("请先安装brew")
 		}
-		output, err := exec.Command(brewbin, "update").CombinedOutput()
+		err = ssh.RunCmd(brewbin, "update")
 		if err != nil {
 			return fmt.Errorf("run: brew update ,err: %v", err)
 		}
-		ext.Log.WriteString(string(output))
-		output, err = exec.Command(brewbin, "install", "lima").CombinedOutput()
+		err = ssh.RunCmd(brewbin, "install", "lima")
 		if err != nil {
 			return fmt.Errorf("run: brew install lima ,err: %v", err)
 		}
-		ext.Log.WriteString(string(output))
 		if runtime.GOARCH != "amd64" {
 			ext.Log.Warnf("M1可能需要Patch, 可以参考看看 https://ysicing.me/posts/lima-vm-on-macos-m1/")
 		}
@@ -235,19 +234,24 @@ func (ext *ExtOptions) lima(cobraCmd *cobra.Command, args []string) error {
 		return err
 	}
 	ext.Log.Debugf("limabin: %v, args: %v", limabin, args)
+	if len(args) == 0 {
+		args = append(args, "-h")
+	}
 	if args[0] == "start" && len(args) == 1 {
 		limacfg := fmt.Sprintf("%v/lima.ergo.yml", common.GetDefaultCfgDir())
-		output, err := exec.Command(limabin, "start", limacfg).CombinedOutput()
+		if file.CheckFileExists("/Users/ysicing/.lima/lima-ergo/ga.sock") {
+			ext.Log.Warnf("instance lima-ergo already exists")
+			return nil
+		}
+		err := ssh.RunCmd(limabin, "start", limacfg)
 		if err != nil {
 			return fmt.Errorf("limactl start %v ,err: %v", limacfg, err)
 		}
-		ext.Log.WriteString(string(output))
 		return nil
 	}
-	output, err := exec.Command(limabin, args...).CombinedOutput()
+	err = ssh.RunCmd(limabin, args...)
 	if err != nil {
 		return fmt.Errorf("limactl %v ,err: %v", args[0], err)
 	}
-	ext.Log.WriteString(string(output))
 	return nil
 }
