@@ -70,7 +70,7 @@ cleanvm: ## clem lima vm
 	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
 
 vm: cleanvm ## start lima vm
-	limactl start hack/lima/debian.yml
+	limactl start common/debian.yml
 
 shell: ## shell debian
 	limactl shell debian

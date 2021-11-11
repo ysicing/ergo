@@ -84,6 +84,7 @@ ergo version
   - [x] `install` 安装ergo二进制
 - [x] ext
   - [x] `gh` 清理github package
+  - [x] `lima` macOS虚拟机
   - [x] `sync` 同步镜像
 - [x] help
 - [x] k3s

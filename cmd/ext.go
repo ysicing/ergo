@@ -10,15 +10,20 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
+	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/gosuri/uitable"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
+	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"helm.sh/helm/v3/pkg/cli/output"
@@ -37,6 +42,7 @@ func newExtCmd(f factory.Factory) *cobra.Command {
 	}
 	cmd.AddCommand(ghClean(f))
 	cmd.AddCommand(syncImage(f))
+	cmd.AddCommand(lima(f))
 	return cmd
 }
 
@@ -65,6 +71,22 @@ func syncImage(f factory.Factory) *cobra.Command {
 		},
 	}
 	return cmd
+}
+
+func lima(f factory.Factory) *cobra.Command {
+	ext := ExtOptions{Log: f.GetLog()}
+	lima := &cobra.Command{
+		Use:   "lima [flags]",
+		Short: "Linux virtual machines on macOS",
+		Long: `
+		https://ysicing.me/posts/lima-vm-on-macos/
+		https://ysicing.me/posts/lima-vm-on-macos-m1/
+		`,
+		Version: "2.6.5",
+		PreRunE: ext.limaPre,
+		RunE:    ext.lima,
+	}
+	return lima
 }
 
 func (ext *ExtOptions) githubClean() {
@@ -151,5 +173,81 @@ func (ext *ExtOptions) doCR(image string) error {
 		ext.Log.Info(crresp.Message)
 		ext.Log.Infof("check sync log: https://cr.hk1.godu.dev%v", crresp.Data.Actionlog)
 	}
+	return nil
+}
+
+func (ext *ExtOptions) limaPre(cobraCmd *cobra.Command, args []string) error {
+	if !zos.IsMacOS() {
+		return fmt.Errorf("仅支持macOS")
+	}
+	limabin, err := exec.LookPath("limactl")
+	if err != nil {
+		ext.Log.Warnf("not found limactl, try brew install limactl")
+		brewbin, err := exec.LookPath("brew")
+		if err != nil {
+			return fmt.Errorf("请先安装brew")
+		}
+		output, err := exec.Command(brewbin, "update").CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("run: brew update ,err: %v", err)
+		}
+		ext.Log.WriteString(string(output))
+		output, err = exec.Command(brewbin, "install", "lima").CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("run: brew install lima ,err: %v", err)
+		}
+		ext.Log.WriteString(string(output))
+		if runtime.GOARCH != "amd64" {
+			ext.Log.Warnf("M1可能需要Patch, 可以参考看看 https://ysicing.me/posts/lima-vm-on-macos-m1/")
+		}
+		limabin, err = exec.LookPath("limactl")
+		if err != nil {
+			return fmt.Errorf("not found limactl,err: %v", err)
+		}
+	}
+	limacfg := fmt.Sprintf("%v/lima.ergo.yml", common.GetDefaultCfgDir())
+	if file.CheckFileExists(limacfg) {
+		// TODO 升级镜像啥的
+	} else {
+		yBytes := common.DefaultTemplate
+		if err := os.MkdirAll(filepath.Dir(limacfg), 0700); err != nil {
+			return err
+		}
+		if err := os.WriteFile(limacfg, yBytes, 0644); err != nil {
+			return err
+		}
+	}
+	output, err := exec.Command(limabin, "--version").CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("limactl default config %v ,err: %v", limacfg, err)
+	}
+	ext.Log.Debug(string(output))
+	return nil
+}
+
+func (ext *ExtOptions) lima(cobraCmd *cobra.Command, args []string) error {
+	if !zos.IsMacOS() {
+		return fmt.Errorf("仅支持macOS")
+	}
+	limabin, err := exec.LookPath("limactl")
+	if err != nil {
+		ext.Log.Warnf("not found limactl, try brew install limactl")
+		return err
+	}
+	ext.Log.Debugf("limabin: %v, args: %v", limabin, args)
+	if args[0] == "start" && len(args) == 1 {
+		limacfg := fmt.Sprintf("%v/lima.ergo.yml", common.GetDefaultCfgDir())
+		output, err := exec.Command(limabin, "start", limacfg).CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("limactl start %v ,err: %v", limacfg, err)
+		}
+		ext.Log.WriteString(string(output))
+		return nil
+	}
+	output, err := exec.Command(limabin, args...).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("limactl %v ,err: %v", args[0], err)
+	}
+	ext.Log.WriteString(string(output))
 	return nil
 }

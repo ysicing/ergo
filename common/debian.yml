@@ -1,7 +1,7 @@
 arch: "x86_64"
 
 images:
-  - location: "~/hack/iso/debian-11-generic-amd64-20211011-792.qcow2"
+  - location: "~/.ergo/data/iso/debian-11-generic-amd64-20211011-792.qcow2"
     arch: "x86_64"
   - location: "https://cloud.debian.org/images/cloud/bullseye/20211011-792/debian-11-generic-amd64-20211011-792.qcow2"
     arch: "x86_64"
