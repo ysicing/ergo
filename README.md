@@ -1,20 +1,19 @@
+# ergo
+
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
 ![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/tag?style=flat-square)
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/ysicing/ergo?filename=go.mod&style=flat-square)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ysicing/ergo?style=flat-square)
 ![GitHub all releases](https://img.shields.io/github/downloads/ysicing/ergo/total?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/ysicing/ergo?style=flat-square)
-[![Go Report Card](https://goreportcard.com/badge/ysicing/ergo)](https://goreportcard.com/report/ysicing/ergo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ysicing/ergo)](https://goreportcard.com/report/github.com/ysicing/ergo)
 [![Releases](https://img.shields.io/github/release-pre/ysicing/ergo.svg)](https://github.com/ysicing/ergo/releases)
-
-
-## ergo
 
 > 一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本
 
 兼容性:
 
-- [x] 100%兼容`Debian 9+`系
+- [x] 100%兼容`Debian 11+`系
 - [ ] macOS部分功能可用
 
 ## ergo能干什么 / What does Ergo do?

@@ -5,7 +5,7 @@ COMMIT_SHA1     := $(shell git rev-parse HEAD || echo "0.0.0")
 help: ## this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {sub("\\\\n",sprintf("\n%22c"," "), $$2);printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-fmt:
+fmt: ## fmt
 	gofmt -w .
 	goimports -w .
 	@echo gofmt -l
@@ -16,7 +16,7 @@ fmt:
         exit 1; \
     fi
 
-golint:
+golint: ## lint
 
 	@echo golangci-lint run --skip-files \".*test.go\" -v ./...
 	@OUTPUT=`command -v golangci-lint >/dev/null 2>&1 && golangci-lint run --skip-files ".*test.go"  -v ./... 2>&1`; \
@@ -24,6 +24,9 @@ golint:
 		echo "golint errors:"; \
 		echo "$$OUTPUT"; \
 	fi
+
+gocyclo: ## 复杂度
+	command -v golangci-lint >/dev/null 2>&1 && gocyclo -over 15 -ignore "_test|Godeps|vendor/" .
 
 default: fmt golint ## fmt code
 
