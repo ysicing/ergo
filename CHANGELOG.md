@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v2.6.6
+  - 优化`ext sync`, 镜像同步后端服务API调整
+
 - v2.6.5
   - 添加`ext lima`
   - 优化支持命令交互

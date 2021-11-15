@@ -4,9 +4,7 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -65,7 +63,7 @@ func syncImage(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "sync [flags]",
 		Short:   "同步多个镜像 ergo ext sync gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0",
-		Version: "2.3.0",
+		Version: "2.6.6",
 		Args:    cobra.MinimumNArgs(1),
 		Run: func(cobraCmd *cobra.Command, args []string) {
 			ext.syncImage(args)
@@ -128,33 +126,9 @@ func (ext *ExtOptions) syncImage(args []string) {
 			s := strings.Split(r, "/")
 			table.AddRow(r, fmt.Sprintf("registry.cn-beijing.aliyuncs.com/k7scn/%v", s[len(s)-1]))
 		}
-		ext.Log.Donef("同步任务已触发, 请稍等")
+		ext.Log.Donef("同步任务已触发, 请稍后重试")
 		output.EncodeTable(os.Stdout, table)
 	}
-}
-
-type SyncCRResp struct {
-	Code int `json:"code"`
-	Data struct {
-		Actionlog string `json:"actionlog"`
-		Client    string `json:"client"`
-		Dockerlog string `json:"dockerlog"`
-		Image     string `json:"image"`
-		Message   string `json:"message"`
-		Taskid    string `json:"taskid"`
-	} `json:"data"`
-	Message   string `json:"message"`
-	Timestamp int    `json:"timestamp"`
-}
-
-type SyncLogResp struct {
-	Code int `json:"code"`
-	Data struct {
-		Logfile string `json:"logfile"`
-		Taskid  string `json:"taskid"`
-	} `json:"data"`
-	Message   string `json:"message"`
-	Timestamp int    `json:"timestamp"`
 }
 
 func (ext *ExtOptions) doCR(image string) error {
@@ -166,14 +140,7 @@ func (ext *ExtOptions) doCR(image string) error {
 	if err != nil || resp.StatusCode != 200 {
 		return fmt.Errorf("同步失败")
 	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	var crresp SyncCRResp
-	json.Unmarshal(body, &crresp)
-	if crresp.Code == 200 {
-		ext.Log.Info(crresp.Message)
-		ext.Log.Infof("check sync log: https://cr.hk1.godu.dev%v", crresp.Data.Actionlog)
-	}
+	ext.Log.Infof("check sync log: https://cr.hk1.godu.dev?image=%v", image)
 	return nil
 }
 
