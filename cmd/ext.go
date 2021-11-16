@@ -121,10 +121,12 @@ func (ext *ExtOptions) syncImage(args []string) {
 	ext.Log.StopWait()
 	if len(okargs) > 0 {
 		table := uitable.New()
-		table.AddRow("src", "dest")
+		table.AddRow("src", "acr", "tcr")
 		for _, r := range okargs {
 			s := strings.Split(r, "/")
-			table.AddRow(r, fmt.Sprintf("registry.cn-beijing.aliyuncs.com/k7scn/%v", s[len(s)-1]))
+			table.AddRow(r,
+				fmt.Sprintf("registry.cn-beijing.aliyuncs.com/k7scn/%v", s[len(s)-1]),
+				fmt.Sprintf("ccr.ccs.tencentyun.com/k7scn/%v", s[len(s)-1]))
 		}
 		ext.Log.Donef("同步任务已触发, 请稍后重试")
 		output.EncodeTable(os.Stdout, table)
