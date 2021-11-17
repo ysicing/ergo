@@ -56,6 +56,7 @@ func (o *Option) Show() {
 		// res = append(res, pf.Plugins...)
 		for _, r := range pf.Services {
 			r.Repo = *i
+			r.Release = pf.Release
 			res = append(res, r)
 		}
 	}

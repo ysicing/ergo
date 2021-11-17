@@ -17,6 +17,7 @@ import (
 
 type SFile struct {
 	Version  string     `yaml:"version" json:"version"`
+	Release  string     `yaml:"release,omitempty" json:"release,omitempty"`
 	Services []*Service `yaml:"services" json:"services"`
 }
 
@@ -28,12 +29,16 @@ type Service struct {
 	Desc     string `yaml:"desc" json:"desc"`
 	Type     string `yaml:"type" json:"type"`
 	URL      string `yaml:"url" json:"url"`
+	Release  string `yaml:"release,omitempty" json:"release,omitempty"`
 }
 
 func (s Service) GetURL() string {
 	localurl := s.URL
 	if strings.Contains(localurl, "github") && environ.GetEnv("NO_MIRROR") == "" {
 		localurl = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, localurl)
+	}
+	if s.Release != "" {
+		return strings.ReplaceAll(localurl, "master", s.Release)
 	}
 	return localurl
 }

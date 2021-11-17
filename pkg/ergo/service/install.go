@@ -39,8 +39,8 @@ func (o *Option) downfile(dfile string) (*Service, error) {
 
 	// 下载
 	// o.Log.StartWait(fmt.Sprintf("下载服务脚本: %v", pn.URL))
-	o.Log.Debugf("下载脚本: %v", pn.URL)
-	_, err = downloader.Download(pn.URL, dfile)
+	o.Log.Debugf("下载脚本: %v", pn.GetURL())
+	_, err = downloader.Download(pn.GetURL(), dfile)
 	// o.Log.StopWait()
 	if err != nil {
 		o.Log.Errorf("下载服务脚本失败: %v", err)
@@ -76,7 +76,7 @@ func (o *Option) Install() error {
 	} else {
 		defer os.Remove(dfile)
 		if err := ssh.RunCmd("/bin/bash", dfile); err != nil {
-			o.Log.Errorf("%v 启动失败: %v", pn.Name, err)
+			o.Log.Errorf("%v 执行失败: %v", pn.Name, err)
 			return err
 		}
 	}
