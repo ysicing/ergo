@@ -4,6 +4,11 @@ on:
     branches:
     - develop
     - feat*
+    paths:
+      - '**.go'
+  pull_request:
+    paths:
+      - '**.go'
 jobs:
   build:
     name: build ergo tools
@@ -16,11 +21,11 @@ jobs:
     - name: install gox
       run: |
           echo "install gox"
-          go get -u github.com/mitchellh/gox
+          go install github.com/mitchellh/gox@latest
     - name: install ghr
       run: |
           echo "install ghr"
-          go get -u github.com/tcnksm/ghr
+          go install github.com/tcnksm/ghr@latest
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
