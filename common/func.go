@@ -44,6 +44,11 @@ func GetDefaultCfgDir() string {
 	return home + "/" + DefaultCfgDir
 }
 
+func GetDefaultKubeDir() string {
+	home := zos.GetHomeDir()
+	return home + "/" + DefaultKubeDir
+}
+
 func GetDefaultRepoCfg() string {
 	return fmt.Sprintf("%v/repo.yaml", GetDefaultCfgDir())
 }

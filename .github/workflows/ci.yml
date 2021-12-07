@@ -9,11 +9,6 @@ jobs:
     name: build ergo tools
     runs-on: ubuntu-latest
     steps:
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Install Go
       uses: actions/setup-go@v2.1.4
       with:
@@ -33,16 +28,10 @@ jobs:
       run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
-          make dpush
-
-          pushd dist
-          sha256sum ergo_darwin_amd64 > ergo_darwin_amd64.sha256sum
-          sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
-          sha256sum ergo_windows_amd64.exe > ergo_windows_amd64.sha256sum
-          sha256sum ergo_darwin_arm64 > ergo_darwin_arm64.sha256sum
-          sha256sum ergo_linux_arm64 > ergo_linux_arm64.sha256sum
-          popd
-          ./gen.sh
-          cat version.txt | grep -E '(beta|rc)' && (make pre-release) || echo "skip release"
-      env:
-        GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          make docker
+          make doc
+    - name: docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

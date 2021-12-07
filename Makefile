@@ -69,6 +69,10 @@ install: clean ## install
 deb: build ## build deb
 	./deb.sh
 
+doc: ## gen docs
+	go run hack/gen/doc/doc.go
+	cp -a docs/ergo.md docs/index.md 
+
 cleanvm: ## clem lima vm
 	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
 

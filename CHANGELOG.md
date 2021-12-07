@@ -1,5 +1,9 @@
 # Ergo CHANGELOG
 
+- v2.7.0-beta
+  - 自动生成文档
+  - kubeconfig管理使用
+
 - v2.6.7
   - 多处优化
 

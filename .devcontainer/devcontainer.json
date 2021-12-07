@@ -1,0 +1,12 @@
+{
+    "name": "ergo",
+    "service": "vscode",
+    "runServices": [
+        "vscode"
+    ],
+    "workspaceFolder": "/workspace",
+    // "overrideCommand": true,
+    "extensions": [
+        "golang.Go",
+    ]
+}
