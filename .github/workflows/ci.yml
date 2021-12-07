@@ -29,6 +29,7 @@ jobs:
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
           make docker
+          ./dist/ergo_linux_amd64 version
           make doc
     - name: docs
       uses: peaceiris/actions-gh-pages@v3
