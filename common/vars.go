@@ -23,7 +23,7 @@ const (
 const (
 	PluginRepoRemoteMode = "remote"
 	PluginRepoLocalMode  = "local"
-	PluginGithubJiasu    = "https://mirror.ghproxy.com"
+	PluginGithubJiasu    = "https://ghproxy.hk1.godu.dev"
 	PluginRepoType       = "plugin"
 	ServiceRepoType      = "service"
 	ServiceRunType       = "compose"
@@ -32,8 +32,8 @@ const (
 const (
 	K3sBinName    = "k3s"
 	K3sBinPath    = "/usr/local/bin/k3s"
-	K3sBinVersion = "v1.22.3+k3s1"
-	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.22.3%2Bk3s1/k3s"
+	K3sBinVersion = "v1.22.4+k3s1"
+	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.22.4%2Bk3s1/k3s"
 	K3sAgentEnv   = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig = "/etc/rancher/k3s/k3s.yaml"
 )
@@ -42,4 +42,13 @@ const (
 	KubeQPS        = 5.0
 	KubeBurst      = 10
 	KubectlBinPath = "/usr/local/bin/kubectl"
+)
+
+const (
+	DownloadAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4688.0 Safari/537.36 Edg/97.0.1069.0"
+)
+
+var (
+	DefaultCipherSuites = []uint16{0xc02f, 0xc030, 0xc02b, 0xc02c, 0xcca8, 0xcca9, 0xc013, 0xc009,
+		0xc014, 0xc00a, 0x009c, 0x009d, 0x002f, 0x0035, 0xc012, 0x000a}
 )

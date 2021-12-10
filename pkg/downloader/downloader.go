@@ -129,7 +129,13 @@ func downloadHTTP(localPath, url string, dlog log.Logger) error {
 		url = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, url)
 	}
 
-	resp, err := http.Get(url)
+	// resp, err := http.Get(url)
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("User-Agent", common.DownloadAgent)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
