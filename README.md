@@ -8,6 +8,7 @@
 ![GitHub](https://img.shields.io/github/license/ysicing/ergo?style=flat-square)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ysicing/ergo)](https://goreportcard.com/report/github.com/ysicing/ergo)
 [![Releases](https://img.shields.io/github/release-pre/ysicing/ergo.svg)](https://github.com/ysicing/ergo/releases)
+[![docs](https://img.shields.io/badge/docs-done-green)](https://ysicing.github.io/ergo/)
 
 > 一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本
 
