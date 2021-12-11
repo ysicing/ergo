@@ -61,58 +61,11 @@ ergo version
 
 ## 命令支持
 
-- [x] cloud云服务商支持
-  - [ ] `cr` 容器镜像服务
-    - [x] `list`
-  - [ ] `dns`
-    - [ ] `domain`
-- [x] code 初始化项目
-- [x] completion
-- [ ] cvm 腾讯云开临时测试机器
-  - [x] `create` / `new` / `add`
-  - [x] `destroy` / `del` / `rm`
-  - [ ] `snapshot`
-  - [ ] `status`
-  - [ ] `halt`
-  - [ ] `up`
-  - [x] `ls` / `list`
-- [x] debian
-  - [x] `apt` 添加ergo debian源
-  - [x] `init` 初始化debian
-  - [x] `upcore` 升级debian内核
-- [x] experimental
-  - [x] `install` 安装ergo二进制
-- [x] ext
-  - [x] `gh` 清理github package
-  - [x] `lima` macOS虚拟机
-  - [x] `sync` 同步镜像
-- [x] help
-- [x] k3s
-  - [x] `init` 初始化k3s集群
-  - [x] `join` 加入集群
-- [x] ops
-  - [x] `ps` 进程
-  - [x] `nc` nc
-  - [x] `exec` 执行命令
-  - [x] `ping`
-- [x] plugin
-  - [x] `install` 安装插件
-  - [x] `list` 列出ergo插件
-  - [x] `ls-remote` 列出远程插件
-- [x] `repo` 插件&服务仓库管理, 类似helm仓库
-   - [x] `add-plugin` 添加插件仓库
-   - [x] `add-service` 添加服务仓库
-   - [x] `del` 移除插件仓库
-   - [x] `init` 添加默认插件库或者服务库
-   - [x] `list` 列出插件仓库列表
-   - [x] `update` 更新插件索引
-- [x] service
-  - [x] `install` 安装服务
-  - [x] `list` 列出安装服务
-  - [x] `show` 列出远程服务
-  - [x] `dump` dump安装文件
-- [x] upgrade
-- [x] version
+具体参见[文档](./docs/index.md)
+
+### 下载说明
+
+> 默认github相关资源使用ghproxy代理，可使用`export NO_MIRROR=6wa6wa`不使用代理加速地址
 
 ### ergo插件
 

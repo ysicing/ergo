@@ -87,7 +87,7 @@ func newOPSCmd(f factory.Factory) *cobra.Command {
 	}
 
 	wgetcmd := &cobra.Command{
-		Use:     "wget",
+		Use:     "wget [url]",
 		Short:   "wget",
 		Version: "2.6.3",
 		Args:    require.MinimumNArgs(1),

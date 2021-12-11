@@ -211,7 +211,7 @@ func NewRootCmd(f factory.Factory) *cobra.Command {
 				log.SetLevel(logrus.DebugLevel)
 			}
 
-			// apply extra flags TODO
+			// TODO apply extra flags
 			return nil
 		},
 		Long: cliDescription,

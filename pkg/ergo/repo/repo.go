@@ -164,7 +164,6 @@ func (o *RepoUpdateOption) Run() error {
 			_, err := url.Parse(repo.URL)
 			if err != nil {
 				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
-				// TODO
 				continue
 			}
 			_, err = downloader.Download(repo.URL, index)

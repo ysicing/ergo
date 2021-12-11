@@ -9,6 +9,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ysicing/ergo/common"
+
 	"github.com/blang/semver"
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/color"
@@ -141,4 +143,8 @@ func Upgrade() {
 	}
 	log.Donef("Successfully updated ergo to version %s", latest.Version)
 	log.Infof("Release note: \n\t%s", latest.ReleaseNotes)
+}
+
+func GetUG() string {
+	return fmt.Sprintf("%v ErGo/%v", common.DownloadAgent, Version)
 }

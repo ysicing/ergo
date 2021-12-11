@@ -9,8 +9,31 @@ cpus: 2
 memory: "4GiB"
 disk: "40GiB"
 
-mounts: []
+mounts:
+#  - location: "~/.ergo"
+#    writable: false
+
+ssh:
+  localPort: 65432
+  loadDotSSHPubKeys: true
 
 containerd:
   system: false
   user: false
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/sh
+      sed -i 's/host.lima.internal.*/host.lima.internal host.docker.internal/' /etc/hosts
+  - mode: system
+    script: |
+      #!/bin/sh
+      echo "deb [trusted=yes] https://debian.ysicing.me/ /" | sudo tee /etc/apt/sources.list.d/ergo.list
+      sudo apt update
+      sudo apt install -y opsergo
+      ergo version
+
+#portForwards:
+#  - guestSocket: "/run/user/{{.UID}}/docker.sock"
+#    hostSocket: "{{.Dir}}/sock/docker.sock"

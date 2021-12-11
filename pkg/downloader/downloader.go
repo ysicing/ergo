@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ysicing/ergo/version"
+
 	"github.com/cheggaaa/pb/v3"
 	"github.com/containerd/continuity/fs"
 	"github.com/ergoapi/log"
@@ -128,13 +130,13 @@ func downloadHTTP(localPath, url string, dlog log.Logger) error {
 	if strings.Contains(url, "github") && environ.GetEnv("NO_MIRROR") == "" {
 		url = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, url)
 	}
-
+	dlog.Debugf("downloading %q into %q", url, localPath)
 	// resp, err := http.Get(url)
 	client := &http.Client{
-		Timeout: time.Second * 5,
+		Timeout: time.Minute * 5,
 	}
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", common.DownloadAgent)
+	req.Header.Set("User-Agent", version.GetUG())
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
