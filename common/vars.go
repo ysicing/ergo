@@ -36,6 +36,8 @@ const (
 	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.22.4%2Bk3s1/k3s"
 	K3sAgentEnv   = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig = "/etc/rancher/k3s/k3s.yaml"
+	CiliumName    = "cilium"
+	CiliumCliURL  = "https://github.com/cilium/cilium-cli/releases/download/v0.10.0/cilium-linux-amd64.tar.gz"
 )
 
 const (
@@ -46,4 +48,8 @@ const (
 
 const (
 	DownloadAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4688.0 Safari/537.36"
+)
+
+var (
+	ValidPrefixes = []string{"ergo", "kubectl", "docker"}
 )

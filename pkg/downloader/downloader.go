@@ -116,7 +116,6 @@ func downloadHTTP(localPath, url string, dlog log.Logger) error {
 	if localPath == "" {
 		return fmt.Errorf("downloadHTTP: got empty localPath")
 	}
-	dlog.Debugf("downloading %q into %q", url, localPath)
 	localPathTmp := localPath + ".tmp"
 	if err := os.RemoveAll(localPathTmp); err != nil {
 		return err

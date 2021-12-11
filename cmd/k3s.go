@@ -23,8 +23,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var dockeronly, cnino bool
-var ksaddr, kstoken string
+var dockerOnly, cniNo bool
+var ksSan, ksAddr, ksToken string
 
 func NewK3sCmd(f factory.Factory) *cobra.Command {
 	k3s := &cobra.Command{
@@ -32,22 +32,23 @@ func NewK3sCmd(f factory.Factory) *cobra.Command {
 		Short: "k3s",
 		Args:  cobra.NoArgs,
 	}
-	k3s.PersistentFlags().BoolVar(&dockeronly, "docker", false, "If true, Use docker instead of containerd")
+	k3s.PersistentFlags().BoolVar(&dockerOnly, "docker", false, "If true, Use docker instead of containerd")
 	init := &cobra.Command{
 		Use:     "init",
-		Short:   "init初始化控制节点",
+		Short:   "init k3s control-plane(master) node",
+		Long:    `example: ergo k3s init --docker`,
 		Version: "2.6.0",
 		RunE:    initAction,
 	}
 	k3s.AddCommand(init)
-	init.PersistentFlags().BoolVar(&cnino, "nocni", true, "If true, Use cni none")
-
+	init.PersistentFlags().StringVar(&ksSan, "san", "ysicing.local", "Add additional hostname or IP as a Subject Alternative Name in the TLS cert")
+	init.PersistentFlags().BoolVar(&cniNo, "nocni", true, "If true, Use cni none")
 	join := &cobra.Command{
 		Use:     "join",
-		Short:   "加入集群",
+		Short:   "join k3s cluster",
 		Version: "2.6.0",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(ksaddr) == 0 || len(kstoken) == 0 {
+			if len(ksAddr) == 0 || len(ksToken) == 0 {
 				return fmt.Errorf("k3s server or k3s token is null")
 			}
 			return nil
@@ -55,8 +56,8 @@ func NewK3sCmd(f factory.Factory) *cobra.Command {
 		RunE: joinAction,
 	}
 	k3s.AddCommand(join)
-	join.PersistentFlags().StringVar(&ksaddr, "url", "", "k3s server url")
-	join.PersistentFlags().StringVar(&kstoken, "token", "", "k3s server token")
+	join.PersistentFlags().StringVar(&ksAddr, "url", "", "k3s server url")
+	join.PersistentFlags().StringVar(&ksToken, "token", "", "k3s server token")
 	return k3s
 }
 
@@ -70,7 +71,7 @@ func initAction(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)
-		klog.Done("k3s下载完成")
+		klog.Done("k3s download complete.")
 		filebin, _ = exec.LookPath(common.K3sBinName)
 	}
 	output, err := exec.Command(filebin, "--version").CombinedOutput()
@@ -89,7 +90,7 @@ func initAction(cmd *cobra.Command, args []string) error {
 		Name: "k3s-server",
 		Desc: "k3s server",
 		Exec: filebin,
-		Args: configargs(k3sargs, dockeronly, cnino),
+		Args: configArgs(k3sargs, ksSan, dockerOnly, cniNo),
 	}
 	options := make(service.KeyValue)
 	options["Restart"] = "always"
@@ -123,30 +124,30 @@ func initAction(cmd *cobra.Command, args []string) error {
 	if err := s.Install(); err != nil {
 		return err
 	}
-	klog.Donef("k3s server 安装完成")
+	klog.Donef("k3s server install complete.")
 	if err := s.Start(); err != nil {
 		return err
 	}
-	klog.Donef("k3s server 启动完成")
-	if !checkbin("kubectl") {
+	klog.Donef("k3s server start complete.")
+	if !checkBin("kubectl") {
 		os.Symlink(filebin, common.KubectlBinPath)
-		klog.Donef("创建kubectl软链接")
+		klog.Donef("create kubectl soft link")
 	}
-	klog.Debug("等待集群ready")
+	klog.Debug("waiting cluster ready")
 	t1 := time.Now()
 	for {
 		if file.CheckFileExists(common.K3sKubeConfig) {
 			d := fmt.Sprintf("%v/.kube", zos.GetHomeDir())
 			os.MkdirAll(d, common.FileMode0644)
 			os.Symlink(common.K3sKubeConfig, fmt.Sprintf("%v/config", d))
-			klog.Donef("创建kubeconfig软链接 %v ---> %v/config", common.K3sKubeConfig, d)
+			klog.Donef("create kubeconfig soft link %v ---> %v/config", common.K3sKubeConfig, d)
 			break
 		}
 		time.Sleep(time.Second * 5)
 		klog.Debug(".")
 	}
 	t2 := time.Now()
-	klog.Donef("集群已经ready, 耗时: %v", t2.Sub(t1))
+	klog.Donef("k3s cluster ready, cost: %v", t2.Sub(t1))
 	cc := &kube.ClientConfig{
 		QPS:   common.KubeQPS,
 		Burst: common.KubeBurst,
@@ -162,6 +163,9 @@ func initAction(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		klog.Warnf("look kubectl path err: %v, will try default bin path: %v", err, common.KubectlBinPath)
 		kubectlbin = common.KubectlBinPath
+	}
+	if cniNo {
+		klog.Warnf("Cilium is recommended")
 	}
 	getnodesoutput, err := exec.Command(kubectlbin, "get", "nodes").CombinedOutput()
 	if err != nil {
@@ -182,7 +186,7 @@ func joinAction(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)
-		klog.Done("k3s下载完成")
+		klog.Done("k3s download complete")
 		filebin, _ = exec.LookPath(common.K3sBinName)
 	}
 	output, err := exec.Command(filebin, "--version").CombinedOutput()
@@ -200,7 +204,7 @@ func joinAction(cmd *cobra.Command, args []string) error {
 		Name: "k3s-agent",
 		Desc: "k3s agent",
 		Exec: filebin,
-		Args: configargs(k3sargs, dockeronly, false),
+		Args: configArgs(k3sargs, "", dockerOnly, false),
 	}
 	options := make(service.KeyValue)
 	options["Restart"] = "always"
@@ -234,36 +238,41 @@ func joinAction(cmd *cobra.Command, args []string) error {
 	if file.CheckFileExists(common.K3sAgentEnv) {
 		file.RemoveFiles(common.K3sAgentEnv)
 	}
-	envbody := fmt.Sprintf("K3S_TOKEN=%v\nK3S_URL=%v\n", kstoken, ksaddr)
+	envbody := fmt.Sprintf("K3S_TOKEN=%v\nK3S_URL=%v\n", ksToken, ksAddr)
 	file.Writefile(common.K3sAgentEnv, envbody)
 	os.Chmod(common.K3sAgentEnv, common.FileMode0644)
 	// start k3s
 	if err := s.Install(); err != nil {
 		return err
 	}
-	klog.Donef("k3s agent安装完成")
+	klog.Donef("k3s agent install complete")
 	if err := s.Start(); err != nil {
 		return err
 	}
-	if !checkbin("kubectl") {
+	if !checkBin("kubectl") {
 		os.Symlink(filebin, common.KubectlBinPath)
-		klog.Donef("创建kubectl软链接")
+		klog.Donef("create kubectl soft link")
 	}
-	klog.Donef("k3s agent 启动完成")
+	klog.Donef("k3s agent started")
 	return nil
 }
 
-func configargs(args []string, docker, nonecni bool) []string {
+func configArgs(args []string, san string, docker, nonecni bool) []string {
 	if docker {
-		args = append(args, "--docker")
+		if checkBin("docker") {
+			args = append(args, "--docker")
+		}
 	}
 	if nonecni {
 		args = append(args, "--flannel-backend=none")
 	}
+	if len(san) != 0 {
+		args = append(args, fmt.Sprintf("--tls-san=%v", ksSan))
+	}
 	return args
 }
 
-func checkbin(cmd string) bool {
+func checkBin(cmd string) bool {
 	_, err := exec.LookPath(cmd)
 	return err == nil
 }
