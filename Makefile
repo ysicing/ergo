@@ -70,7 +70,7 @@ deb: build ## build deb
 	./deb.sh
 
 doc: ## gen docs
-	go run ./hack/gen/doc/doc.go
+	go run ./hack/gendoc/doc.go
 	cp -a docs/ergo.md docs/index.md 
 
 cleanvm: ## clem lima vm
