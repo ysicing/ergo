@@ -12,44 +12,37 @@
 
 > 一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本
 
-兼容性:
+compatibility:
 
-- [x] 100%兼容`Debian 11+`系
-- [ ] macOS部分功能可用
+- [x] 100% support `Debian 10+`
+- [ ] for macOS some features are available
+- [ ] for CentOS some features are available
 
 ## ergo能干什么 / What does Ergo do?
 
 - 将常用脚本或者公有云操作抽象成cli命令, 简化工作
 - 灵活的自定义插件管理工具,像使用`helm repo`方式管理插件
 
-## 安装使用
+## Install
 
-### 二进制安装
+### Binary
 
-可直接从 [release](https://github.com/ysicing/ergo/releases) 下载预编译的二进制文件
+Downloaded from [release](https://github.com/ysicing/ergo/releases) pre-compiled binaries
 
-### macOS安装
+### macOS Install
 
 ```bash
 brew tap ysicing/tap
 brew install ergo
 ```
 
-### macOS升级
-
-```bash
-brew upgrade
-或者
-ergo upgrade
-```
-
-### 镜像使用
+### Running with Docker
 
 ```bash
 ysicing/ergo
 ```
 
-### Debian使用
+### Debian Install
 
 ```bash
 echo "deb [trusted=yes] https://debian.ysicing.me/ /" | sudo tee /etc/apt/sources.list.d/ergo.list
@@ -59,17 +52,42 @@ apt-get install -y opsergo
 ergo version
 ```
 
-## 命令支持
+### Building From Source
+
+ergo is currently using go v1.16 or above. In order to build ergo from source you must:
+
+```bash
+# Clone the repo
+# Build and run the executable
+make build && ./dist/ergo_darwin_amd64 
+```
+
+### Upgrade
+
+```bash
+# macOS
+brew upgrade
+# apt / debian
+apt-get update
+apt-get --only-upgrade install opsergo
+# default
+ergo upgrade
+# other
+ergo ops wget https://github.com/ysicing/ergo/releases/latest/download/ergo_linux_amd64
+/root/.ergo/tmp/ergo_linux_amd64 experimental install
+```
+
+## Support
 
 具体参见[文档](./docs/index.md)
 
-### 下载说明
+### China Mainland users
 
 > 默认github相关资源使用ghproxy代理，可使用`export NO_MIRROR=6wa6wa`不使用代理加速地址
 
-### ergo插件
+### ergo plugin
 
-> 默认支持`ergo-`插件
+> 默认支持`ergo-`插件, 类似krew
 
 ```bash
 # 列出插件
@@ -96,13 +114,13 @@ default   https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.y
 
 # 列出远程插件
 ergo plugin ls-remote 
-[done] √ sync done.
-Repo    NAME            URL                                                                                                             Desc                                                    Available
-default tgsend-linux    https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_linux_amd64   一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 false    
-default tgsend-darwin   https://github.techoc.workers.dev/https://github.com/mritd/tgsend/releases/download/v1.0.1/tgsend_darwin_amd64  一个 Telegram 推送的小工具，用于调用 Bot API 发送告警等 true   
+[done] √ 索引全部更新完成
+[done] √ 加载完成.
+repo          	name 	version  	homepage                           	desc                                            	url
+default-plugin	helm 	v3.7.1   	https://helm.sh                    	The Kubernetes Package Manager                  	https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
 ```
 
-#### 已知问题
+#### Issue
 
 - Q: docker compose命令不识别
   - A: 需要使用compose v2版本 [配置文档](https://github.com/docker/compose#linux)
@@ -116,6 +134,6 @@ default tgsend-darwin   https://github.techoc.workers.dev/https://github.com/mri
 - [kubernetes/kubectl](https://github.com/kubernetes/kubernetes)
 - [helm/helm](https://github.com/helm/helm)
 
-## 🎉🎉 赞助商
+## 🎉🎉 Sponsors
 
 [![jetbrains](docs/jetbrains.svg)](https://www.jetbrains.com/?from=ergo)

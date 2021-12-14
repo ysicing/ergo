@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -67,8 +68,14 @@ func Download(remote, local string) (*Result, error) {
 	defer func() {
 		os.Remove(temp.Name())
 	}()
-	if err := downloadHTTP(temp.Name(), remote, dlog); err != nil {
-		return nil, err
+	if code, err := downloadHTTP(temp.Name(), remote, dlog); err != nil {
+		if code != 403 {
+			return nil, err
+		}
+		dlog.Warn("cdn 403, try use wget or curl")
+		if err := downloadBySystem(temp.Name(), remote, dlog); err != nil {
+			return nil, err
+		}
 	}
 	if err := CopyLocal(localPath, temp.Name()); err != nil {
 		return nil, err
@@ -112,23 +119,54 @@ func canonicalLocalPath(s string) (string, error) {
 	return zos.HomeExpand(s)
 }
 
-func downloadHTTP(localPath, url string, dlog log.Logger) error {
+// downloadByWget used wget
+func downloadBySystem(localPath, url string, dlog log.Logger) error {
 	if localPath == "" {
 		return fmt.Errorf("downloadHTTP: got empty localPath")
 	}
+	if err := os.RemoveAll(localPath); err != nil {
+		return err
+	}
+	url = proxyurl(url)
+	dlog.Debugf("downloading %q into %q", url, localPath)
+	wgetbin, err := exec.LookPath("wget")
+	if err != nil {
+		curlbin, err := exec.LookPath("curl")
+		if err != nil {
+			return fmt.Errorf("not found curl/wget")
+		}
+		curlargs := []string{url, "-s", "--user-agent", version.GetUG(), "-o", localPath}
+		dlog.Debugf("curl %v", curlargs)
+		if _, err := exec.Command(curlbin, curlargs...).CombinedOutput(); err != nil {
+			return err
+		}
+		return nil
+	}
+	wgetagent := fmt.Sprintf("--user-agent=ERGO/%v", version.Version)
+	wgetargs := []string{"-O", localPath, "-q", "-t=3", "-c", wgetagent, url}
+	dlog.Debugf("wget %v", wgetargs)
+	if _, err := exec.Command(wgetbin, wgetargs...).CombinedOutput(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func downloadHTTP(localPath, url string, dlog log.Logger) (int, error) {
+	if localPath == "" {
+		return 0, fmt.Errorf("downloadHTTP: got empty localPath")
+	}
 	localPathTmp := localPath + ".tmp"
 	if err := os.RemoveAll(localPathTmp); err != nil {
-		return err
+		return 0, err
 	}
 	fileWriter, err := os.Create(localPathTmp)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer fileWriter.Close()
 
-	if strings.Contains(url, "github") && environ.GetEnv("NO_MIRROR") == "" {
-		url = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, url)
-	}
+	url = proxyurl(url)
+
 	dlog.Debugf("downloading %q into %q", url, localPath)
 	// resp, err := http.Get(url)
 	client := &http.Client{
@@ -138,15 +176,15 @@ func downloadHTTP(localPath, url string, dlog log.Logger) error {
 	req.Header.Set("User-Agent", version.GetUG())
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("expected HTTP status %d, got %s", http.StatusOK, resp.Status)
+		return resp.StatusCode, fmt.Errorf("expected HTTP status %d, got %s", http.StatusOK, resp.Status)
 	}
 	bar, err := createBar(resp.ContentLength)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	writers := []io.Writer{fileWriter}
@@ -154,23 +192,23 @@ func downloadHTTP(localPath, url string, dlog log.Logger) error {
 
 	bar.Start()
 	if _, err := io.Copy(multiWriter, bar.NewProxyReader(resp.Body)); err != nil {
-		return err
+		return 0, err
 	}
 	bar.Finish()
 	if err := fileWriter.Sync(); err != nil {
-		return err
+		return 0, err
 	}
 	if err := fileWriter.Close(); err != nil {
-		return err
+		return 0, err
 	}
 	if err := os.RemoveAll(localPath); err != nil {
-		return err
+		return 0, err
 	}
 	if err := os.Rename(localPathTmp, localPath); err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return 0, nil
 }
 
 func createBar(size int64) (*pb.ProgressBar, error) {
@@ -192,4 +230,11 @@ func createBar(size int64) (*pb.ProgressBar, error) {
 	}
 
 	return bar, nil
+}
+
+func proxyurl(url string) string {
+	if strings.Contains(url, "github") && environ.GetEnv("NO_MIRROR") == "" && !strings.HasPrefix(url, common.PluginGithubJiasu) {
+		url = fmt.Sprintf("%v/%v", common.PluginGithubJiasu, url)
+	}
+	return url
 }

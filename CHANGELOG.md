@@ -1,5 +1,9 @@
 # Ergo CHANGELOG
 
+- v2.6.10
+  - 优化brew
+  - 继续优化下载= =
+
 - v2.6.9
   - 继续优化下载= =
   - 更新lima debian文件
