@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v2.6.11
+  - fix typo
+
 - v2.6.10
   - 优化brew
   - 继续优化下载= =
