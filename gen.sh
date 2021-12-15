@@ -46,17 +46,6 @@ class Ergo < Formula
           bin.install "ergo_linux_arm64" => "ergo"
         end 
       end
-
-      # Install bash completion
-      output = Utils.safe_popen_read(bin/"ergo", "completion", "bash")
-      (bash_completion/"ergo").write output
-
-      # Install zsh completion
-      output = Utils.safe_popen_read(bin/"ergo", "completion", "zsh")
-      (zsh_completion/"_ergo").write output
-      
-      fish_output = Utils.safe_popen_read(bin/"ergo", "completion", "fish")
-      (fish_completion/"ergo.fish").write fish_output
     end
 
     test do
