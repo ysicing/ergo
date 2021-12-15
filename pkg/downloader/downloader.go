@@ -135,7 +135,7 @@ func downloadBySystem(localPath, url string, dlog log.Logger) error {
 		if err != nil {
 			return fmt.Errorf("not found curl/wget")
 		}
-		curlargs := []string{url, "-s", "--user-agent", version.GetUG(), "-o", localPath}
+		curlargs := []string{url, "-s", "-L", "--user-agent", version.GetUG(), "-o", localPath}
 		dlog.Debugf("curl %v", curlargs)
 		if _, err := exec.Command(curlbin, curlargs...).CombinedOutput(); err != nil {
 			return err

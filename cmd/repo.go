@@ -161,11 +161,13 @@ ergo服务库 https://github.com/ysicing/ergo-service
 `,
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			cmdargs := os.Args
-			if err := ssh.RunCmd(cmdargs[0], "repo", "add-plugin", "default-plugin", "https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml"); err != nil {
+			// https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml -> https://github.com/ysicing/ergo-plugin/releases/latest/download/default.yaml
+			if err := ssh.RunCmd(cmdargs[0], "repo", "add-plugin", "default-plugin", "https://github.com/ysicing/ergo-plugin/releases/latest/download/default.yaml"); err != nil {
 				log.Debugf("添加默认插件库失败: %v", err)
 				return fmt.Errorf("添加默认插件库失败")
 			}
-			if err := ssh.RunCmd(cmdargs[0], "repo", "add-service", "default-service", "https://raw.githubusercontent.com/ysicing/ergo-service/master/default.yaml"); err != nil {
+			// https://raw.githubusercontent.com/ysicing/ergo-service/master/default.yaml ->
+			if err := ssh.RunCmd(cmdargs[0], "repo", "add-service", "default-service", "https://github.com/ysicing/ergo-service/releases/latest/download/default.yaml"); err != nil {
 				log.Debugf("添加默认服务库失败: %v", err)
 				return fmt.Errorf("添加默认服务库失败")
 			}
