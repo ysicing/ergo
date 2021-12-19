@@ -65,3 +65,8 @@ func GetRepoIndexFileByName(name string) string {
 func GetLockfile() string {
 	return fmt.Sprintf("%v/.install.lockfile", GetDefaultCfgDir())
 }
+
+func GetDefaultErgoCfg() string {
+	home := GetDefaultCfgDir()
+	return home + "/ergo.yml"
+}
