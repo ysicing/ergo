@@ -20,6 +20,7 @@ var rootDirs = []string{
 	common.DefaultBinDir,
 	common.DefaultCfgDir,
 	common.DefaultKubeDir,
+	common.DefaultCacheDir,
 }
 
 func initRootDirectory() error {

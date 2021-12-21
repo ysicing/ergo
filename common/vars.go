@@ -18,6 +18,7 @@ const (
 	DefaultBinDir     = ".ergo/bin"
 	DefaultCfgDir     = ".ergo/.config"
 	DefaultKubeDir    = ".ergo/kube"
+	DefaultCacheDir   = ".ergo/cache"
 )
 
 const (

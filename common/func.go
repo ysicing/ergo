@@ -49,6 +49,11 @@ func GetDefaultKubeDir() string {
 	return home + "/" + DefaultKubeDir
 }
 
+func GetDefaultCacheDir() string {
+	home := zos.GetHomeDir()
+	return home + "/" + DefaultCacheDir
+}
+
 func GetDefaultRepoCfg() string {
 	return fmt.Sprintf("%v/repo.yaml", GetDefaultCfgDir())
 }
@@ -59,7 +64,7 @@ func GetDefaultCfgPathByName(name string) string {
 }
 
 func GetRepoIndexFileByName(name string) string {
-	return fmt.Sprintf("%v/.%v.indexfile", GetDefaultCfgDir(), name)
+	return fmt.Sprintf("%v/%v.indexfile", GetDefaultCacheDir(), name)
 }
 
 func GetLockfile() string {
