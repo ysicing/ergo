@@ -6,19 +6,18 @@ package cmd
 
 import (
 	"context"
-	"os"
 	"strings"
 
 	"github.com/ergoapi/log"
-	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/zos"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/config"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/qcloud"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 type CvmOption struct {
@@ -38,7 +37,7 @@ func newCvmCmd(f factory.Factory) *cobra.Command {
 		Short:   "开通竞价机器",
 		Version: "2.0.7",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return opt.Init()
+			return opt.Run()
 		},
 	}
 	cvm.PersistentFlags().StringVarP(&opt.action, "action", "a", "", "操作 \"create\",\"new\",\"add\",\"destroy\",\"del\",\"rm\",\"list\" ")
@@ -46,48 +45,28 @@ func newCvmCmd(f factory.Factory) *cobra.Command {
 	return cvm
 }
 
-func (c *CvmOption) Init() error {
+func (c *CvmOption) Run() error {
 	var aid, akey, provider, region string
-	cvmfile := common.GetDefaultCfgPathByName("cloud")
-	c.log.Debugf("load cloud cfg: %v", cvmfile)
-	if !file.CheckFileExists(cvmfile) {
-		c.log.Debugf("not found %v, will gen one", cvmfile)
-		pprompt := promptui.Prompt{
-			Label: "provider",
+	ergocfg, err := config.LoadYaml(common.GetDefaultErgoCfg())
+	if err != nil {
+		return err
+	}
+
+	if len(ergocfg.Cloud) == 0 {
+		// 不存在
+		c.log.Debug("not found cloud provider, will gen one")
+		newprovider := addProvider()
+		ergocfg.Cloud = append(ergocfg.Cloud, newprovider)
+		ergocfg.Dump()
+		provider = newprovider.Provider
+		aid = newprovider.Secrets.AID
+		akey = newprovider.Secrets.AKey
+		if len(newprovider.Regions) > 0 {
+			region = newprovider.Regions[0]
 		}
-		provider, _ = pprompt.Run()
-		aidprompt := promptui.Prompt{
-			Label: "aid",
-		}
-		aid, _ = aidprompt.Run()
-		akeyprompt := promptui.Prompt{
-			Label: "akey",
-		}
-		akey, _ = akeyprompt.Run()
-		regionprompt := promptui.Prompt{
-			Label: "region",
-		}
-		region, _ = regionprompt.Run()
-		c.log.Debugf("%v, %v, %v, %v", aid, akey, provider, region)
-		configs := cloud.Configs{}
-		configs.Add(cloud.Config{
-			Provider: provider,
-			Secrets: cloud.Secrets{
-				AID:  aid,
-				AKey: akey,
-			},
-			Regions: []string{region},
-		})
-		if err := configs.Save(cvmfile); err != nil {
-			return err
-		}
-		return nil
 	} else {
-		configs, err := cloud.LoadCloudConfigs(cvmfile)
-		if err != nil {
-			return err
-		}
-		selectitem := append(configs.Configs, cloud.Config{
+		// 存在
+		selectitem := append(ergocfg.Cloud, config.Provider{
 			Provider: "new",
 		})
 		c.log.Debugf("加载配置成功: %v", selectitem)
@@ -104,47 +83,24 @@ func (c *CvmOption) Init() error {
 		}
 		psid, _, _ := ps.Run()
 		if selectitem[psid].Provider == "new" {
-			c.log.Debugf("found %v, will add one", cvmfile)
-			pprompt := promptui.Prompt{
-				Label: "provider",
+			newprovider := addProvider()
+			ergocfg.Cloud = append(ergocfg.Cloud, newprovider)
+			ergocfg.Dump()
+			provider = newprovider.Provider
+			aid = newprovider.Secrets.AID
+			akey = newprovider.Secrets.AKey
+			if len(newprovider.Regions) > 0 {
+				region = newprovider.Regions[0]
 			}
-			provider, _ = pprompt.Run()
-			aidprompt := promptui.Prompt{
-				Label: "aid",
+		} else {
+			provider = selectitem[psid].Provider
+			aid = selectitem[psid].Secrets.AID
+			akey = selectitem[psid].Secrets.AKey
+			if len(selectitem[psid].Regions) > 0 {
+				region = selectitem[psid].Regions[0]
 			}
-			aid, _ = aidprompt.Run()
-			akeyprompt := promptui.Prompt{
-				Label: "akey",
-			}
-			akey, _ = akeyprompt.Run()
-			regionprompt := promptui.Prompt{
-				Label: "region",
-			}
-			region, _ = regionprompt.Run()
-			c.log.Debugf("%v, %v, %v, %v", aid, akey, provider, region)
-			configs.Add(cloud.Config{
-				Provider: provider,
-				Secrets: cloud.Secrets{
-					AID:  aid,
-					AKey: akey,
-				},
-				Regions: []string{region},
-			})
-			if err := configs.Save(cvmfile); err != nil {
-				return err
-			}
-			args := os.Args
-			return ssh.RunCmd(args[0], "cvm")
 		}
-		c.log.Debugf("select %v", selectitem[psid])
-		if len(selectitem[psid].Regions) != 0 {
-			region = selectitem[psid].Regions[0]
-		}
-		provider = selectitem[psid].Provider
-		aid = selectitem[psid].Secrets.AID
-		akey = selectitem[psid].Secrets.AKey
 	}
-	// c.log.Debugf("%v %v , %v %v", c.action, provider, cloud.ProviderQcloud.Value(), provider == cloud.ProviderQcloud.Value())
 	if provider == cloud.ProviderQcloud.Value() {
 		// 腾讯云默认南京地域
 		if !strings.HasPrefix(region, "ap") {
@@ -172,4 +128,38 @@ func (c *CvmOption) Init() error {
 		}
 	}
 	return nil
+}
+
+func addProvider() config.Provider {
+	var provider, aid, akey, region string
+	pprompt := promptui.Prompt{
+		Label: "provider",
+	}
+	provider, _ = pprompt.Run()
+	aidprompt := promptui.Prompt{
+		Label: "aid",
+	}
+	aid, _ = aidprompt.Run()
+	akeyprompt := promptui.Prompt{
+		Label: "akey",
+	}
+	akey, _ = akeyprompt.Run()
+	regionprompt := promptui.Prompt{
+		Label: "region",
+	}
+
+	cfg := config.Provider{
+		UUID:     zos.GenUUID(),
+		Provider: strings.Trim(provider, " "),
+		Secrets: config.Secrets{
+			AID:  strings.Trim(aid, " "),
+			AKey: strings.Trim(akey, ""),
+		},
+	}
+
+	region, _ = regionprompt.Run()
+	if len(region) != 0 {
+		cfg.Regions = []string{strings.Trim(region, " ")}
+	}
+	return cfg
 }

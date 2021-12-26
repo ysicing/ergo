@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/ergoapi/log"
 	"github.com/ysicing/ergo/common"
@@ -11,30 +13,43 @@ import (
 )
 
 type ErGoConfig struct {
-	Cloud []Provider `json:"cloud" yaml:"cloud"`
+	Cloud     []Provider `json:"cloud" yaml:"cloud"`
+	Generated time.Time  `json:"generated" yaml:"generated"`
 }
 
 type Provider struct {
-	Type string `json:"type" yaml:"type"`
+	UUID     string   `json:"uuid" yaml:"uuid"`
+	Provider string   `json:"provider" yaml:"provider"`
+	Secrets  Secrets  `json:"secrets" yaml:"secrets"`
+	Regions  []string `json:"regions,omitempty" yaml:"regions,omitempty"`
 }
 
-func (c *ErGoConfig) Dump(path string) {
+type Secrets struct {
+	AID  string `json:"aid" yaml:"aid"`
+	AKey string `json:"akey" yaml:"akey"`
+}
+
+func (c *ErGoConfig) Dump(path ...string) {
+	var cfgpath string
 	log := log.GetInstance()
-	if path == "" {
-		path = common.GetDefaultErgoCfg()
+	if len(path) == 0 {
+		cfgpath = common.GetDefaultErgoCfg()
+	} else {
+		cfgpath = path[0]
 	}
+	c.Generated = time.Now()
 	y, err := yaml.Marshal(c)
 	if err != nil {
-		log.Error("dump config file failed: %v", err)
+		log.Errorf("dump config file failed: %v", err)
 		return
 	}
-	err = os.MkdirAll(path, os.ModePerm)
+	err = os.MkdirAll(filepath.Dir(cfgpath), os.ModePerm)
 	if err != nil {
-		log.Warn("create default ergo config dir failed, please create it by your self %v", path)
+		log.Warnf("create default ergo config dir failed, please create it by your self %v", path)
 		return
 	}
-	if err = ioutil.WriteFile(path, y, common.FileMode0644); err != nil {
-		log.Warn("write to file %s failed: %s", path, err)
+	if err = ioutil.WriteFile(cfgpath, y, common.FileMode0644); err != nil {
+		log.Warnf("write to file %s failed: %s", path, err)
 	}
 }
 
@@ -90,8 +105,8 @@ func LoadYaml(path string) (*ErGoConfig, error) {
 	log := log.GetInstance()
 	y, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Errorf("read config file %s failed %v", path, err)
-		return nil, fmt.Errorf("read config file %s failed %v", path, err)
+		log.Debugf("read config file %s failed %v", path, err)
+		return &ErGoConfig{}, nil
 	}
 	var content ErGoConfig
 	err = yaml.Unmarshal(y, &content)
