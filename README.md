@@ -137,3 +137,7 @@ default-plugin	helm 	v3.7.1   	https://helm.sh                    	The Kubernete
 ## 🎉🎉 Sponsors
 
 [![jetbrains](docs/jetbrains.svg)](https://www.jetbrains.com/?from=ergo)
+
+## 📊 Stats
+
+![Alt](https://repobeats.axiom.co/api/embed/7067f86501e4c17c2f638dcc419df0a047b01208.svg "Repobeats analytics image")
