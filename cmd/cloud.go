@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ysicing/ergo/pkg/config"
+
 	"github.com/ergoapi/util/file"
 	"github.com/gosuri/uitable"
 	"github.com/manifoldco/promptui"
@@ -28,51 +30,49 @@ func newCloudCommand(f factory.Factory) *cobra.Command {
 		Use:   "cloud [flags]",
 		Short: "云服务商支持",
 	}
-	cloud.AddCommand(newCloudCofig(f))
-	cloud.AddCommand(newCloudDNS(f))
+	cloud.AddCommand(newCloudDomain(f))
 	cloud.AddCommand(newCloudCR(f))
 	return cloud
 }
 
-func newCloudCofig(f factory.Factory) *cobra.Command {
-	cmd := &cobra.Command{}
-	return cmd
-}
-
-func newCloudDNS(f factory.Factory) *cobra.Command {
+func newCloudDomain(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "dns [flags]",
-		Short: "dns",
+		Use:   "domain [flags]",
+		Short: "domain 域名服务",
 	}
-	cmd.AddCommand(newDNSList(f))
+	cmd.AddCommand(newCloudDomainList(f))
 	return cmd
 }
 
-func newDNSList(f factory.Factory) *cobra.Command {
+func newCloudDomainList(f factory.Factory) *cobra.Command {
 	l := f.GetLog()
 	cmd := &cobra.Command{
-		Use:   "domain",
+		Use:   "list",
 		Short: "域名列表",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			ergocfg, err := config.LoadYaml(common.GetDefaultErgoCfg())
+			if err != nil {
+				return err
+			}
 			templates := &promptui.SelectTemplates{
 				Label:    "{{ . }}",
-				Active:   "\U0001F449 {{ .Value | cyan }}",
-				Inactive: "  {{ .Value | cyan }}",
-				Selected: "\U0001F389 {{ .Value | red | cyan }}",
+				Active:   "\U0001F449 {{ .Provider | cyan }}",
+				Inactive: "  {{ .Provider | cyan }}",
+				Selected: "\U0001F389 {{ .Provider | red | cyan }}",
 			}
 			cloudprompt := promptui.Select{
 				Label:     "选择云服务商",
-				Items:     cloud.CloudType,
+				Items:     ergocfg.Cloud,
 				Size:      4,
 				Templates: templates,
 			}
 			selectid, _, _ := cloudprompt.Run()
-			ct := cloud.CloudType[selectid]
+			ct := ergocfg.Cloud[selectid]
 			var domainlist cloud.DomainList
-			if ct.Key == "all" || ct.Key == cloud.ProviderQcloud.Value() {
+			if ct.Provider == cloud.ProviderQcloud.Value() {
 				l.Debugf("load qcloud domain")
 				// 腾讯云
-				p, err := qcloud.NewDNS(qcloud.WithLog(l), qcloud.WithAPI(os.Getenv("TX_Key"), os.Getenv("TX_Secret")))
+				p, err := qcloud.NewDNS(qcloud.WithLog(l), qcloud.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create qcloud api client err: %v", err)
 				} else {
@@ -84,10 +84,10 @@ func newDNSList(f factory.Factory) *cobra.Command {
 					}
 				}
 			}
-			if ct.Key == "all" || ct.Key == cloud.ProviderAliyun.Value() {
+			if ct.Provider == cloud.ProviderAliyun.Value() {
 				l.Debugf("load aliyun domain")
 				// 阿里云
-				p, err := aliyun.NewDNS(aliyun.WithLog(l), aliyun.WithAPI(os.Getenv("Ali_Key"), os.Getenv("Ali_Secret")))
+				p, err := aliyun.NewDNS(aliyun.WithLog(l), aliyun.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create aliyun api client err: %v", err)
 				} else {
@@ -105,7 +105,7 @@ func newDNSList(f factory.Factory) *cobra.Command {
 				table.AddRow(re.Provider, re.Name)
 			}
 			_ = output.EncodeTable(os.Stdout, table)
-			domainfile := fmt.Sprintf("%v/.domain", common.GetDefaultCfgDir())
+			domainfile := fmt.Sprintf("%v/.domain", common.GetDefaultCacheDir())
 			if file.CheckFileExists(domainfile) {
 				file.RemoveFiles(domainfile)
 			}
@@ -133,25 +133,29 @@ func newCRList(f factory.Factory) *cobra.Command {
 		Use:   "list",
 		Short: "镜像列表",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			ergocfg, err := config.LoadYaml(common.GetDefaultErgoCfg())
+			if err != nil {
+				return err
+			}
 			templates := &promptui.SelectTemplates{
 				Label:    "{{ . }}",
-				Active:   "\U0001F449 {{ .Value | cyan }}",
-				Inactive: "  {{ .Value | cyan }}",
-				Selected: "\U0001F389 {{ .Value | red | cyan }}",
+				Active:   "\U0001F449 {{ .Provider | cyan }}",
+				Inactive: "  {{ .Provider | cyan }}",
+				Selected: "\U0001F389 {{ .Provider | red | cyan }}",
 			}
 			cloudprompt := promptui.Select{
 				Label:     "选择云服务商",
-				Items:     cloud.CloudType,
+				Items:     ergocfg.Cloud,
 				Size:      4,
 				Templates: templates,
 			}
 			selectid, _, _ := cloudprompt.Run()
-			ct := cloud.CloudType[selectid]
+			ct := ergocfg.Cloud[selectid]
 			var crlist cloud.CRList
-			if ct.Key == "all" || ct.Key == cloud.ProviderQcloud.Value() {
+			if ct.Provider == cloud.ProviderQcloud.Value() {
 				l.StartWait("开始加载腾讯云镜像")
 				// 腾讯云
-				p, err := qcloud.NewTCR(qcloud.WithLog(l), qcloud.WithRegion("ap-beijing"), qcloud.WithAPI(os.Getenv("TX_Key"), os.Getenv("TX_Secret")))
+				p, err := qcloud.NewTCR(qcloud.WithLog(l), qcloud.WithRegion("ap-beijing"), qcloud.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create qcloud api client err: %v", err)
 				} else {
@@ -165,10 +169,10 @@ func newCRList(f factory.Factory) *cobra.Command {
 					}
 				}
 			}
-			if ct.Key == "all" || ct.Key == cloud.ProviderAliyun.Value() {
+			if ct.Provider == cloud.ProviderAliyun.Value() {
 				// 阿里云
 				l.StartWait("开始加载阿里云镜像")
-				p, err := aliyun.NewACR(aliyun.WithLog(l), aliyun.WithRegion("cn-beijing"), aliyun.WithAPI(os.Getenv("Ali_Key"), os.Getenv("Ali_Secret")))
+				p, err := aliyun.NewACR(aliyun.WithLog(l), aliyun.WithRegion("cn-beijing"), aliyun.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create aliyun api client err: %v", err)
 				} else {

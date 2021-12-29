@@ -6,6 +6,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/ysicing/ergo/common"
+	"helm.sh/helm/v3/pkg/cli/output"
 
 	"github.com/ergoapi/log"
 	"github.com/spf13/cobra"
@@ -17,16 +21,27 @@ func newConfigCmd() *cobra.Command {
 		Use:   "config",
 		Short: "ergo config",
 	}
-	configCommand.AddCommand(newValidateCommand())
+	configCommand.AddCommand(newConfigValidateCommand())
+	configCommand.AddCommand(newConfigShowCommand())
 	return configCommand
 }
 
-func newValidateCommand() *cobra.Command {
+func newConfigValidateCommand() *cobra.Command {
 	var validateCommand = &cobra.Command{
 		Use:   "validate FILE.yaml [FILE.yaml, ...]",
 		Short: "Validate YAML files",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  validateAction,
+	}
+	return validateCommand
+}
+
+func newConfigShowCommand() *cobra.Command {
+	var validateCommand = &cobra.Command{
+		Use:   "show FILE.yaml",
+		Short: "Show YAML files",
+		Args:  cobra.MaximumNArgs(1),
+		RunE:  showConfigAction,
 	}
 	return validateCommand
 }
@@ -40,5 +55,18 @@ func validateAction(cmd *cobra.Command, args []string) error {
 		}
 		logrus.Donef("%q: OK", f)
 	}
+	return nil
+}
+
+func showConfigAction(cmd *cobra.Command, args []string) error {
+	fp := common.GetDefaultErgoCfg()
+	if len(args) != 0 {
+		fp = args[0]
+	}
+	ergocfg, err := config.LoadYaml(fp)
+	if err != nil {
+		return fmt.Errorf("failed to load YAML file %q: %w", fp, err)
+	}
+	output.EncodeYAML(os.Stdout, ergocfg)
 	return nil
 }

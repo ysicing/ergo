@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v2.7.0
+  - 默认统一配置文件
+
 - v2.6.11
   - fix typo
 
