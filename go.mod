@@ -6,7 +6,7 @@ require (
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20211112122917-428f8eabeeb3 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1411
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1425
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -21,7 +21,7 @@ require (
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/gopasspw/gopass v1.13.0
 	github.com/gosuri/uitable v0.0.4
-	github.com/hashicorp/go-version v1.3.0
+	github.com/hashicorp/go-version v1.4.0
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/juju/ansiterm v0.0.0-20210929141451-8b71cc96ebdc // indirect
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
@@ -35,22 +35,22 @@ require (
 	github.com/pkg/sftp v1.13.4
 	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/shirou/gopsutil/v3 v3.21.11
+	github.com/shirou/gopsutil/v3 v3.21.12
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.322
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.322
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.322
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.322
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.322
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.322
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.324
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.324
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.324
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.324
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.324
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.324
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
-	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
+	golang.org/x/net v0.0.0-20220105145211-5b0dc2dfae98 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect

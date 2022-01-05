@@ -25,9 +25,6 @@ golint: ## lint
 		echo "$$OUTPUT"; \
 	fi
 
-gocyclo: ## 复杂度
-	command -v golangci-lint >/dev/null 2>&1 && gocyclo -over 15 -ignore "_test|Godeps|vendor/" .
-
 default: fmt golint ## fmt code
 
 build: clean ## 构建二进制

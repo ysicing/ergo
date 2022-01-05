@@ -16,13 +16,13 @@ func newExperimentalCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "experimental [flags]",
 		Short:   "Experimental commands that may be modified or deprecated",
-		Version: "4.5.0",
+		Version: "2.5.0",
 		Aliases: []string{"x", "exp"},
 	}
 	install := &cobra.Command{
 		Use:     "install",
 		Short:   "install ergo",
-		Version: "4.5.0",
+		Version: "2.5.0",
 		Run: func(cmd *cobra.Command, args []string) {
 			exp.Install()
 		},

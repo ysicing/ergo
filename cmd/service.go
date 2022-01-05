@@ -23,7 +23,7 @@ func newServiceCmd(f factory.Factory) *cobra.Command {
 		Short:                 "Provides utilities for interacting with services",
 		Version:               "2.4.0",
 	}
-	cmd.AddCommand(NewCmdServiceShow(f))
+	cmd.AddCommand(NewCmdServiceListRemote(f))
 	cmd.AddCommand(NewCmdServiceList(f))
 	cmd.AddCommand(NewCmdServiceDump(f))
 	cmd.AddCommand(NewCmdServiceInstall(f))
@@ -58,13 +58,14 @@ func NewCmdServiceDump(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-func NewCmdServiceShow(f factory.Factory) *cobra.Command {
+func NewCmdServiceListRemote(f factory.Factory) *cobra.Command {
 	o := &service.Option{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
-		Use:     "show",
+		Use:     "ls-remote",
+		Aliases: []string{"lr"},
 		Short:   "List remote versions available for install",
 		Version: "2.4.0",
 		Run: func(cmd *cobra.Command, args []string) {

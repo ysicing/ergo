@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v2.7.1
+  - `service show`子命令调整为`service ls-remote`
+
 - v2.7.0
   - 默认统一配置文件
 
