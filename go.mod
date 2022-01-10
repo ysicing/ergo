@@ -3,14 +3,13 @@ module github.com/ysicing/ergo
 go 1.16
 
 require (
-	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20211112122917-428f8eabeeb3 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1425
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
-	github.com/containerd/continuity v0.2.1
+	github.com/containerd/continuity v0.2.2
 	github.com/elazarl/goproxy v0.0.0-20210801061803-8e322dfb79c4 // indirect
 	github.com/ergoapi/log v0.0.1
 	github.com/ergoapi/util v0.1.4
