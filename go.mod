@@ -42,7 +42,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.327
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.327
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.327
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.327
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.328
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.327
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.327
 	github.com/ulikunitz/xz v0.5.10 // indirect
