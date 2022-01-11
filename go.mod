@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20211112122917-428f8eabeeb3 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1425
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1434
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -39,12 +39,12 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.324
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.324
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.324
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.324
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.324
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.324
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.327
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.327
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.327
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.327
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.327
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.327
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
