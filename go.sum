@@ -579,8 +579,8 @@ github.com/googleapis/gnostic v0.4.1/go.mod h1:LRhVm6pbyptWbWbuZ38d1eyptfvIytN3i
 github.com/googleapis/gnostic v0.5.1/go.mod h1:6U4PtQXGIEt/Z3h5MAT7FNofLnw9vXk2cUuW7uA/OeU=
 github.com/googleapis/gnostic v0.5.5 h1:9fHAtK0uDfpveeqqo1hkEZJcFvYXAiCN3UutL8F9xHw=
 github.com/googleapis/gnostic v0.5.5/go.mod h1:7+EbHbldMins07ALC74bsA81Ovc97DwqyJO1AENw9kA=
-github.com/gopasspw/gopass v1.13.0 h1:oPGM6V/H+fLnFO9w6swcnvDAh10zRYPYvXM49PvyPr8=
-github.com/gopasspw/gopass v1.13.0/go.mod h1:d5NovqLyuZQm1/vpkmT10ZTuJ6xuKwh0Cq4cbk9VSFs=
+github.com/gopasspw/gopass v1.13.1 h1:RJT+lVoRcG3Jnjo4VkJQ6yoRnnLDtUt6eMnh19xnbZs=
+github.com/gopasspw/gopass v1.13.1/go.mod h1:d5NovqLyuZQm1/vpkmT10ZTuJ6xuKwh0Cq4cbk9VSFs=
 github.com/gopasspw/pinentry v0.0.2/go.mod h1:lR1WuNI96rXXBCgM601Ima3acnX3ZSPthIAuG6lHa68=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/gorilla/handlers v0.0.0-20150720190736-60c7bfde3e33/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
@@ -1069,8 +1069,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330 h1:JuviXzj
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.330 h1:U5P+uAojyWtusHtz4HpI+su7mEd3LLf38s6Q00fQPgc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.330/go.mod h1:CuOaLxOQr477GhMWAQPYQFUJrsZbW+ZqkAgP2uHDZXg=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.330 h1:k2Wrrj+3OLdJVUll03xZqTj5mzYafFrbnTXlvAA3NBQ=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.330/go.mod h1:r8txjlw4DjLDZFOpnPC/hOFHr1VckZc0jjBK6XIFLP0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.332 h1:cJuCemJujpxSxNGev5R2O1uohI9pn2m/WATarKobqCM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.332/go.mod h1:r8txjlw4DjLDZFOpnPC/hOFHr1VckZc0jjBK6XIFLP0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.330 h1:QNCtuBtDr/+Ym8BHceY2DxL3L6xV1JCxFXdEePoNLeE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.330/go.mod h1:SEUO10oGtg+4AGCfpJDn9ynf47P+ZiyvhzOyXLt0mOY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.330 h1:5YaKcF2XPTjI4VUcAbQHSJyEEUindGfMNlUGZIeMfRo=
