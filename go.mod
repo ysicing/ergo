@@ -18,7 +18,7 @@ require (
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
 	github.com/gofrs/flock v0.8.1
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
-	github.com/gopasspw/gopass v1.13.0
+	github.com/gopasspw/gopass v1.13.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/hashicorp/go-version v1.4.0
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
@@ -41,7 +41,7 @@ require (
 	github.com/spf13/viper v1.10.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.330
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.330
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.332
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.330
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.330
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.330
