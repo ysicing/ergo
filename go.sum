@@ -579,8 +579,8 @@ github.com/googleapis/gnostic v0.4.1/go.mod h1:LRhVm6pbyptWbWbuZ38d1eyptfvIytN3i
 github.com/googleapis/gnostic v0.5.1/go.mod h1:6U4PtQXGIEt/Z3h5MAT7FNofLnw9vXk2cUuW7uA/OeU=
 github.com/googleapis/gnostic v0.5.5 h1:9fHAtK0uDfpveeqqo1hkEZJcFvYXAiCN3UutL8F9xHw=
 github.com/googleapis/gnostic v0.5.5/go.mod h1:7+EbHbldMins07ALC74bsA81Ovc97DwqyJO1AENw9kA=
-github.com/gopasspw/gopass v1.13.0 h1:oPGM6V/H+fLnFO9w6swcnvDAh10zRYPYvXM49PvyPr8=
-github.com/gopasspw/gopass v1.13.0/go.mod h1:d5NovqLyuZQm1/vpkmT10ZTuJ6xuKwh0Cq4cbk9VSFs=
+github.com/gopasspw/gopass v1.13.1 h1:RJT+lVoRcG3Jnjo4VkJQ6yoRnnLDtUt6eMnh19xnbZs=
+github.com/gopasspw/gopass v1.13.1/go.mod h1:d5NovqLyuZQm1/vpkmT10ZTuJ6xuKwh0Cq4cbk9VSFs=
 github.com/gopasspw/pinentry v0.0.2/go.mod h1:lR1WuNI96rXXBCgM601Ima3acnX3ZSPthIAuG6lHa68=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/gorilla/handlers v0.0.0-20150720190736-60c7bfde3e33/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
@@ -1065,8 +1065,8 @@ github.com/tcnksm/go-gitconfig v0.1.2 h1:iiDhRitByXAEyjgBqsKi9QU4o2TNtv9kPP3RgPg
 github.com/tcnksm/go-gitconfig v0.1.2/go.mod h1:/8EhP4H7oJZdIPyT+/UIsG87kTzrzM4UsLGSItWYCpE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.330 h1:yPUoeUIxqrrYoKhwYRNIDKpnZ5VIMK3qNwuuB55DZtY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.330/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330 h1:JuviXzj8cXLYhYErBFe1ZtoBf2NRfrLP9TVeb+jKypI=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.332 h1:QY+VlLo23GFaTb4uX1ZE3J4X/gLehgjUQQoSxVO9mjc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.332/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.330 h1:U5P+uAojyWtusHtz4HpI+su7mEd3LLf38s6Q00fQPgc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.330/go.mod h1:CuOaLxOQr477GhMWAQPYQFUJrsZbW+ZqkAgP2uHDZXg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.330 h1:k2Wrrj+3OLdJVUll03xZqTj5mzYafFrbnTXlvAA3NBQ=
