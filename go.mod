@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20211112122917-428f8eabeeb3 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1446
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1457
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -39,12 +39,12 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.330
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.330
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.330
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.330
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.330
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.335
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.335
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.335
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.335
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.335
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.335
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
@@ -55,16 +55,18 @@ require (
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.7.2
-	k8s.io/apimachinery v0.23.1
-	k8s.io/client-go v0.23.1
+	k8s.io/apimachinery v0.23.2
+	k8s.io/client-go v0.23.2
 	k8s.io/klog/v2 v2.40.1 // indirect
-	k8s.io/kubectl v0.23.1
+	k8s.io/kubectl v0.23.2
 	k8s.io/utils v0.0.0-20211208161948-7d6a63dca704 // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
 
 // replace github.com/google/go-github/v39 => ../go-github
 // github.com/kardianos/service => ../service
-replace github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
+replace (
+	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
+	github.com/rhysd/go-github-selfupdate v1.2.3 => github.com/BeidouCloudPlatform/go-github-selfupdate v1.2.4-0.20220122124055-98116fd13821
+)
