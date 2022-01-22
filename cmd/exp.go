@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"github.com/ergoapi/util/zos"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/experimental"
 	"github.com/ysicing/ergo/pkg/util/factory"
@@ -27,6 +28,21 @@ func newExperimentalCmd(f factory.Factory) *cobra.Command {
 			exp.Install()
 		},
 	}
+	simplefile := &cobra.Command{
+		Use:     "simplefile",
+		Short:   "simple file server",
+		Version: "2.8.0",
+		Run: func(cmd *cobra.Command, args []string) {
+			exp.SimpleFileCfg.Debug = globalFlags.Debug
+			exp.SimpleFileCfg.Dir, _ = zos.HomeExpand(exp.SimpleFileCfg.Dir)
+			exp.SimpleFile()
+		},
+	}
+	simplefile.PersistentFlags().StringVar(&exp.SimpleFileCfg.User, "user", "", "user")
+	simplefile.PersistentFlags().StringVar(&exp.SimpleFileCfg.Pass, "pass", "", "pass")
+	simplefile.PersistentFlags().StringVar(&exp.SimpleFileCfg.Port, "port", "8888", "port")
+	simplefile.PersistentFlags().StringVar(&exp.SimpleFileCfg.Dir, "dir", "./", "file dir")
 	cmd.AddCommand(install)
+	cmd.AddCommand(simplefile)
 	return cmd
 }

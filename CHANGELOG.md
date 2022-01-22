@@ -2,6 +2,8 @@
 
 - v2.8.0
   - `upgrade` 新增proxy下载文件
+  - `experimental simplefile` 提高简单web服务
+  - 更新lima debian配置文件
 
 - v2.7.1
   - `service show`子命令调整为`service ls-remote`

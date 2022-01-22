@@ -9,5 +9,14 @@ import (
 )
 
 type Options struct {
-	Log log.Logger
+	Log           log.Logger
+	SimpleFileCfg SimpleFile
+}
+
+type SimpleFile struct {
+	Debug bool
+	User  string
+	Pass  string
+	Port  string
+	Dir   string
 }
