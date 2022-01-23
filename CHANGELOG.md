@@ -1,5 +1,9 @@
 # Ergo CHANGELOG
 
+- v2.8.1
+  - `k3s getbin` 新增下载k3s二进制
+  - k3s默认添加`--rootless`参数
+
 - v2.8.0
   - `upgrade` 新增proxy下载文件
   - `experimental simplefile` 提高简单web服务

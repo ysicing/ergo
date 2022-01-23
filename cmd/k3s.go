@@ -58,17 +58,28 @@ func newK3sCmd(f factory.Factory) *cobra.Command {
 	k3s.AddCommand(join)
 	join.PersistentFlags().StringVar(&ksAddr, "url", "", "k3s server url")
 	join.PersistentFlags().StringVar(&ksToken, "token", "", "k3s server token")
+	getbin := &cobra.Command{
+		Use:     "bin",
+		Short:   "download k3s bin",
+		Long:    `example: ergo k3s getbin `,
+		Version: "2.8.0",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, err := getbin()
+			return err
+		},
+	}
+	k3s.AddCommand(getbin)
 	return k3s
 }
 
-func initAction(cmd *cobra.Command, args []string) error {
+func getbin() (string, error) {
 	klog := log.GetInstance()
 	// check k3s bin
 	filebin, err := exec.LookPath(common.K3sBinName)
 	if err != nil {
 		klog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
 		if _, err := downloader.Download(common.K3sBinURL, common.K3sBinPath); err != nil {
-			return err
+			return "", err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)
 		klog.Done("k3s download complete.")
@@ -76,12 +87,24 @@ func initAction(cmd *cobra.Command, args []string) error {
 	}
 	output, err := exec.Command(filebin, "--version").CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("seems like there are issues with your k3s client: \n\n%s", output)
+		return "", fmt.Errorf("seems like there are issues with your k3s client: \n\n%s", output)
 	}
 	klog.Debugf("k3s version: %v", string(output))
+	return filebin, nil
+}
+
+func initAction(cmd *cobra.Command, args []string) error {
+	klog := log.GetInstance()
+	// check k3s bin
+	filebin, err := getbin()
+	if err != nil {
+		return err
+	}
 	k3sargs := []string{
 		"server",
 		"--disable=servicelb,traefik",
+		"--rootless",
+		"--disable-helm-controller",
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
@@ -179,23 +202,13 @@ func initAction(cmd *cobra.Command, args []string) error {
 func joinAction(cmd *cobra.Command, args []string) error {
 	klog := log.GetInstance()
 	// check k3s bin
-	filebin, err := exec.LookPath(common.K3sBinName)
+	filebin, err := getbin()
 	if err != nil {
-		klog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
-		if _, err := downloader.Download(common.K3sBinURL, common.K3sBinPath); err != nil {
-			return err
-		}
-		os.Chmod(common.K3sBinPath, common.FileMode0755)
-		klog.Done("k3s download complete")
-		filebin, _ = exec.LookPath(common.K3sBinName)
+		return err
 	}
-	output, err := exec.Command(filebin, "--version").CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("seems like there are issues with your k3s client: \n\n%s", output)
-	}
-	klog.Debugf("k3s version: %v", string(output))
 	k3sargs := []string{
 		"agent",
+		"--rootless",
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",

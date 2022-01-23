@@ -31,7 +31,7 @@ build: clean ## 构建二进制
 	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${COMMIT_SHA1}"
 	#@bash hack/docker/build.sh ${version} ${tagversion} ${commit_sha1}
 	# go get github.com/mitchellh/gox
-	@gox -osarch="darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64 windows/arm64" \
+	@gox -osarch="darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
     	-ldflags   "-w -s \
     				-X 'github.com/ysicing/ergo/version.Version=${BUILD_VERSION}' \

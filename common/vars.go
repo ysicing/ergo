@@ -33,12 +33,12 @@ const (
 const (
 	K3sBinName    = "k3s"
 	K3sBinPath    = "/usr/local/bin/k3s"
-	K3sBinVersion = "v1.22.4+k3s1"
-	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.22.4%2Bk3s1/k3s"
+	K3sBinVersion = "v1.23.1+k3s2"
+	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.23.1%2Bk3s2/k3s"
 	K3sAgentEnv   = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig = "/etc/rancher/k3s/k3s.yaml"
 	CiliumName    = "cilium"
-	CiliumCliURL  = "https://github.com/cilium/cilium-cli/releases/download/v0.10.0/cilium-linux-amd64.tar.gz"
+	CiliumCliURL  = "https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz"
 )
 
 const (
