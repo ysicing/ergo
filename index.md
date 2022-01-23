@@ -19,12 +19,10 @@ A simple command line client for devops
 
 * [ergo cloud](ergo_cloud.md)	 - 云服务商支持
 * [ergo code](ergo_code.md)	 - 初始化项目
-* [ergo config](ergo_config.md)	 - ergo config
-* [ergo cvm](ergo_cvm.md)	 - 开通竞价机器
 * [ergo debian](ergo_debian.md)	 - 初始化debian, 升级debian内核
 * [ergo experimental](ergo_experimental.md)	 - Experimental commands that may be modified or deprecated
 * [ergo ext](ergo_ext.md)	 - ext 功能
-* [ergo k3s](ergo_k3s.md)	 - k3s
+* [ergo kube](ergo_kube.md)	 - kube ops tools
 * [ergo ops](ergo_ops.md)	 - 基础运维
 * [ergo plugin](ergo_plugin.md)	 - Provides utilities for interacting with plugins
 * [ergo repo](ergo_repo.md)	 - 管理plugins & services repos

@@ -19,6 +19,7 @@ Experimental commands that may be modified or deprecated
 ### SEE ALSO
 
 * [ergo](ergo.md)	 - ergo, ergo, NB!
+* [ergo experimental config](ergo_experimental_config.md)	 - ergo config
 * [ergo experimental install](ergo_experimental_install.md)	 - install ergo
 * [ergo experimental simplefile](ergo_experimental_simplefile.md)	 - simple file server
 
