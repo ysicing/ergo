@@ -44,5 +44,7 @@ func newExperimentalCmd(f factory.Factory) *cobra.Command {
 	simplefile.PersistentFlags().StringVar(&exp.SimpleFileCfg.Dir, "dir", "./", "file dir")
 	cmd.AddCommand(install)
 	cmd.AddCommand(simplefile)
+	cmd.AddCommand(newDebugCmd())
+	cmd.AddCommand(newConfigCmd())
 	return cmd
 }
