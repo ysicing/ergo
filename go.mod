@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220113124808-70ae35bab23f // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1457
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1465
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -56,7 +56,6 @@ require (
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.7.2
-	inet.af/netaddr v0.0.0-20211027220019-c74959edd3b6 // indirect
 	k8s.io/apimachinery v0.23.2
 	k8s.io/client-go v0.23.2
 	k8s.io/klog/v2 v2.40.1 // indirect
