@@ -17,32 +17,6 @@ import (
 	"helm.sh/helm/v3/pkg/cli/output"
 )
 
-func newDebugCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:    "debug",
-		Short:  "Debug utilities",
-		Long:   "DO NOT USE! THE COMMAND SYNTAX IS SUBJECT TO CHANGE!",
-		Hidden: true,
-	}
-	cmd.AddCommand(newDebugDNSCommand())
-	return cmd
-}
-
-func newDebugDNSCommand() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:   "dns UDPPORT [TCPPORT]",
-		Short: "Debug built-in DNS",
-		Long:  "DO NOT USE! THE COMMAND SYNTAX IS SUBJECT TO CHANGE!",
-		Args:  cobra.RangeArgs(1, 2),
-		RunE:  debugDNSAction,
-	}
-	return cmd
-}
-
-func debugDNSAction(cmd *cobra.Command, args []string) error {
-	return nil
-}
-
 func newConfigCmd() *cobra.Command {
 	var configCommand = &cobra.Command{
 		Use:   "config",
@@ -132,7 +106,6 @@ func newExperimentalCmd(f factory.Factory) *cobra.Command {
 	simplefile.PersistentFlags().StringVar(&exp.SimpleFileCfg.Dir, "dir", "./", "file dir")
 	cmd.AddCommand(install)
 	cmd.AddCommand(simplefile)
-	cmd.AddCommand(newDebugCmd())
 	cmd.AddCommand(newConfigCmd())
 	return cmd
 }

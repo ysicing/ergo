@@ -56,7 +56,6 @@ require (
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.7.2
-	inet.af/netaddr v0.0.0-20211027220019-c74959edd3b6 // indirect
 	k8s.io/apimachinery v0.23.2
 	k8s.io/client-go v0.23.2
 	k8s.io/klog/v2 v2.40.1 // indirect
