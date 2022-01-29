@@ -5,16 +5,17 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	kube2 "github.com/ysicing/ergo/cmd/kube"
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 func newKubeCmd(f factory.Factory) *cobra.Command {
-	kube := &cobra.Command{
+	k := &cobra.Command{
 		Use:   "kube",
 		Short: "kube ops tools",
 		Long:  `kube manage tools. eg: k3s install, k8s manage restart`,
 		Args:  cobra.NoArgs,
 	}
-	kube.AddCommand(newK3sCmd(f))
-	return kube
+	k.AddCommand(kube2.K3sCmd(f))
+	return k
 }

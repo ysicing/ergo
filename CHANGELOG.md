@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+= v3.0.0
+  - 优化代码结构
+
 - v2.9.0
   - `k3s getbin` 新增下载k3s二进制
   - k3s不使用docker runtime添加`--rootless`参数

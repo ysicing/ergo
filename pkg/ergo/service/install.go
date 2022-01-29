@@ -57,7 +57,7 @@ func (o *Option) Install() error {
 		o.Log.Warnf("已经安装 %v, 跳过", o.Name)
 		return nil
 	}
-	dfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultComposeDir(), o.Name)
+	dfile := fmt.Sprintf("%v/%v.yaml", common.GetDefaultCfgDir(), o.Name)
 	pn, err := o.downfile(dfile)
 	if pn == nil {
 		return err

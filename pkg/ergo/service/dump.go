@@ -25,7 +25,7 @@ func (o *Option) Dump(mode string) error {
 	if mode == "" || strings.ToLower(mode) == "stdout" {
 		return ssh.RunCmd("cat", tmpfile.Name())
 	}
-	dumpfile := common.GetDefaultDumpDir() + "/" + o.Name + "." + ztime.GetTodayMin() + ".dump"
+	dumpfile := common.GetDefaultCacheDir() + "/" + o.Name + "." + ztime.GetTodayMin() + ".dump"
 	o.Log.Infof("dump file: %v", dumpfile)
 	return ssh.RunCmd("cp", tmpfile.Name(), dumpfile)
 }

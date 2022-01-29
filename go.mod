@@ -12,13 +12,14 @@ require (
 	github.com/containerd/continuity v0.2.2
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
 	github.com/ergoapi/exgin v1.0.5
-	github.com/ergoapi/log v0.0.1
+	github.com/ergoapi/log v0.0.2
 	github.com/ergoapi/util v0.1.9
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.2.2 // indirect
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
 	github.com/gofrs/flock v0.8.1
+	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/gopasspw/gopass v1.13.1
 	github.com/gosuri/uitable v0.0.4
@@ -51,7 +52,7 @@ require (
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	go.uber.org/zap v1.20.0 // indirect
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8
-	golang.org/x/net v0.0.0-20220121210141-e204ce36a2ba // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	gotest.tools v2.2.0+incompatible

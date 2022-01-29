@@ -4,31 +4,15 @@
 package cmd
 
 import (
-	"fmt"
-	"sync"
-
-	"github.com/ergoapi/util/file"
-
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/cmd/flags"
-	"github.com/ysicing/ergo/pkg/ergo/debian"
+	debopt "github.com/ysicing/ergo/cmd/debian"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
-
-type DebianCmd struct {
-	*flags.GlobalFlags
-	// log    log.Logger
-	local  bool
-	sshcfg sshutil.SSH
-	ips    []string
-}
 
 // newDebianCmd ergo debian tools
 func newDebianCmd(f factory.Factory) *cobra.Command {
-	cmd := &DebianCmd{
+	opt := &debopt.Option{
 		GlobalFlags: globalFlags,
-		// log:         log.GetInstance(),
 	}
 	debian := &cobra.Command{
 		Use:     "debian [flags]",
@@ -42,7 +26,7 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 		Short:   "初始化debian或debian系环境",
 		Version: "2.0.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return cmd.Init(f)
+			return opt.Init(f)
 		},
 	}
 	apt := &cobra.Command{
@@ -50,7 +34,7 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 		Short:   "添加ergo apt源",
 		Version: "2.2.1",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return cmd.Apt(f)
+			return opt.Apt(f)
 		},
 	}
 	upcore := &cobra.Command{
@@ -58,72 +42,17 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 		Short:   "升级Debian内核",
 		Version: "2.0.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return cmd.UpCore(f)
+			return opt.UpCore(f)
 		},
 	}
 	debian.AddCommand(init)
 	debian.AddCommand(upcore)
 	debian.AddCommand(apt)
-	debian.PersistentFlags().StringVar(&cmd.sshcfg.User, "user", "root", "用户")
-	debian.PersistentFlags().StringVar(&cmd.sshcfg.Pass, "pass", "", "密码")
-	debian.PersistentFlags().StringVar(&cmd.sshcfg.PkFile, "pk", "", "私钥")
-	debian.PersistentFlags().StringVar(&cmd.sshcfg.PkPass, "pkpass", "", "私钥密码")
-	debian.PersistentFlags().StringSliceVar(&cmd.ips, "ip", nil, "机器IP")
-	debian.PersistentFlags().BoolVar(&cmd.local, "local", false, "本地安装")
+	debian.PersistentFlags().StringVar(&opt.SSHCfg.User, "user", "root", "用户")
+	debian.PersistentFlags().StringVar(&opt.SSHCfg.Pass, "pass", "", "密码")
+	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkFile, "pk", "", "私钥")
+	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkPass, "pkpass", "", "私钥密码")
+	debian.PersistentFlags().StringSliceVar(&opt.IPs, "ip", nil, "机器IP")
+	debian.PersistentFlags().BoolVar(&opt.Local, "local", false, "本地安装")
 	return debian
-}
-
-func (cmd *DebianCmd) Init(f factory.Factory) error {
-	// cmd.log = f.GetLog()
-	cmd.sshcfg.Log = f.GetLog()
-	if cmd.local || len(cmd.ips) == 0 {
-		debian.RunLocalShell("init", cmd.sshcfg.Log)
-		return nil
-	}
-
-	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.ips {
-		wg.Add(1)
-		go debian.RunInit(cmd.sshcfg, ip, &wg)
-	}
-	wg.Wait()
-	return nil
-}
-
-func (cmd *DebianCmd) UpCore(f factory.Factory) error {
-	cmd.sshcfg.Log = f.GetLog()
-	// 本地
-	if cmd.local || len(cmd.ips) == 0 {
-		debian.RunLocalShell("upcore", cmd.sshcfg.Log)
-		return nil
-	}
-	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.ips {
-		wg.Add(1)
-		go debian.RunUpgradeCore(cmd.sshcfg, ip, &wg)
-	}
-	wg.Wait()
-	return nil
-}
-
-func (cmd *DebianCmd) Apt(f factory.Factory) error {
-	cmd.sshcfg.Log = f.GetLog()
-	// 本地
-	if cmd.local || len(cmd.ips) == 0 {
-		if file.CheckFileExists("/etc/apt/sources.list") {
-			debian.RunLocalShell("apt", cmd.sshcfg.Log)
-			return nil
-		}
-		return fmt.Errorf("仅支持Debian系")
-	}
-	cmd.sshcfg.Log.Debugf("ssh: %v, ips: %v", cmd.sshcfg, cmd.ips)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.ips {
-		wg.Add(1)
-		go debian.RunAddDebSource(cmd.sshcfg, ip, &wg)
-	}
-	wg.Wait()
-	return nil
 }

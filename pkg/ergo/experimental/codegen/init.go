@@ -142,7 +142,7 @@ func (code CodeGen) GenCrds() error {
 	var b bytes.Buffer
 	t := template.Must(template.New("crds").Parse(crdshell))
 	t.Execute(&b, c)
-	tmpfile := fmt.Sprintf("%v/crds.%v", common.GetDefaultTmpDir(), ztime.NowUnixString())
+	tmpfile := fmt.Sprintf("%v/crds.%v", common.GetDefaultCacheDir(), ztime.NowUnixString())
 	if err := file.Writefile(tmpfile, b.String()); err != nil {
 		return err
 	}

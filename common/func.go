@@ -14,24 +14,9 @@ func GetDefaultLogDir() string {
 	return home + "/" + DefaultLogDir
 }
 
-func GetDefaultComposeDir() string {
-	home := zos.GetHomeDir()
-	return home + "/" + DefaultComposeDir
-}
-
-func GetDefaultTmpDir() string {
-	home := zos.GetHomeDir()
-	return home + "/" + DefaultTmpDir
-}
-
 func GetDefaultDataDir() string {
 	home := zos.GetHomeDir()
 	return home + "/" + DefaultDataDir
-}
-
-func GetDefaultDumpDir() string {
-	home := zos.GetHomeDir()
-	return home + "/" + DefaultDumpDir
 }
 
 func GetDefaultBinDir() string {
@@ -42,11 +27,6 @@ func GetDefaultBinDir() string {
 func GetDefaultCfgDir() string {
 	home := zos.GetHomeDir()
 	return home + "/" + DefaultCfgDir
-}
-
-func GetDefaultKubeDir() string {
-	home := zos.GetHomeDir()
-	return home + "/" + DefaultKubeDir
 }
 
 func GetDefaultCacheDir() string {

@@ -13,13 +13,9 @@ import (
 
 var rootDirs = []string{
 	common.DefaultLogDir,
-	common.DefaultTmpDir,
-	common.DefaultComposeDir,
 	common.DefaultDataDir,
-	common.DefaultDumpDir,
 	common.DefaultBinDir,
 	common.DefaultCfgDir,
-	common.DefaultKubeDir,
 	common.DefaultCacheDir,
 }
 

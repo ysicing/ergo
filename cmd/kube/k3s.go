@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package cmd
+package kube
 
 import (
 	"context"
@@ -26,7 +26,7 @@ import (
 var dockerOnly, cniNo bool
 var ksSan, ksAddr, ksToken string
 
-func newK3sCmd(f factory.Factory) *cobra.Command {
+func K3sCmd(f factory.Factory) *cobra.Command {
 	k3s := &cobra.Command{
 		Use:   "k3s",
 		Short: "k3s",

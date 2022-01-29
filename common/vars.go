@@ -10,15 +10,11 @@ const (
 )
 
 const (
-	DefaultLogDir     = ".ergo/log"
-	DefaultTmpDir     = ".ergo/tmp"
-	DefaultComposeDir = ".ergo/compose"
-	DefaultDataDir    = ".ergo/data"
-	DefaultDumpDir    = ".ergo/dump"
-	DefaultBinDir     = ".ergo/bin"
-	DefaultCfgDir     = ".ergo/.config"
-	DefaultKubeDir    = ".ergo/kube"
-	DefaultCacheDir   = ".ergo/cache"
+	DefaultLogDir   = ".ergo/log"
+	DefaultDataDir  = ".ergo/data"
+	DefaultBinDir   = ".ergo/bin"
+	DefaultCfgDir   = ".ergo/config"
+	DefaultCacheDir = ".ergo/cache"
 )
 
 const (
