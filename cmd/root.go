@@ -1,4 +1,4 @@
-// MIT License
+// AGPL License
 // Copyright (c) 2020 ysicing <i@ysicing.me>
 
 package cmd
@@ -59,7 +59,6 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newUpgradeCmd())
 	rootCmd.AddCommand(newDebianCmd(f))
 	rootCmd.AddCommand(newOPSCmd(f))
-	rootCmd.AddCommand(newCodeGenCmd(f))
 	rootCmd.AddCommand(newCloudCommand(f))
 	rootCmd.AddCommand(newRepoCmd(f))
 	rootCmd.AddCommand(newPluginCmd(f))

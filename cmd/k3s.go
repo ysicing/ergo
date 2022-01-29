@@ -103,7 +103,6 @@ func initAction(cmd *cobra.Command, args []string) error {
 	k3sargs := []string{
 		"server",
 		"--disable=servicelb,traefik",
-		"--rootless",
 		"--disable-helm-controller",
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
@@ -208,7 +207,6 @@ func joinAction(cmd *cobra.Command, args []string) error {
 	}
 	k3sargs := []string{
 		"agent",
-		"--rootless",
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
@@ -275,6 +273,8 @@ func configArgs(args []string, san string, docker, nonecni bool) []string {
 		if checkBin("docker") {
 			args = append(args, "--docker")
 		}
+	} else {
+		args = append(args, "--rootless")
 	}
 	if nonecni {
 		args = append(args, "--flannel-backend=none")

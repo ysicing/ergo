@@ -1,5 +1,5 @@
-// MIT License
-// Copyright (c) 2020 ysicing <i@ysicing.me>
+// AGPL License
+// Copyright (c) 2022 ysicing <i@ysicing.me>
 
 package codegen
 

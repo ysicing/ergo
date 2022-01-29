@@ -32,7 +32,7 @@ import (
 func newCloudCommand(f factory.Factory) *cobra.Command {
 	cloud := &cobra.Command{
 		Use:   "cloud [flags]",
-		Short: "云服务商支持",
+		Short: "cloud tools",
 	}
 	cloud.AddCommand(newCvmCmd(f))
 	cloud.AddCommand(newCloudDomain(f))

@@ -62,7 +62,7 @@ func newOPSCmd(f factory.Factory) *cobra.Command {
 	}
 	ops := &cobra.Command{
 		Use:     "ops [flags]",
-		Short:   "基础运维",
+		Short:   "sre tools",
 		Version: "2.0.0",
 		Args:    cobra.NoArgs,
 	}

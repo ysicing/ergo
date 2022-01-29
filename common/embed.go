@@ -7,5 +7,6 @@ import (
 	_ "embed"
 )
 
+// DefaultTemplate default lima template
 //go:embed debian.yml
 var DefaultTemplate []byte

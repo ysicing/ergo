@@ -2,7 +2,7 @@
 
 - v2.9.0
   - `k3s getbin` 新增下载k3s二进制
-  - k3s默认添加`--rootless`参数
+  - k3s不使用docker runtime添加`--rootless`参数
   - 调整合并部分子命令
 
 - v2.8.0

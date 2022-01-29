@@ -36,7 +36,7 @@ type ExtOptions struct {
 func newExtCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "ext [flags]",
-		Short:   "ext 功能",
+		Short:   "ext tools",
 		Version: "2.1.0",
 	}
 	cmd.AddCommand(ghClean(f))
