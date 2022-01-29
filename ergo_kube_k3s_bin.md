@@ -19,7 +19,7 @@ ergo kube k3s bin [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   The ergo config file to use (default "/home/runner/.ergo/.config/ergo.yml")
+      --config string   The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
       --debug           Prints the stack trace if an error occurs
       --docker          If true, Use docker instead of containerd
       --silent          Run in silent mode and prevents any ergo log output except panics & fatals

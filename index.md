@@ -9,7 +9,7 @@ A simple command line client for devops
 ### Options
 
 ```
-      --config string   The ergo config file to use (default "/home/runner/.ergo/.config/ergo.yml")
+      --config string   The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
       --debug           Prints the stack trace if an error occurs
   -h, --help            help for ergo
       --silent          Run in silent mode and prevents any ergo log output except panics & fatals
@@ -22,7 +22,7 @@ A simple command line client for devops
 * [ergo experimental](ergo_experimental.md)	 - Experimental commands that may be modified or deprecated
 * [ergo ext](ergo_ext.md)	 - ext tools
 * [ergo kube](ergo_kube.md)	 - kube ops tools
-* [ergo ops](ergo_ops.md)	 - sre tools
+* [ergo op](ergo_op.md)	 - sre tools
 * [ergo plugin](ergo_plugin.md)	 - Provides utilities for interacting with plugins
 * [ergo repo](ergo_repo.md)	 - 管理plugins & services repos
 * [ergo service](ergo_service.md)	 - Provides utilities for interacting with services
