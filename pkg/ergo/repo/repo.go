@@ -22,7 +22,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-type RepoAddOption struct {
+type AddOption struct {
 	Log     log.Logger
 	Name    string
 	URL     string
@@ -30,7 +30,7 @@ type RepoAddOption struct {
 	RepoCfg string
 }
 
-func (o *RepoAddOption) Run() error {
+func (o *AddOption) Run() error {
 	// Ensure the file directory exists as it is required for file locking
 	err := os.MkdirAll(filepath.Dir(o.RepoCfg), os.ModePerm)
 	if err != nil && !os.IsExist(err) {
@@ -96,13 +96,13 @@ func (o *RepoAddOption) Run() error {
 	return nil
 }
 
-type RepoDelOption struct {
+type DelOption struct {
 	Log     log.Logger
 	Names   []string
 	RepoCfg string
 }
 
-func (o *RepoDelOption) Run() error {
+func (o *DelOption) Run() error {
 	r, err := LoadFile(o.RepoCfg)
 	if err != nil || len(r.Repos) == 0 {
 		o.Log.Warn("no plugin or service repo configured")
@@ -129,13 +129,13 @@ func (o *RepoDelOption) Run() error {
 	return nil
 }
 
-type RepoUpdateOption struct {
+type UpdateOption struct {
 	Log     log.Logger
 	Names   []string
 	RepoCfg string
 }
 
-func (o *RepoUpdateOption) Run() error {
+func (o *UpdateOption) Run() error {
 	r, err := LoadFile(o.RepoCfg)
 	if err != nil || len(r.Repos) == 0 {
 		return fmt.Errorf("no plugin or service repo configured")

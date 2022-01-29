@@ -35,7 +35,7 @@ func newRepoCmd(f factory.Factory) *cobra.Command {
 }
 
 func newAddPluginRepo(f factory.Factory) *cobra.Command {
-	o := &repo.RepoAddOption{
+	o := &repo.AddOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
@@ -55,7 +55,7 @@ func newAddPluginRepo(f factory.Factory) *cobra.Command {
 }
 
 func newAddServiceRepo(f factory.Factory) *cobra.Command {
-	o := &repo.RepoAddOption{
+	o := &repo.AddOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
@@ -75,7 +75,7 @@ func newAddServiceRepo(f factory.Factory) *cobra.Command {
 }
 
 func newRepoDel(f factory.Factory) *cobra.Command {
-	o := &repo.RepoDelOption{
+	o := &repo.DelOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
@@ -93,7 +93,7 @@ func newRepoDel(f factory.Factory) *cobra.Command {
 }
 
 func newRepoUpdate(f factory.Factory) *cobra.Command {
-	o := &repo.RepoUpdateOption{
+	o := &repo.UpdateOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}

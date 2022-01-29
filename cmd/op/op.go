@@ -40,12 +40,12 @@ func ExecCmd() *cobra.Command {
 func (cmd *execOption) Exec(args []string) error {
 	cmd.sshcfg.Log = log.GetInstance()
 	if cmd.local {
-		return exec.ExecLocal(args...)
+		return exec.LocalRun(args...)
 	}
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		exec.ExecSh(cmd.sshcfg, ip, &wg, args...)
+		exec.RunSH(cmd.sshcfg, ip, &wg, args...)
 	}
 	wg.Wait()
 	return nil

@@ -3,7 +3,7 @@
 
 package ecs
 
-type ECSAction interface {
+type Action interface {
 	Reset(id string) error
 	List() error
 }

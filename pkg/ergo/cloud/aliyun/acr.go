@@ -85,10 +85,7 @@ func (c acrclient) Repos(num int, ns ...string) (qdata []Repo) {
 	}
 
 	sort.Slice(qdata, func(i, j int) bool {
-		if qdata[i].GmtModified > qdata[j].GmtModified {
-			return true
-		}
-		return false
+		return qdata[i].GmtModified > qdata[j].GmtModified
 	})
 	if len(qdata) < num {
 		num = len(qdata)
@@ -122,10 +119,7 @@ func (c acrclient) Tags(ns, repo string, num ...int) (qdata []Tag) {
 	}
 
 	sort.Slice(qdata, func(i, j int) bool {
-		if qdata[i].ImageUpdate > qdata[j].ImageUpdate {
-			return true
-		}
-		return false
+		return qdata[i].ImageUpdate > qdata[j].ImageUpdate
 	})
 	if len(num) == 0 {
 		return qdata

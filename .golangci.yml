@@ -1,26 +1,48 @@
+run:
+  timeout: 10m
+  skip-dirs:
+    - docs
+    - hack
+
+output:
+  # colored-line-number|line-number|json|tab|checkstyle|code-climate|junit-xml|github-actions
+  # default is "colored-line-number"
+  format: colored-line-number
+
 linters:
   # TODO: fix errors so that all of the linters below pass.
   # The linters that are commented out, as well as those explicitly disabled,
   # are currently failing.  We should fix those failures or define exclusion
   # rules, and then enable those linters.
+  disable-all: true
   enable:
+    - deadcode
+    - gosimple
+    - govet
+    - ineffassign
+    - unused
+    - varcheck
+    - staticcheck
+#    - errcheck
     - dogsled
     - gofmt
     - goimports
-    # - gosec
+#    - gosec
     - misspell
     - nakedret
     - stylecheck
-    # - unconvert
-    # - unparam
+#    - structcheck
+#    - golint
+#    - unconvert
+#    - unparam
     - whitespace
-  disable:
-    - errcheck
-    - gosimple
-    - staticcheck
-    - ineffassign
-    - unused
-    - dupl
+#  disable:
+#    - errcheck
+#    - gosimple
+#    - staticcheck
+#    - ineffassign
+#    - unused
+#    - dupl
 issues:
   exclude-rules:
     - linters:
@@ -30,3 +52,12 @@ issues:
     - linters:
         - dupl
       path: _test\.go
+
+linters-settings:
+  gofmt:
+    simplify: true
+  dupl:
+    # tokens count to trigger issue, 150 by default
+    threshold: 400
+  errcheck:
+    check-blank: false

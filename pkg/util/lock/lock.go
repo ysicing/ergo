@@ -15,7 +15,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-type LockFile struct {
+type File struct {
 	Installeds []*Installed `json:"installeds" yaml:"installeds"`
 }
 
@@ -29,13 +29,13 @@ type Installed struct {
 }
 
 // Has returns true if the given name is already a repository name.
-func (r *LockFile) Has(name, repo string) bool {
+func (r *File) Has(name, repo string) bool {
 	entry := r.Get(name, repo)
 	return entry != nil
 }
 
 // Get returns an entry with the given name if it exists, otherwise returns nil
-func (r *LockFile) Get(name, repo string) *Installed {
+func (r *File) Get(name, repo string) *Installed {
 	for _, entry := range r.Installeds {
 		if entry.Name == name && entry.Repo == repo {
 			return entry
@@ -45,7 +45,7 @@ func (r *LockFile) Get(name, repo string) *Installed {
 }
 
 // Remove removes the entry from the list of repositories.
-func (r *LockFile) Remove(name string) bool {
+func (r *File) Remove(name string) bool {
 	var cp []*Installed
 	found := false
 	for _, rf := range r.Installeds {
@@ -60,12 +60,12 @@ func (r *LockFile) Remove(name string) bool {
 }
 
 // Add adds one or more repo entries to a repo file.
-func (r *LockFile) Add(re ...*Installed) {
+func (r *File) Add(re ...*Installed) {
 	r.Installeds = append(r.Installeds, re...)
 }
 
 // WriteFile writes a repositories file to the given path.
-func (r *LockFile) WriteFile(path string) error {
+func (r *File) WriteFile(path string) error {
 	data, err := yaml.Marshal(r)
 	if err != nil {
 		return err
@@ -76,10 +76,10 @@ func (r *LockFile) WriteFile(path string) error {
 	return ioutil.WriteFile(path, data, common.FileMode0600)
 }
 
-func LoadFile(path string) (*LockFile, error) {
+func LoadFile(path string) (*File, error) {
 	f := log.GetInstance()
 	f.Debugf("path: %v", path)
-	r := new(LockFile)
+	r := new(File)
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		f.Debugf("couldn't load install lockfile (%s), err: %v", path, err)

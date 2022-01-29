@@ -3,7 +3,7 @@
 
 package lighthouse
 
-type LighthouseAction interface {
+type Action interface {
 	Reset(id string) error
 	BindKey(id string) error
 	List() error

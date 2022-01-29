@@ -38,5 +38,4 @@ func (exp *Options) Install() {
 		return
 	}
 	exp.Log.Donef("安装完成, 默认路径: %v", "/usr/local/bin")
-	return
 }

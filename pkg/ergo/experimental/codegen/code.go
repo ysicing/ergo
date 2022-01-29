@@ -36,7 +36,7 @@ func (code CodeOptions) Init() {
 	codetypeid, _, _ := codetype.Run()
 	selectcodetypevalue := CodeType[codetypeid].Key
 	code.Log.Infof("\U0001F389 选择 %v", selectcodetypevalue)
-	codefunc := CodeGen{Log: code.Log}
+	codefunc := &CodeGen{Log: code.Log}
 	if selectcodetypevalue == "go" {
 		code.Log.Infof("Start downloading the template...")
 		if err := codefunc.GoClone(); err != nil {

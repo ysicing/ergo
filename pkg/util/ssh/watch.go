@@ -61,8 +61,7 @@ func toSizeFromInt(length int) (float64, string) {
 	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", float64(length)/oneMBByte), 64)
 	if isMb {
 		return value, "MB"
-	} else {
-		value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", float64(length)/oneKBByte), 64)
-		return value, "KB"
 	}
+	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", float64(length)/oneKBByte), 64)
+	return value, "KB"
 }

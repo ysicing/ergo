@@ -14,8 +14,8 @@ import (
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
-// ExecSh 执行shell
-func ExecSh(ssh sshutil.SSH, ip string, wg *sync.WaitGroup, execcmd ...string) {
+// RunSH 执行shell
+func RunSH(ssh sshutil.SSH, ip string, wg *sync.WaitGroup, execcmd ...string) {
 	defer wg.Done()
 	if err := ssh.CmdAsync(ip, strings.Join(execcmd, " ")); err != nil {
 		fmt.Println(err.Error())
@@ -30,7 +30,7 @@ func CheckCmd(ssh sshutil.SSH, ip string, packagename string) bool {
 	return true
 }
 
-func ExecLocal(execcmd ...string) error {
+func LocalRun(args ...string) error {
 	var shell string
 	switch runtime.GOOS {
 	case "linux":
