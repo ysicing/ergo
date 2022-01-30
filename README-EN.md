@@ -12,39 +12,37 @@
 
 > 一款使用 Go 编写的轻量运维工具集,尽量减少重复工作，同时降低维护脚本的成本
 
-兼容性:
+compatibility:
 
-- [x] 100% 支持 `Debian 11`
-- [ ] 绝大数功能在macOS上测试通过
-- [ ] 部分功能在非Debian系上测试通过
+- [x] 100% support `Debian 10+`
+- [ ] for macOS some features are available
+- [ ] for CentOS some features are available
 
 ## ergo能干什么 / What does Ergo do?
 
 - 将常用脚本或者公有云操作抽象成cli命令, 简化工作
 - 灵活的自定义插件管理工具,像使用`helm repo`方式管理插件
 
-## 安装
+## Install
 
-### 二进制安装
+### Binary
 
-从 [Github Release](https://github.com/ysicing/ergo/releases) 下载已经编译好的二进制文件: 
+Downloaded from [release](https://github.com/ysicing/ergo/releases) pre-compiled binaries
 
-### macOS安装
-
-- 支持brew方式
+### macOS Install
 
 ```bash
 brew tap ysicing/tap
 brew install ergo
 ```
 
-- 支持容器Docker
+### Running with Docker
 
 ```bash
 ysicing/ergo
 ```
 
-### Debian系安装
+### Debian Install
 
 ```bash
 echo "deb [trusted=yes] https://debian.ysicing.me/ /" | sudo tee /etc/apt/sources.list.d/ergo.list
@@ -54,9 +52,9 @@ apt-get install -y opsergo
 ergo version
 ```
 
-### 源码编译安装
+### Building From Source
 
-- 支持go v1.16+
+ergo is currently using go v1.16 or above. In order to build ergo from source you must:
 
 ```bash
 # Clone the repo
@@ -64,7 +62,7 @@ ergo version
 make build && ./dist/ergo_darwin_amd64 
 ```
 
-### 升级
+### Upgrade
 
 ```bash
 # macOS
@@ -79,15 +77,15 @@ ergo ops wget https://github.com/ysicing/ergo/releases/latest/download/ergo_linu
 /root/.ergo/tmp/ergo_linux_amd64 experimental install
 ```
 
-## 文档
+## Support
 
 具体参见[文档](./docs/index.md)
 
-### 中国大陆用户
+### China Mainland users
 
 > 默认github相关资源使用ghproxy代理，可使用`export NO_MIRROR=6wa6wa`不使用代理加速地址
 
-### 特性-插件
+### ergo plugin
 
 > 默认支持`ergo-`插件, 类似krew
 
@@ -122,7 +120,7 @@ repo          	name 	version  	homepage                           	desc         
 default-plugin	helm 	v3.7.1   	https://helm.sh                    	The Kubernetes Package Manager                  	https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
 ```
 
-#### 存在问题
+#### Issue
 
 - Q: docker compose命令不识别
   - A: 需要使用compose v2版本 [配置文档](https://github.com/docker/compose#linux)
@@ -136,7 +134,7 @@ default-plugin	helm 	v3.7.1   	https://helm.sh                    	The Kubernete
 - [kubernetes/kubectl](https://github.com/kubernetes/kubernetes)
 - [helm/helm](https://github.com/helm/helm)
 
-## 🎉🎉 赞助商
+## 🎉🎉 Sponsors
 
 [![jetbrains](docs/jetbrains.svg)](https://www.jetbrains.com/?from=ergo)
 
