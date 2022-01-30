@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220113124808-70ae35bab23f // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1470
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1473
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -45,7 +45,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.339
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.339
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.339
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.339
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.340
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.339
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
