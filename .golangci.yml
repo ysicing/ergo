@@ -23,26 +23,20 @@ linters:
     - unused
     - varcheck
     - staticcheck
-#    - errcheck
     - dogsled
     - gofmt
     - goimports
-#    - gosec
+    - gosec
     - misspell
     - nakedret
     - stylecheck
-#    - structcheck
-#    - golint
-#    - unconvert
-#    - unparam
+    - structcheck
+    - golint
+    - unconvert
+    - unparam
     - whitespace
 #  disable:
 #    - errcheck
-#    - gosimple
-#    - staticcheck
-#    - ineffassign
-#    - unused
-#    - dupl
 issues:
   exclude-rules:
     - linters:

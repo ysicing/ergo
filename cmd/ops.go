@@ -6,11 +6,10 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/op"
-	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 // newOPCmd ergo ops
-func newOPCmd(f factory.Factory) *cobra.Command {
+func newOPCmd() *cobra.Command {
 	ops := &cobra.Command{
 		Use:     "op [flags]",
 		Short:   "sre tools",

@@ -29,12 +29,12 @@ func (o *Option) downfile(dfile string) (*Service, error) {
 	pf, err := LoadIndexFile(pluginfilepath)
 	if err != nil {
 		o.Log.Errorf("加载%s, 失败: %v", o.Repo, err)
-		return nil, nil
+		return nil, fmt.Errorf("加载%s, 失败: %v", o.Repo, err)
 	}
 	pn := pf.Get(o.Name)
 	if pn == nil {
 		o.Log.Errorf("%v 服务不存在: %v", o.Repo, o.Name)
-		return nil, nil
+		return nil, fmt.Errorf("%v 服务不存在: %v", o.Repo, o.Name)
 	}
 
 	// 下载
@@ -44,7 +44,7 @@ func (o *Option) downfile(dfile string) (*Service, error) {
 	// o.Log.StopWait()
 	if err != nil {
 		o.Log.Errorf("下载服务脚本失败: %v", err)
-		return nil, nil
+		return nil, err
 	}
 	o.Log.Donef("%v 下载完成", pn.Name)
 	return pn, nil

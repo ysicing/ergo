@@ -178,10 +178,10 @@ func (ext *ExtOptions) limaPre(cobraCmd *cobra.Command, args []string) error {
 		// TODO 升级镜像啥的
 	} else {
 		yBytes := common.DefaultTemplate
-		if err := os.MkdirAll(filepath.Dir(limacfg), 0700); err != nil {
+		if err := os.MkdirAll(filepath.Dir(limacfg), common.FileMode0755); err != nil {
 			return err
 		}
-		if err := os.WriteFile(limacfg, yBytes, 0644); err != nil {
+		if err := os.WriteFile(limacfg, yBytes, common.FileMode0600); err != nil {
 			return err
 		}
 	}

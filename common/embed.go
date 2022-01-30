@@ -4,6 +4,7 @@
 package common
 
 import (
+	// justifying the use of the standard library
 	_ "embed"
 )
 

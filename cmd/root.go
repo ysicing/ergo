@@ -58,7 +58,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newVersionCmd())
 	rootCmd.AddCommand(newUpgradeCmd())
 	rootCmd.AddCommand(newDebianCmd(f))
-	rootCmd.AddCommand(newOPCmd(f))
+	rootCmd.AddCommand(newOPCmd())
 	rootCmd.AddCommand(newCloudCommand(f))
 	rootCmd.AddCommand(newRepoCmd(f))
 	// rootCmd.AddCommand(newSecCmd(f))
