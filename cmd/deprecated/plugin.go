@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package cmd
+package deprecated
 
 import (
 	"fmt"
@@ -13,21 +13,21 @@ import (
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
-// newPluginCmd ergo plugin
-func newPluginCmd(f factory.Factory) *cobra.Command {
+// PluginCmd ergo plugin
+func PluginCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "plugin [flags]",
 		DisableFlagsInUseLine: true,
 		Aliases:               []string{"p"},
 		Short:                 "Provides utilities for interacting with plugins",
 	}
-	cmd.AddCommand(NewCmdPluginList(f))
-	cmd.AddCommand(NewCmdPluginListRemote(f))
-	cmd.AddCommand(NewCmdPluginInstall(f))
+	cmd.AddCommand(pluginList(f))
+	cmd.AddCommand(pluginListRemote(f))
+	cmd.AddCommand(pluginInstall(f))
 	return cmd
 }
 
-func NewCmdPluginListRemote(f factory.Factory) *cobra.Command {
+func pluginListRemote(f factory.Factory) *cobra.Command {
 	o := &plugin.ListRemoteOptions{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
@@ -43,7 +43,7 @@ func NewCmdPluginListRemote(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
+func pluginInstall(f factory.Factory) *cobra.Command {
 	o := &plugin.InstallOption{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
@@ -72,8 +72,8 @@ func NewCmdPluginInstall(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-// NewCmdPluginList provides a way to list all plugin executables visible to ergo
-func NewCmdPluginList(f factory.Factory) *cobra.Command {
+// pluginList provides a way to list all plugin executables visible to ergo
+func pluginList(f factory.Factory) *cobra.Command {
 	o := &plugin.ListOptions{
 		Log: f.GetLog(),
 	}

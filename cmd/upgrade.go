@@ -39,6 +39,5 @@ func (cmd *UpgradeCmd) Run() error {
 		}()
 	}
 	version.Upgrade()
-
 	return nil
 }

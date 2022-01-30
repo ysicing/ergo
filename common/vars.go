@@ -49,4 +49,5 @@ const (
 
 var (
 	ValidPrefixes = []string{"ergo", "kubectl", "docker"}
+	ListOutput    string
 )

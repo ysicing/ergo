@@ -1,7 +1,7 @@
 // AGPL License
 // Copyright (c) 2021 ysicing <i@ysicing.me>
 
-package cmd
+package deprecated
 
 import (
 	"fmt"
@@ -14,8 +14,8 @@ import (
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
-// newServiceCmd ergo service
-func newServiceCmd(f factory.Factory) *cobra.Command {
+// ServiceCmd ergo service
+func ServiceCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "service [flags]",
 		Aliases:               []string{"svc", "s"},
@@ -23,14 +23,14 @@ func newServiceCmd(f factory.Factory) *cobra.Command {
 		Short:                 "Provides utilities for interacting with services",
 		Version:               "2.4.0",
 	}
-	cmd.AddCommand(NewCmdServiceListRemote(f))
-	cmd.AddCommand(NewCmdServiceList(f))
-	cmd.AddCommand(NewCmdServiceDump(f))
-	cmd.AddCommand(NewCmdServiceInstall(f))
+	cmd.AddCommand(serviceListRemote(f))
+	cmd.AddCommand(serviceList(f))
+	cmd.AddCommand(serviceDump(f))
+	cmd.AddCommand(serviceInstall(f))
 	return cmd
 }
 
-func NewCmdServiceDump(f factory.Factory) *cobra.Command {
+func serviceDump(f factory.Factory) *cobra.Command {
 	o := &service.Option{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
@@ -51,14 +51,14 @@ func NewCmdServiceDump(f factory.Factory) *cobra.Command {
 				o.Repo = args[0]
 				o.Name = args[1]
 			}
-			return o.Dump(listoutput)
+			return o.Dump(common.ListOutput)
 		},
 	}
-	cmd.PersistentFlags().StringVarP(&listoutput, "output", "o", "", "dump file, 默认stdout, 支持file")
+	cmd.PersistentFlags().StringVarP(&common.ListOutput, "output", "o", "", "dump file, 默认stdout, 支持file")
 	return cmd
 }
 
-func NewCmdServiceListRemote(f factory.Factory) *cobra.Command {
+func serviceListRemote(f factory.Factory) *cobra.Command {
 	o := &service.Option{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
@@ -75,7 +75,7 @@ func NewCmdServiceListRemote(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-func NewCmdServiceInstall(f factory.Factory) *cobra.Command {
+func serviceInstall(f factory.Factory) *cobra.Command {
 	o := &service.Option{
 		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
@@ -105,8 +105,8 @@ func NewCmdServiceInstall(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-// NewCmdServiceList 列出本地存在的service
-func NewCmdServiceList(f factory.Factory) *cobra.Command {
+// serviceList 列出本地存在的service
+func serviceList(f factory.Factory) *cobra.Command {
 	o := &service.Option{
 		Log: f.GetLog(),
 	}
