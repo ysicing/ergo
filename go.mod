@@ -45,7 +45,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.339
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.340
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.339
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.339
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.340
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.339
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
