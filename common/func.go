@@ -44,7 +44,7 @@ func GetDefaultCfgPathByName(name string) string {
 }
 
 func GetRepoIndexFileByName(name string) string {
-	return fmt.Sprintf("%v/%v.indexfile", GetDefaultCacheDir(), name)
+	return fmt.Sprintf("%v/%v.repoindex", GetDefaultCacheDir(), name)
 }
 
 func GetLockfile() string {

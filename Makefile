@@ -59,16 +59,17 @@ clean: ## clean
 install: clean ## install
 	go install \
 		-ldflags   "-w -s \
-						-X 'github.com/ysicing/ergo/cmd.Version=${BUILD_VERSION}' \
-                        -X 'github.com/ysicing/ergo/cmd.BuildDate=${BUILD_DATE}' \
-                        -X 'github.com/ysicing/ergo/cmd.CommitID=${COMMIT_SHA1}'"
+						-X 'github.com/ysicing/ergo/version.Version=${BUILD_VERSION}' \
+                        -X 'github.com/ysicing/ergo/version.BuildDate=${BUILD_DATE}' \
+                        -X 'github.com/ysicing/ergo/version.GitCommitHash=${COMMIT_SHA1}'"
 
 deb: build ## build deb
 	./deb.sh
 
 doc: ## gen docs
 	go run ./hack/gendoc/doc.go
-	cp -a docs/ergo.md docs/index.md 
+	cp -a docs/ergo.md docs/index.md
+	cp -a README.md docs/readme.md
 
 cleanvm: ## clem lima vm
 	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
@@ -80,7 +81,7 @@ shell: ## shell debian
 	limactl shell debian
 
 local-test: build ## 本地测试
-	limactl cp ./dist/ergo_linux_amd64 debian:/tmp
+	limactl cp ./dist/ergo_linux_amd64 lima-ergo:/home/ysicing.linux/.ergo/bin/ergo-ergo
 
 .PHONY : build release clean install
 

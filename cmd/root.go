@@ -61,6 +61,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newOPCmd())
 	rootCmd.AddCommand(newCloudCommand(f))
 	rootCmd.AddCommand(newRepoCmd(f))
+	rootCmd.AddCommand(newAddOnsCmd(f))
 	// rootCmd.AddCommand(newSecCmd(f))
 	rootCmd.AddCommand(newExtCmd(f))
 	rootCmd.AddCommand(newExperimentalCmd(f))

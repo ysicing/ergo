@@ -4,7 +4,6 @@
 package service
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/ergoapi/log"
@@ -43,7 +42,7 @@ func (o *Option) Show() {
 	}
 	var res []*Service
 	for _, i := range r.Repos {
-		index := common.GetRepoIndexFileByName(fmt.Sprintf("%v.%v", i.Type, i.Name))
+		index := common.GetRepoIndexFileByName(i.Name)
 		if !file.CheckFileExists(index) {
 			o.Log.Debugf("not found %n index", i.Name)
 			continue

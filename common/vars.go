@@ -18,12 +18,12 @@ const (
 )
 
 const (
-	PluginRepoRemoteMode = "remote"
-	PluginRepoLocalMode  = "local"
-	PluginGithubJiasu    = "https://ghproxy.hk1.godu.dev"
-	PluginRepoType       = "plugin"
-	ServiceRepoType      = "service"
-	ServiceRunType       = "compose"
+	RepoRemoteMode    = "remote"
+	RepoLocalMode     = "local"
+	PluginGithubJiasu = "https://ghproxy.hk1.godu.dev"
+	PluginRepoType    = "plugin"
+	ServiceRepoType   = "service"
+	ServiceRunType    = "compose"
 )
 
 const (
@@ -50,4 +50,8 @@ const (
 var (
 	ValidPrefixes = []string{"ergo", "kubectl", "docker"}
 	ListOutput    string
+)
+
+const (
+	ErgoOwner = "ysicing"
 )

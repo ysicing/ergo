@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ergoapi/util/zos"
+
 	"github.com/ysicing/ergo/pkg/downloader"
 
 	"github.com/ergoapi/log"
@@ -26,7 +28,6 @@ type AddOption struct {
 	Log     log.Logger
 	Name    string
 	URL     string
-	Type    string
 	RepoCfg string
 }
 
@@ -43,7 +44,7 @@ func (o *AddOption) Run() error {
 	if len(repoFileExt) > 0 && len(repoFileExt) < len(o.RepoCfg) {
 		lockPath = strings.Replace(o.RepoCfg, repoFileExt, ".lock", 1)
 	} else {
-		lockPath = o.RepoCfg + o.Type + ".lock"
+		lockPath = o.RepoCfg + ".lock"
 	}
 	fileLock := flock.New(lockPath)
 	lockCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -69,14 +70,15 @@ func (o *AddOption) Run() error {
 	c := Repo{
 		Name: o.Name,
 		URL:  o.URL,
-		Type: o.Type,
 	}
 
 	if strings.HasPrefix(o.URL, "http") {
-		c.Mode = common.PluginRepoRemoteMode
+		c.Mode = common.RepoRemoteMode
 	} else {
-		c.Mode = common.PluginRepoLocalMode
+		c.Mode = common.RepoLocalMode
 	}
+
+	c.UUID = zos.GenUUID()
 
 	if f.Has(o.Name) {
 		existing := f.Get(o.Name)
@@ -119,7 +121,7 @@ func (o *DelOption) Run() error {
 		if err := r.WriteFile(o.RepoCfg, common.FileMode0600); err != nil {
 			return err
 		}
-		index := common.GetRepoIndexFileByName(fmt.Sprintf("%v.%v", repo.Type, repo.Name))
+		index := common.GetRepoIndexFileByName(repo.Name)
 		if file.CheckFileExists(index) {
 			file.RemoveFiles(index)
 			o.Log.Debugf("%q清理索引文件", name)
@@ -138,7 +140,7 @@ type UpdateOption struct {
 func (o *UpdateOption) Run() error {
 	r, err := LoadFile(o.RepoCfg)
 	if err != nil || len(r.Repos) == 0 {
-		return fmt.Errorf("no plugin or service repo configured")
+		return fmt.Errorf("no repo configured")
 	}
 
 	updateall := len(o.Names) == 0
@@ -152,15 +154,15 @@ func (o *UpdateOption) Run() error {
 	for _, name := range o.Names {
 		repo := r.Get(name)
 		if repo == nil {
-			o.Log.Warnf("不存在 %q 插件或者服务", name)
+			o.Log.Warnf("不存在 %q", name)
 			continue
 		}
-		index := common.GetRepoIndexFileByName(fmt.Sprintf("%v.%v", repo.Type, repo.Name))
+		index := common.GetRepoIndexFileByName(repo.Name)
 		if file.CheckFileExists(index) {
 			file.RemoveFiles(index)
 		}
 		// TODO 不单独判断,通过downloader判断
-		if repo.Mode != common.PluginRepoLocalMode && strings.HasPrefix(repo.URL, "http") {
+		if repo.Mode != common.RepoLocalMode && strings.HasPrefix(repo.URL, "http") {
 			_, err := url.Parse(repo.URL)
 			if err != nil {
 				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
@@ -169,21 +171,24 @@ func (o *UpdateOption) Run() error {
 			_, err = downloader.Download(repo.URL, index)
 			if err != nil {
 				o.Log.Debugf("%q 更新索引失败: %v", name, err)
+				continue
 			} else {
 				o.Log.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		} else {
 			if !file.CheckFileExists(repo.URL) {
-				o.Log.Warnf("%v invalid local repo file: %s", repo.Name, repo.URL)
+				o.Log.Warnf("%v invalid local file: %s", repo.Name, repo.URL)
 				continue
 			}
 			file.RemoveFiles(index)
 			if err := downloader.CopyLocal(index, repo.URL); err != nil {
 				o.Log.Debugf("%q 更新索引失败: %v", name, err)
+				continue
 			} else {
 				o.Log.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		}
+		o.Log.Infof("%s 更新成功", name)
 	}
 	o.Log.Done("索引全部更新完成")
 	return nil

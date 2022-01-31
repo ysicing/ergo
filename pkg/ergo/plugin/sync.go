@@ -4,7 +4,6 @@
 package plugin
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 
@@ -46,7 +45,7 @@ func (p *ListRemoteOptions) Run() {
 	}
 	var res []*Plugin
 	for _, i := range r.Repos {
-		index := common.GetRepoIndexFileByName(fmt.Sprintf("%v.%v", i.Type, i.Name))
+		index := common.GetRepoIndexFileByName(i.Name)
 		if !file.CheckFileExists(index) {
 			p.Log.Debugf("not found %n index", i.Name)
 			continue

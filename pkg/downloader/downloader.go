@@ -52,7 +52,7 @@ func Download(remote, local string) (*Result, error) {
 		}
 	}
 	localPathDir := filepath.Dir(localPath)
-	if err := os.MkdirAll(localPathDir, 0755); err != nil {
+	if err := os.MkdirAll(localPathDir, common.FileMode0755); err != nil {
 		return nil, err
 	}
 	if validation.IsLocal(remote) {

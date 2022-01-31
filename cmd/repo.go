@@ -12,12 +12,10 @@ import (
 
 func newRepoCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "repo [flags]",
-		Aliases: []string{"r"},
-		Short:   "管理plugins & services repos",
+		Use:   "repo [flags]",
+		Short: "add, list, remove, update, and init add-one repositories",
 	}
-	cmd.AddCommand(repo.AddServiceRepo(f))
-	cmd.AddCommand(repo.AddPluginRepo(f))
+	cmd.AddCommand(repo.AddCmd(f))
 	cmd.AddCommand(repo.ListCmd(f))
 	cmd.AddCommand(repo.DelCmd(f))
 	cmd.AddCommand(repo.UpdateCmd(f))

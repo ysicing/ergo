@@ -115,5 +115,5 @@ type Repo struct {
 	Name string `yaml:"name" json:"name"`
 	URL  string `yaml:"url" json:"url"`
 	Mode string `yaml:"mode,omitempty" json:"mode,omitempty"` // 默认remote, 支持local
-	Type string `yaml:"type,omitempty" json:"type,omitempty"` // 默认plugin, 支持service
+	UUID string `yaml:"uuid" json:"uuid"`
 }
