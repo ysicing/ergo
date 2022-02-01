@@ -4,7 +4,9 @@
 package addons
 
 import (
+	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
@@ -14,15 +16,26 @@ import (
 )
 
 func Install(f factory.Factory) *cobra.Command {
-	o := &plugin.ListRemoteOptions{
-		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultRepoCfg(),
+	o := &addons.InstallOption{
+		Log: f.GetLog(),
 	}
 	cmd := &cobra.Command{
-		Use:   "install [flags]",
+		Use:   "install [repo] [name] [flags]",
 		Short: "install add-ons",
-		Run: func(cmd *cobra.Command, args []string) {
-			o.Run()
+		Args:  cobra.RangeArgs(1, 2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 1 {
+				iargs := strings.Split(args[0], "/")
+				if len(iargs) != 2 {
+					return fmt.Errorf("ergo addons install [repo/name] or [repo] [name]")
+				}
+				o.Repo = iargs[0]
+				o.Name = iargs[1]
+			} else {
+				o.Repo = args[0]
+				o.Name = args[1]
+			}
+			return o.Run()
 		},
 	}
 	return cmd

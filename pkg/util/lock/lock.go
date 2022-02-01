@@ -21,7 +21,6 @@ type File struct {
 
 type Installed struct {
 	Name    string    `yaml:"name" json:"name"`
-	Mode    string    `yaml:"mode" json:"mode"`
 	Repo    string    `yaml:"repo" json:"repo"`
 	Type    string    `yaml:"type" json:"type"`
 	Time    time.Time `yaml:"time" json:"time"`

@@ -87,7 +87,6 @@ func (o *Option) Install() error {
 		Type:    pn.Type,
 		Time:    time.Now(),
 		Version: pn.Version,
-		Mode:    common.ServiceRepoType,
 	})
 	l.WriteFile(common.GetLockfile())
 	return nil

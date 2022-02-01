@@ -10,6 +10,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/containerd/continuity v0.2.2
+	github.com/davecgh/go-spew v1.1.1
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
 	github.com/ergoapi/exgin v1.0.5
 	github.com/ergoapi/log v0.0.2

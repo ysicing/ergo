@@ -53,5 +53,13 @@ var (
 )
 
 const (
-	ErgoOwner = "ysicing"
+	ErgoOwner  = "ysicing"
+	PluginKind = "Plugin"
+)
+
+var (
+	PluginRunTypeCurl    = "curl"
+	PluginRunTypeShell   = "shell"
+	PluginRunTypeCompose = "compose"
+	PluginRunTypeKube    = "kube"
 )

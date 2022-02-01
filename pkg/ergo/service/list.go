@@ -19,11 +19,12 @@ var (
 func (o *Option) List() error {
 	l, _ := lock.LoadFile(common.GetLockfile())
 	var svcs []*lock.Installed
-	for _, i := range l.Installeds {
-		if i.Mode == common.ServiceRepoType {
-			svcs = append(svcs, i)
-		}
-	}
+	//for _, i := range l.Installeds {
+	// if i.Mode == common.ServiceRepoType {
+	//	svcs = append(svcs, i)
+	//}
+	//}
+	svcs = append(svcs, l.Installeds...)
 	if len(svcs) == 0 {
 		o.Log.Warnf("未安装相关服务")
 		return nil

@@ -131,7 +131,7 @@ func (r *InstallOption) Run() error {
 		Type:    common.PluginRepoType,
 		Time:    time.Now(),
 		Version: pn.Version,
-		Mode:    pn.Bin,
+		// Mode:    pn.Bin,
 	})
 	l.WriteFile(common.GetLockfile())
 	return nil
