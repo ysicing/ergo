@@ -3,7 +3,7 @@
 install add-ons
 
 ```
-ergo addons install [flags]
+ergo addons install [repo] [name] [flags]
 ```
 
 ### Options
