@@ -19,7 +19,6 @@ A simple command line client for devops
 
 * [ergo addons](ergo_addons.md)	 - Ergo add-ons are components, services, or pieces of infrastructure that are fully maintained for you, either by a third-party provider or by Ergo
 * [ergo cloud](ergo_cloud.md)	 - cloud tools
-* [ergo d](ergo_d.md)	 - deprecated cmd
 * [ergo debian](ergo_debian.md)	 - 初始化debian, 升级debian内核
 * [ergo experimental](ergo_experimental.md)	 - Experimental commands that may be modified or deprecated
 * [ergo ext](ergo_ext.md)	 - ext tools
