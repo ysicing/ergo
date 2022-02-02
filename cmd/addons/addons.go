@@ -42,15 +42,25 @@ func Install(f factory.Factory) *cobra.Command {
 }
 
 func UnInstall(f factory.Factory) *cobra.Command {
-	o := &plugin.ListRemoteOptions{
-		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultRepoCfg(),
+	o := &addons.UnInstallOption{
+		Log: f.GetLog(),
 	}
 	cmd := &cobra.Command{
-		Use:   "uninstall [flags]",
+		Use:   "uninstall [repo] [name] [flags]",
 		Short: "uninstall add-ons",
-		Run: func(cmd *cobra.Command, args []string) {
-			o.Run()
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 1 {
+				iargs := strings.Split(args[0], "/")
+				if len(iargs) != 2 {
+					return fmt.Errorf("ergo addons uninstall [repo/name] or [repo] [name]")
+				}
+				o.Repo = iargs[0]
+				o.Name = iargs[1]
+			} else {
+				o.Repo = args[0]
+				o.Name = args[1]
+			}
+			return o.Run()
 		},
 	}
 	return cmd

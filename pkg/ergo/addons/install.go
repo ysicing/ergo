@@ -89,7 +89,7 @@ func (o *InstallOption) shell(p Spec) error {
 func (o *InstallOption) curl(p Spec) error {
 	temp, _ := ioutil.TempFile(common.GetDefaultCacheDir(), "ergo-curl-")
 	o.Log.Debugf("temp path: %v", temp.Name())
-	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.ShellURL), temp.Name())
+	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.URL), temp.Name())
 	if err != nil {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
@@ -103,8 +103,10 @@ func (o *InstallOption) curl(p Spec) error {
 func (o *InstallOption) compose(p Spec) error {
 	temp, _ := ioutil.TempFile(os.TempDir(), "ergo-compose-")
 	o.Log.Debugf("temp path: %v", temp.Name())
-	// defer os.Remove(tmpfile.Name())
-	temp.WriteString(p.Compose)
+	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.URL), temp.Name())
+	if err != nil {
+		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
+	}
 	if err := ssh.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {
 		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
 		return err

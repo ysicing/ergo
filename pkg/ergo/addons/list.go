@@ -32,9 +32,9 @@ func (o *ListOption) Run() {
 	}
 
 	table := uitable.New()
-	table.AddRow("repo", "name", "version", "homepage", "desc", "url")
+	table.AddRow("repo", "name", "version")
 	for _, re := range r.Installeds {
-		table.AddRow(re.Repo, re.Name, re.Version, "", "", "")
+		table.AddRow(re.Repo, re.Name, re.Version)
 	}
 	output.EncodeTable(os.Stdout, table)
 }

@@ -33,7 +33,7 @@ type Spec struct {
 	Version     string       `json:"version,omitempty" yaml:"version,omitempty"`
 	Type        string       `json:"type,omitempty" yaml:"type,omitempty"`
 	Shell       string       `json:"shell,omitempty" yaml:"shell,omitempty"`
-	ShellURL    string       `json:"url,omitempty" yaml:"url,omitempty"`
+	URL         string       `json:"url,omitempty" yaml:"url,omitempty"`
 	Compose     string       `json:"compose,omitempty" yaml:"compose,omitempty"`
 	Kube        string       `json:"kube,omitempty" yaml:"kube,omitempty"`
 	Platforms   string       `json:"platforms,omitempty" yaml:"platforms,omitempty"`
