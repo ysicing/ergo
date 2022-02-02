@@ -10,7 +10,6 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/containerd/continuity v0.2.2
-	github.com/davecgh/go-spew v1.1.1
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
 	github.com/ergoapi/exgin v1.0.5
 	github.com/ergoapi/log v0.0.2
@@ -20,7 +19,6 @@ require (
 	github.com/go-logr/logr v1.2.2 // indirect
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
 	github.com/gofrs/flock v0.8.1
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
 	github.com/gopasspw/gopass v1.13.1
 	github.com/gosuri/uitable v0.0.4
@@ -37,7 +35,7 @@ require (
 	github.com/pkg/sftp v1.13.4
 	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/shirou/gopsutil/v3 v3.21.12
+	github.com/shirou/gopsutil/v3 v3.22.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
