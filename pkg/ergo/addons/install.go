@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/ysicing/ergo/pkg/downloader"
@@ -60,6 +61,10 @@ func (o *InstallOption) Run() error {
 		if err := o.curl(p.Spec); err != nil {
 			return err
 		}
+	case common.PluginRunTypeBin:
+		if err := o.bin(p.Spec); err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("不支持的类型")
 	}
@@ -101,17 +106,13 @@ func (o *InstallOption) curl(p Spec) error {
 }
 
 func (o *InstallOption) compose(p Spec) error {
-	temp, _ := ioutil.TempFile(os.TempDir(), "ergo-compose-")
-	o.Log.Debugf("temp path: %v", temp.Name())
-	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.URL), temp.Name())
+	pf := fmt.Sprintf("%s/.%s.%s.docker.compose.yaml", common.GetDefaultCfgDir(), o.Name, o.Repo)
+	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.URL), pf)
 	if err != nil {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
-	if err := ssh.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {
-		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
-		return err
-	}
-	return nil
+	compose := "docker-compose -f " + pf + " up"
+	return ssh.RunCmd("/bin/bash", compose)
 }
 
 func (o *InstallOption) kube(p Spec) error {
@@ -123,4 +124,26 @@ func (o *InstallOption) kube(p Spec) error {
 		return err
 	}
 	return nil
+}
+
+func (o *InstallOption) bin(p Spec) error {
+	binos := runtime.GOOS
+	binarch := runtime.GOARCH
+	url := ""
+	for _, x := range p.Platforms {
+		if x.OS == binos && x.Arch == binarch {
+			url = x.URL
+		}
+	}
+	if url == "" {
+		o.Log.Warnf("不支持当前操作系统: %s-%s", binos, binarch)
+		return nil
+	}
+	binx := fmt.Sprintf("%s/ergo-%s", common.GetDefaultBinDir(), p.Bin)
+	_, err := downloader.Download(url, binx)
+	if err != nil {
+		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
+	}
+	os.Chmod(binx, common.FileMode0755)
+	return ssh.RunCmd(os.Args[0], p.Bin)
 }

@@ -36,12 +36,14 @@ type Spec struct {
 	URL         string       `json:"url,omitempty" yaml:"url,omitempty"`
 	Compose     string       `json:"compose,omitempty" yaml:"compose,omitempty"`
 	Kube        string       `json:"kube,omitempty" yaml:"kube,omitempty"`
-	Platforms   string       `json:"platforms,omitempty" yaml:"platforms,omitempty"`
+	Bin         string       `json:"bin,omitempty" yaml:"bin,omitempty"`
+	Platforms   []Platforms  `json:"platforms,omitempty" yaml:"platforms,omitempty"`
 }
 
 type Platforms struct {
 	OS   string `json:"os" yaml:"os"`
 	Arch string `json:"arch" yaml:"arch"`
+	URL  string `json:"url" yaml:"url"`
 }
 
 type PluginList struct {

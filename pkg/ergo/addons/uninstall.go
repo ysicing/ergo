@@ -44,6 +44,10 @@ func (o *UnInstallOption) Run() error {
 		if err := o.compose(); err != nil {
 			return err
 		}
+	case common.PluginRunTypeBin:
+		if err := o.bin(); err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("no support uninstall %s", check.Type)
 	}
@@ -61,5 +65,9 @@ func (o *UnInstallOption) compose() error {
 }
 
 func (o *UnInstallOption) kube() error {
+	return nil
+}
+
+func (o *UnInstallOption) bin() error {
 	return nil
 }

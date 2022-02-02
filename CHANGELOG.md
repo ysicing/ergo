@@ -2,7 +2,8 @@
 
 = v3.0.0
   - 优化代码结构
-  - `service` 和 `plugin` 移到 `deprecated` 废弃
+  - `service` 和 `plugin`废弃
+  - 新增 `addons`
 
   - v2.9.0
     - `k3s getbin` 新增下载k3s二进制

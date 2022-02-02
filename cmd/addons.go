@@ -19,6 +19,5 @@ func newAddOnsCmd(f factory.Factory) *cobra.Command {
 	cmd.AddCommand(addons.List(f))
 	cmd.AddCommand(addons.Install(f))
 	cmd.AddCommand(addons.UnInstall(f))
-	cmd.AddCommand(addons.Upgrade(f))
 	return cmd
 }

@@ -15,7 +15,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
@@ -67,12 +66,11 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newExperimentalCmd(f))
 	rootCmd.AddCommand(newKubeCmd(f))
 	rootCmd.AddCommand(newDebugCmd())
-	rootCmd.AddCommand(newDeprecatedCmd(f))
 	// Add plugin commands
 
 	args := os.Args
 	if len(args) > 1 {
-		pluginHandler := NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
+		pluginHandler := NewDefaultPluginHandler(common.ValidPrefixes)
 		cmdPathPieces := args[1:]
 		if _, _, err := rootCmd.Find(cmdPathPieces); err != nil {
 			var cmdName string // first "non-flag" arguments

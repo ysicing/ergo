@@ -62,4 +62,5 @@ var (
 	PluginRunTypeShell   = "shell"
 	PluginRunTypeCompose = "compose"
 	PluginRunTypeKube    = "kube"
+	PluginRunTypeBin     = "bin"
 )

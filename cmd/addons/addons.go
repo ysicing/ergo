@@ -9,9 +9,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/addons"
-	"github.com/ysicing/ergo/pkg/ergo/plugin"
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
@@ -61,21 +59,6 @@ func UnInstall(f factory.Factory) *cobra.Command {
 				o.Name = args[1]
 			}
 			return o.Run()
-		},
-	}
-	return cmd
-}
-
-func Upgrade(f factory.Factory) *cobra.Command {
-	o := &plugin.ListRemoteOptions{
-		Log:     f.GetLog(),
-		RepoCfg: common.GetDefaultRepoCfg(),
-	}
-	cmd := &cobra.Command{
-		Use:   "upgrade [flags]",
-		Short: "upgrade add-ons",
-		Run: func(cmd *cobra.Command, args []string) {
-			o.Run()
 		},
 	}
 	return cmd
