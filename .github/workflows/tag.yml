@@ -42,7 +42,7 @@ jobs:
           sha256sum ergo_linux_arm64 > ergo_linux_arm64.sha256sum
           popd
           ./gen.sh
-          make release
+          cat version.txt | grep -E '(beta|rc)' && (pre-release) || (make release)
           make deb
         env:
           GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}

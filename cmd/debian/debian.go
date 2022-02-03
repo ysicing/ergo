@@ -22,15 +22,19 @@ type Option struct {
 	IPs    []string
 }
 
+func (cmd *Option) prepare() {
+	if len(cmd.IPs) == 0 {
+		cmd.Local = true
+	}
+}
+
 func (cmd *Option) Init(f factory.Factory) error {
-	// cmd.log = f.GetLog()
+	cmd.prepare()
 	cmd.SSHCfg.Log = f.GetLog()
-	if cmd.Local || len(cmd.IPs) == 0 {
+	if cmd.Local {
 		debian.RunLocalShell("init", cmd.SSHCfg.Log)
 		return nil
 	}
-
-	cmd.SSHCfg.Log.Debugf("ssh: %v, ips: %v", cmd.SSHCfg, cmd.IPs)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		wg.Add(1)
@@ -41,13 +45,13 @@ func (cmd *Option) Init(f factory.Factory) error {
 }
 
 func (cmd *Option) UpCore(f factory.Factory) error {
+	cmd.prepare()
 	cmd.SSHCfg.Log = f.GetLog()
 	// 本地
-	if cmd.Local || len(cmd.IPs) == 0 {
+	if cmd.Local {
 		debian.RunLocalShell("upcore", cmd.SSHCfg.Log)
 		return nil
 	}
-	cmd.SSHCfg.Log.Debugf("ssh: %v, ips: %v", cmd.SSHCfg, cmd.IPs)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		wg.Add(1)
@@ -58,16 +62,16 @@ func (cmd *Option) UpCore(f factory.Factory) error {
 }
 
 func (cmd *Option) Apt(f factory.Factory) error {
+	cmd.prepare()
 	cmd.SSHCfg.Log = f.GetLog()
 	// 本地
-	if cmd.Local || len(cmd.IPs) == 0 {
+	if cmd.Local {
 		if file.CheckFileExists("/etc/apt/sources.list") {
 			debian.RunLocalShell("apt", cmd.SSHCfg.Log)
 			return nil
 		}
 		return fmt.Errorf("仅支持Debian系")
 	}
-	cmd.SSHCfg.Log.Debugf("ssh: %v, ips: %v", cmd.SSHCfg, cmd.IPs)
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		wg.Add(1)
