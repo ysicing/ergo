@@ -13,7 +13,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
 	github.com/ergoapi/exgin v1.0.5
 	github.com/ergoapi/log v0.0.2
-	github.com/ergoapi/util v0.1.9
+	github.com/ergoapi/util v0.2.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-logr/logr v1.2.2 // indirect
