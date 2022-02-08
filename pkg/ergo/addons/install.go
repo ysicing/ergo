@@ -112,7 +112,7 @@ func (o *InstallOption) compose(p Spec) error {
 	if err != nil {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
-	compose := "docker-compose -f " + pf + " up"
+	compose := "docker-compose -f " + pf + " up -d"
 	return ssh.RunCmd("/bin/bash", "-c", compose)
 }
 
