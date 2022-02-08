@@ -26,7 +26,7 @@ linters:
     - dogsled
     - gofmt
     - goimports
-    - gosec
+    # - gosec
     - misspell
     - nakedret
     - stylecheck

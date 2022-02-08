@@ -13,6 +13,7 @@ import (
 	"github.com/ergoapi/util/environ"
 
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/exid"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/ergoapi/util/ztime"
@@ -131,7 +132,7 @@ func (code CodeGen) GenCrds() error {
 	}
 	c.Name, _ = namept.Run()
 	if len(c.Name) == 0 {
-		c.Name = zos.GenUUID()
+		c.Name = exid.GenUUID()
 	}
 	gopath := environ.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
 	code.Log.Debugf("GoPath: %v", gopath)

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ergoapi/util/zos"
+	"github.com/ergoapi/util/exid"
 
 	"github.com/ysicing/ergo/pkg/downloader"
 
@@ -78,7 +78,7 @@ func (o *AddOption) Run() error {
 		c.Mode = common.RepoLocalMode
 	}
 
-	c.UUID = zos.GenUUID()
+	c.UUID = exid.GenUUID()
 
 	if f.Has(o.Name) {
 		existing := f.Get(o.Name)

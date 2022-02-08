@@ -38,6 +38,7 @@ type Spec struct {
 	Kube        string       `json:"kube,omitempty" yaml:"kube,omitempty"`
 	Bin         string       `json:"bin,omitempty" yaml:"bin,omitempty"`
 	Platforms   []Platforms  `json:"platforms,omitempty" yaml:"platforms,omitempty"`
+	LinkPath    string       `json:"linkpath,omitempty" yaml:"linkpath,omitempty"`
 }
 
 type Platforms struct {

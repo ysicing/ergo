@@ -13,6 +13,7 @@ import (
 	"github.com/ysicing/ergo/pkg/downloader"
 
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/lock"
 	"github.com/ysicing/ergo/pkg/util/ssh"
@@ -84,7 +85,7 @@ func (o *InstallOption) shell(p Spec) error {
 	temp, _ := ioutil.TempFile(common.GetDefaultCacheDir(), "ergo-shell-")
 	o.Log.Debugf("temp path: %v", temp.Name())
 	temp.WriteString(p.Shell)
-	if err := ssh.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {
+	if err := ssh.RunCmd("/bin/bash", temp.Name()); err != nil {
 		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
 		return err
 	}
@@ -98,7 +99,7 @@ func (o *InstallOption) curl(p Spec) error {
 	if err != nil {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
-	if err := ssh.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {
+	if err := ssh.RunCmd("/bin/bash", temp.Name()); err != nil {
 		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
 		return err
 	}
@@ -112,7 +113,7 @@ func (o *InstallOption) compose(p Spec) error {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
 	compose := "docker-compose -f " + pf + " up"
-	return ssh.RunCmd("/bin/bash", compose)
+	return ssh.RunCmd("/bin/bash", "-c", compose)
 }
 
 func (o *InstallOption) kube(p Spec) error {
@@ -145,5 +146,8 @@ func (o *InstallOption) bin(p Spec) error {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
 	os.Chmod(binx, common.FileMode0755)
+	if len(p.LinkPath) > 0 && !file.CheckFileExists(p.LinkPath) {
+		os.Link(binx, fmt.Sprintf("/usr/local/bin/%s", p.LinkPath))
+	}
 	return ssh.RunCmd(os.Args[0], p.Bin)
 }

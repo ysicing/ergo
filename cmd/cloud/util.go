@@ -6,7 +6,7 @@ package cloud
 import (
 	"strings"
 
-	"github.com/ergoapi/util/zos"
+	"github.com/ergoapi/util/exid"
 	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/pkg/config"
 )
@@ -30,7 +30,7 @@ func addProvider() config.Provider {
 	}
 
 	cfg := config.Provider{
-		UUID:     zos.GenUUID(),
+		UUID:     exid.GenUUID(),
 		Provider: strings.Trim(provider, " "),
 		Secrets: config.Secrets{
 			AID:  strings.Trim(aid, " "),
