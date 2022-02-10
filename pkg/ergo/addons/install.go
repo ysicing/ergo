@@ -23,12 +23,13 @@ type InstallOption struct {
 	Log       log.Logger
 	Name      string
 	Repo      string
+	Force     bool
 	indexpath string
 }
 
 func (o *InstallOption) Run() error {
 	l, _ := lock.LoadFile(common.GetLockfile())
-	if l.Has(o.Name, o.Repo) {
+	if l.Has(o.Name, o.Repo) && !o.Force {
 		o.Log.Warnf("已经安装 %v, 跳过", o.Name)
 		return nil
 	}
@@ -45,29 +46,24 @@ func (o *InstallOption) Run() error {
 	}
 	o.Log.Donef("%s %s 加载完成", o.Repo, o.Name)
 	// spew.Dump(p)
+	var installerr error
 	switch p.Spec.Type {
 	case common.PluginRunTypeCompose:
-		if err := o.compose(p.Spec); err != nil {
-			return err
-		}
+		installerr = o.compose(p.Spec)
 	case common.PluginRunTypeKube:
-		if err := o.kube(p.Spec); err != nil {
-			return err
-		}
+		installerr = o.kube(p.Spec)
 	case common.PluginRunTypeShell:
-		if err := o.shell(p.Spec); err != nil {
-			return err
-		}
+		installerr = o.shell(p.Spec)
 	case common.PluginRunTypeCurl:
-		if err := o.curl(p.Spec); err != nil {
-			return err
-		}
+		installerr = o.curl(p.Spec)
 	case common.PluginRunTypeBin:
-		if err := o.bin(p.Spec); err != nil {
-			return err
-		}
+		installerr = o.bin(p.Spec)
 	default:
-		return fmt.Errorf("不支持的类型")
+		installerr = fmt.Errorf("不支持的类型")
+	}
+	if installerr != nil {
+		o.Log.Errorf("%s 安装失败", o.Name)
+		return installerr
 	}
 	o.Log.Donef("%v 已安装完成", o.Name)
 	l.Add(&lock.Installed{

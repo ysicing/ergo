@@ -36,6 +36,7 @@ func Install(f factory.Factory) *cobra.Command {
 			return o.Run()
 		},
 	}
+	cmd.PersistentFlags().BoolVarP(&o.Force, "force", "f", false, "force install")
 	return cmd
 }
 

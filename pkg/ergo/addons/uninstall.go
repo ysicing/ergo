@@ -48,6 +48,14 @@ func (o *UnInstallOption) Run() error {
 		if err := o.bin(); err != nil {
 			return err
 		}
+	case common.PluginRunTypeCurl:
+		if err := o.curl(); err != nil {
+			return err
+		}
+	case common.PluginRunTypeShell:
+		if err := o.shell(); err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("no support uninstall %s", check.Type)
 	}
@@ -69,5 +77,13 @@ func (o *UnInstallOption) kube() error {
 }
 
 func (o *UnInstallOption) bin() error {
+	return nil
+}
+
+func (o *UnInstallOption) curl() error {
+	return nil
+}
+
+func (o *UnInstallOption) shell() error {
 	return nil
 }
