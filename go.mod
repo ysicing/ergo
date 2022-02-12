@@ -3,7 +3,7 @@ module github.com/ysicing/ergo
 go 1.17
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1479
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1483
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -35,9 +35,9 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.340
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.340
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.340
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.342
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.340
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.342
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
