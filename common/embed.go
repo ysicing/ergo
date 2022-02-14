@@ -8,6 +8,10 @@ import (
 	_ "embed"
 )
 
-// DefaultTemplate default lima template
+// DefaultLinuxTemplate default lima template
 //go:embed debian.yml
-var DefaultTemplate []byte
+var DefaultLinuxTemplate []byte
+
+// DefaultDockerTemplate docker lima tpl
+//go:embed docker.yml
+var DefaultDockerTemplate []byte

@@ -33,10 +33,10 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.342
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.340
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.342
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.342
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8

@@ -177,7 +177,7 @@ func (ext *ExtOptions) limaPre(cobraCmd *cobra.Command, args []string) error {
 	if file.CheckFileExists(limacfg) {
 		// TODO 升级镜像啥的
 	} else {
-		yBytes := common.DefaultTemplate
+		yBytes := common.DefaultLinuxTemplate
 		if err := os.MkdirAll(filepath.Dir(limacfg), common.FileMode0755); err != nil {
 			return err
 		}
