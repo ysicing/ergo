@@ -10,5 +10,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: tjenkinson/gh-action-auto-merge-dependency-updates@v1
         with:
+          allowed-actors: dependabot-preview[bot], dependabot[bot]
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           merge-method: rebase
