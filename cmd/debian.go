@@ -37,6 +37,14 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 			return opt.Apt(f)
 		},
 	}
+	swap := &cobra.Command{
+		Use:     "swap",
+		Short:   "添加swap",
+		Version: "3.0.2",
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return opt.Swap(f)
+		},
+	}
 	upcore := &cobra.Command{
 		Use:     "upcore",
 		Short:   "upgrade debian linux core",
@@ -49,6 +57,7 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 	debian.AddCommand(init)
 	debian.AddCommand(upcore)
 	debian.AddCommand(apt)
+	debian.AddCommand(swap)
 	debian.PersistentFlags().StringVar(&opt.SSHCfg.User, "user", "root", "用户")
 	debian.PersistentFlags().StringVar(&opt.SSHCfg.Pass, "pass", "", "密码")
 	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkFile, "pk", "", "私钥")

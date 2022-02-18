@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v3.0.3
+  - debian添加swap
+
 - v3.0.2
   - 优化debian init
 

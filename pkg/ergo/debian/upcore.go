@@ -107,6 +107,8 @@ func RunLocalShell(runtype string, log log.Logger) {
 		shelldata = UpgradeCore
 	case "apt":
 		shelldata = AddDebSource
+	case "swap":
+		shelldata = AddSwap
 	default:
 		shelldata = "uname -a"
 	}

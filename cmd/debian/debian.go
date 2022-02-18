@@ -80,3 +80,23 @@ func (cmd *Option) Apt(f factory.Factory) error {
 	wg.Wait()
 	return nil
 }
+
+func (cmd *Option) Swap(f factory.Factory) error {
+	cmd.prepare()
+	cmd.SSHCfg.Log = f.GetLog()
+	// 本地
+	if cmd.Local {
+		if file.CheckFileExists("/etc/apt/sources.list") {
+			debian.RunLocalShell("swap", cmd.SSHCfg.Log)
+			return nil
+		}
+		return fmt.Errorf("仅支持Debian系")
+	}
+	var wg sync.WaitGroup
+	for _, ip := range cmd.IPs {
+		wg.Add(1)
+		go debian.RunAddDebSwap(cmd.SSHCfg, ip, &wg)
+	}
+	wg.Wait()
+	return nil
+}
