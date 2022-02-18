@@ -32,9 +32,9 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.348
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.349
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.348
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.349
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.348
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.342
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.342

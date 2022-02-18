@@ -1140,12 +1140,13 @@ github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635/go.mod h1:hkRG
 github.com/tchap/go-patricia v2.2.6+incompatible/go.mod h1:bmLyhP68RS6kStMGxByiQ23RP/odRBOTVjwp2cDyi6I=
 github.com/tcnksm/go-gitconfig v0.1.2 h1:iiDhRitByXAEyjgBqsKi9QU4o2TNtv9kPP3RgPgXBPw=
 github.com/tcnksm/go-gitconfig v0.1.2/go.mod h1:/8EhP4H7oJZdIPyT+/UIsG87kTzrzM4UsLGSItWYCpE=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.348 h1:7QQjMMhCMnUU2mgfgAubF6btnXCvS1ZyRHaYkJ/FETw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.348/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.349 h1:gxYMgu7WnSqWmxi1VBcQMTnsEv1pT/fARuBlxe4cpMw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.349/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.348 h1:+iPOBBKTdd+EZS1AaVWR1ppPaCC/Z8oyNFUvVCzVCic=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.348/go.mod h1:R5MT1k5xsQSdw4JyFcqhTK2A3t+cpcNbpTynH7sHY2A=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.342 h1:KPFIZHUqrfWRHCmP1DMbE1r0oOEUjtItUtm+Tws1YbQ=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.342/go.mod h1:CuOaLxOQr477GhMWAQPYQFUJrsZbW+ZqkAgP2uHDZXg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.349 h1:mtXu5v3ZGTqPvk6BVadNU4n2oXQwUuQFX/gVMVFQaS4=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.349/go.mod h1:Z932V7aHOzJ9rFfuR7Lr+bcqbx5Y7SXe3OrBfnhTEdk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.348 h1:6udyuTlyiyJ6gzGDZPMPJICm/O5nRVtltyNEahAEUxc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.348/go.mod h1:uOmGcInPfPjsqlH1XoImJF1KAjNSr3VP/PJthWerPGA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.342 h1:S8cAktkSBdpdXzPRnt91XgGg/A81Y75pgxCiZrtTk6M=
