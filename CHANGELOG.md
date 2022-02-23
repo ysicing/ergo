@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v3.1.0
+  - 添加mysql client
+
 - v3.0.3
   - debian添加swap
 

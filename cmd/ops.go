@@ -23,5 +23,6 @@ func newOPCmd() *cobra.Command {
 	ops.AddCommand(op.ExecCmd())
 	ops.AddCommand(op.PingCmd())
 	ops.AddCommand(op.WgetCmd())
+	ops.AddCommand(op.MysqlCmd())
 	return ops
 }
