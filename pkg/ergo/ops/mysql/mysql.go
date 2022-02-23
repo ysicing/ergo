@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ergoapi/log"
+
 	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -64,29 +65,39 @@ func (db *DB) Create(dbname, dbuser, dbpass string) error {
 }
 
 func (db *DB) Exec(sql string) error {
-	_, err := db.client.Exec(sql)
-	return err
+	res, err := db.client.Exec(sql)
+	if err != nil {
+		return err
+	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	db.zlog.Debugf("exec sql: %s, affected: %v", sql, affected)
+	return nil
 }
 
 func (db *DB) Drop(dbname, dbuser string) error {
-	// 移除权限
-	revokeCmd := fmt.Sprintf("REVOKE ALL ON %s.* FROM '%s'@'%%';", dbname, dbuser)
-	_, err := db.client.Exec(revokeCmd)
-	if err != nil {
-		db.zlog.Warnf("revoke user %v err: %v, sql: %v", dbuser, err, revokeCmd)
+	if len(dbuser) != 0 {
+		// 移除权限
+		revokeCmd := fmt.Sprintf("REVOKE ALL ON %s.* FROM '%s'@'%%';", dbname, dbuser)
+		_, err := db.client.Exec(revokeCmd)
+		if err != nil {
+			db.zlog.Warnf("revoke user %v err: %v, sql: %v", dbuser, err, revokeCmd)
+		}
+		db.zlog.Debugf("revoke user %v", dbuser)
+		// 删除用户
+		dropUserCmd := fmt.Sprintf("DROP USER IF EXISTS \"%v\";", dbuser)
+		_, err = db.client.Exec(dropUserCmd)
+		if err != nil {
+			db.zlog.Errorf("delete user %v err: %v, sql: %v", dbuser, err, dropUserCmd)
+			return err
+		}
+		db.zlog.Debugf("delete user %v", dbuser)
 	}
-	db.zlog.Debugf("revoke user %v", dbuser)
-	// 删除用户
-	dropUserCmd := fmt.Sprintf("DROP USER IF EXISTS \"%v\";", dbuser)
-	_, err = db.client.Exec(dropUserCmd)
-	if err != nil {
-		db.zlog.Errorf("delete user %v err: %v, sql: %v", dbuser, err, dropUserCmd)
-		return err
-	}
-	db.zlog.Debugf("delete user %v", dbuser)
 	// 删除数据库
 	dropDBCmd := fmt.Sprintf("DROP DATABASE IF EXISTS %v;", dbname)
-	_, err = db.client.Exec(dropDBCmd)
+	_, err := db.client.Exec(dropDBCmd)
 	if err != nil {
 		db.zlog.Errorf("delete db %v err: %v, sql: %v", dbname, err, dropDBCmd)
 		return err
@@ -110,7 +121,7 @@ type DBCfg struct {
 }
 
 func (db *DB) Show() ([]DBCfg, error) {
-	res, err := db.client.Query("SELECT schema_name as `database` FROM information_schema.schemata where schema_name like 'gitea_%%' ;")
+	res, err := db.client.Query("SELECT schema_name as `database` FROM information_schema.schemata;")
 	if err != nil {
 		db.zlog.Errorf("query db err: %v", err)
 		return nil, err
