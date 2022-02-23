@@ -1,16 +1,21 @@
-## ergo op ping
+## ergo op mysql
 
 ping
 
 ```
-ergo op ping [flags]
+ergo op mysql [flags]
 ```
 
 ### Options
 
 ```
-      --c int   ping count (default 4)
-  -h, --help    help for ping
+      --dsn string    mysql dsn, $MYSQL_DSN
+  -h, --help          help for mysql
+      --host string   mysql host $MYSQL_HOST (default "127.0.0.1")
+      --name string   mysql name $MYSQL_NAME
+      --pass string   mysql pass $MYSQL_PASS
+      --port int      mysql port $MYSQL_PORT (default 3306)
+      --user string   mysql user $MYSQL_USER (default "root")
 ```
 
 ### Options inherited from parent commands
