@@ -82,7 +82,7 @@ func MysqlCmd() *cobra.Command {
 					zlog.Errorf("create new db err: %v", err)
 					return
 				}
-				zlog.Infof("create new db [user: %s,pass: %s,name: %s] done")
+				zlog.Infof("create new db [user: %s,pass: %s,name: %s] done", user, pass, name)
 			case "drop":
 				name := ""
 				user := ""

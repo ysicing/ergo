@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v3.1.1
+  - 修复了一些错误
+
 - v3.1.0
   - 添加mysql client
 
