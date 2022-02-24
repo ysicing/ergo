@@ -35,6 +35,7 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    # - gofumpt
 #  disable:
 #    - errcheck
 issues:

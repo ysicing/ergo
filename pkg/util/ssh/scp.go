@@ -21,8 +21,7 @@ import (
 
 // CopyForMD5 is
 func (ss *SSH) CopyForMD5(host, localFilePath, remoteFilePath, md5 string) bool {
-	//如果有md5则可以验证
-	//如果没有md5则拿到本地数据后验证
+	//有md5则可以验证, 如果没有md5则拿到本地数据后验证
 	if md5 == "" {
 		md5 = Md5FromLocal(localFilePath)
 	}
