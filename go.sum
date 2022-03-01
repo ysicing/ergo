@@ -1142,13 +1142,13 @@ github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635/go.mod h1:hkRG
 github.com/tchap/go-patricia v2.2.6+incompatible/go.mod h1:bmLyhP68RS6kStMGxByiQ23RP/odRBOTVjwp2cDyi6I=
 github.com/tcnksm/go-gitconfig v0.1.2 h1:iiDhRitByXAEyjgBqsKi9QU4o2TNtv9kPP3RgPgXBPw=
 github.com/tcnksm/go-gitconfig v0.1.2/go.mod h1:/8EhP4H7oJZdIPyT+/UIsG87kTzrzM4UsLGSItWYCpE=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.353/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.355 h1:OjEmbOvY5LlL9SLaomD16+JoWZ2T3tfjKS42COl9ANY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.355/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.357 h1:uaMtRfV/OYPolAldcOuChMPAnmYnG+CONdDAFcaOQGU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.357/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.355 h1:aPrrLPbg5ItpdDBudeDk1rBiHg7/kbYvsAwnsvAA6gk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.355/go.mod h1:gtyedp4/vys3X8kgajZm8v9HjxbRuzc30gySJlGbTkE=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.355 h1:LqvxV0MW+CH50DC9UEkFD/wNGWEAqGbUo6YGi7CyeAo=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.355/go.mod h1:FFz2t5Q2AnkDzIpeFZqmUL8FOuODYbupMpYfMmhly5o=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.357 h1:7hy0P/0Nup3F9HIgqZnoXnLzxOCFvU0bZXIYGCdygoA=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.357/go.mod h1:WVilRYHFBfqJopuJH1QeJinq8IsSHLZkBQGYbskQL5w=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.355 h1:0ZLFWbHwOH9uYF4GoF8zLblm0tOmVKMpzpz3e8NPZdM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.355/go.mod h1:k93aCn2Yn9moRnsb60WhFN6rTjCqa0fsMHvZqANHr2Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.355 h1:k/d0GmKWD1VISBSuw5FqKXLC5Wx7/Josan5WuP7Q03U=
