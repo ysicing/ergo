@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v3.1.2
+  - 更新lima-docker debian版本
+
 - v3.1.1
   - 修复了一些错误
 

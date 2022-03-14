@@ -3,7 +3,7 @@ module github.com/ysicing/ergo
 go 1.17
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1509
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1515
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -31,20 +31,20 @@ require (
 	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/shirou/gopsutil/v3 v3.22.2
 	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.360
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.360
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.360
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.360
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.360
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.360
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.364
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.364
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.364
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.364
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.364
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.364
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
-	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
+	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
+	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gotest.tools v2.2.0+incompatible
-	helm.sh/helm/v3 v3.8.0
+	helm.sh/helm/v3 v3.8.1
 	k8s.io/apimachinery v0.23.4
 	k8s.io/client-go v0.23.4
 	k8s.io/kubectl v0.23.4
@@ -129,7 +129,7 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.20.0 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect

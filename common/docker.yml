@@ -1,12 +1,12 @@
 arch: "x86_64"
 images:
-  - location: "~/hack/iso/debian-11-generic-amd64-20220121-894.qcow2"
+  - location: "~/.ergo/data/iso/debian-11-generic-amd64-20220310-944.qcow2"
     arch: "x86_64"
-  - location: "https://cloud.debian.org/images/cloud/bullseye/20220121-894/debian-11-generic-amd64-20220121-894.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/bullseye/20220310-944/debian-11-generic-amd64-20220310-944.qcow2"
     arch: "x86_64"
-  # - location: "~/hack/iso/debian-11-generic-arm64-20220121-894.qcow2"
+  # - location: "~/hack/iso/debian-11-generic-arm64-20220310-944.qcow2"
   #   arch: "aarch64"
-  # - location: "https://cloud.debian.org/images/cloud/bullseye/20220121-894/debian-11-generic-arm64-20220121-894.qcow2"
+  # - location: "https://cloud.debian.org/images/cloud/bullseye/20220310-944/debian-11-generic-arm64-20220310-944.qcow2"
   #   arch: "aarch64"
 cpus: 2
 memory: "4GiB"
@@ -62,6 +62,9 @@ probes:
         exit 1
       fi
     hint: See "/var/log/cloud-init-output.log". in the guest
+hostResolver:
+  hosts:
+    host.docker.internal: host.lima.internal
 portForwards:
 - guestSocket: "/run/user/{{.UID}}/docker.sock"
   hostSocket: "{{.Dir}}/sock/docker.sock"
