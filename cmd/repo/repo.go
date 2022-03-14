@@ -113,11 +113,11 @@ func InitCmd(f factory.Factory) *cobra.Command {
 		Short: "add default repo",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			cmdArgs := os.Args
-			if err := ssh.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, "https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml"); err != nil {
+			if err := ssh.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, common.DefaultRepoURL); err != nil {
 				log.Debugf("添加默认库失败: %v", err)
 				return fmt.Errorf("添加默认库失败")
 			}
-			return nil
+			return ssh.RunCmd(cmdArgs[0], "repo", "update")
 		},
 	}
 	return cmd

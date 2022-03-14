@@ -64,3 +64,7 @@ var (
 	PluginRunTypeKube    = "kube"
 	PluginRunTypeBin     = "bin"
 )
+
+const (
+	DefaultRepoURL = "https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml"
+)
