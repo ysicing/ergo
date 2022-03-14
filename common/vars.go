@@ -29,7 +29,7 @@ const (
 const (
 	K3sBinName    = "k3s"
 	K3sBinPath    = "/usr/local/bin/k3s"
-	K3sBinVersion = "v1.23.1+k3s2"
+	K3sBinVersion = "v1.23.4+k3s1"
 	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download/v1.23.1%2Bk3s2/k3s"
 	K3sAgentEnv   = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig = "/etc/rancher/k3s/k3s.yaml"

@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v3.1.3
+  - 更新k3s默认版本为v1.23.4+k3s.1
+
 - v3.1.2
   - 更新lima-docker debian版本
 

@@ -277,7 +277,7 @@ func configArgs(args []string, san string, docker, nonecni bool) []string {
 		args = append(args, "--rootless")
 	}
 	if nonecni {
-		args = append(args, "--flannel-backend=none")
+		args = append(args, "--flannel-backend=none --disable-network-policy")
 	}
 	if len(san) != 0 {
 		args = append(args, fmt.Sprintf("--tls-san=%v", ksSan))
