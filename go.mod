@@ -3,7 +3,7 @@ module github.com/ysicing/ergo
 go 1.17
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1515
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1524
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
