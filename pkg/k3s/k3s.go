@@ -237,13 +237,16 @@ func (o *Option) configArgs() []string {
 	if o.DockerOnly && excmd.CheckBin("docker") {
 		args = append(args, "--docker")
 	}
-	if o.CniNo {
-		args = append(args, "--flannel-backend=none")
-		args = append(args, "--disable-network-policy")
+	if o.Mode == "server" {
+		if o.CniNo {
+			args = append(args, "--flannel-backend=none")
+			args = append(args, "--disable-network-policy")
+		}
+		if len(o.KsSan) != 0 {
+			args = append(args, fmt.Sprintf("--tls-san=%v", o.KsSan))
+		}
 	}
-	if len(o.KsSan) != 0 {
-		args = append(args, fmt.Sprintf("--tls-san=%v", o.KsSan))
-	}
+
 	if len(o.EIP) != 0 {
 		args = append(args, fmt.Sprintf("--node-external-ip=%v", o.EIP))
 	}
