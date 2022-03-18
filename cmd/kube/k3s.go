@@ -12,9 +12,6 @@ import (
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
-var dockerOnly, cniNo bool
-var ksSan, ksAddr, ksToken string
-
 func K3sCmd(f factory.Factory) *cobra.Command {
 	opt := k3.Option{
 		Klog: log.GetInstance(),
@@ -25,6 +22,8 @@ func K3sCmd(f factory.Factory) *cobra.Command {
 		Args:  cobra.NoArgs,
 	}
 	k3s.PersistentFlags().BoolVar(&opt.DockerOnly, "docker", false, "If true, Use docker instead of containerd")
+	k3s.PersistentFlags().StringVar(&opt.EIP, "eip", "", "external IP addresses to advertise for node")
+	k3s.PersistentFlags().StringArrayVar(&opt.Args, "k3s-arg", nil, "k3s args")
 	init := &cobra.Command{
 		Use:     "init",
 		Short:   "init k3s control-plane(master) node",

@@ -24,11 +24,15 @@ type Option struct {
 	DockerOnly bool   `json:"dockerOnly"`
 	CniNo      bool   `json:"cniNo"`
 	KsSan      string `json:"ksSan"`
+	EIP        string `json:"eip"`
 	// Join
 	KsAddr  string `json:"ksAddr"`
 	KsToken string `json:"ksToken"`
 
+	// ext
+	Mode string `json:"mode"`
 	Klog log.Logger
+	Args []string `json:"args"`
 }
 
 func (o *Option) PreCheckK3sBin() (string, error) {
@@ -65,6 +69,7 @@ func (o *Option) Init() error {
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
 	}
+	o.Mode = "server"
 	k3sargs = append(k3sargs, o.configArgs()...)
 	k3sCfg := &es.Config{
 		Name: "k3s-server",
@@ -168,6 +173,7 @@ func (o *Option) Join() error {
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
 	}
+	o.Mode = "agent"
 	k3sargs = append(k3sargs, o.configArgs()...)
 	k3sCfg := &es.Config{
 		Name: "k3s-agent",
@@ -238,5 +244,9 @@ func (o *Option) configArgs() []string {
 	if len(o.KsSan) != 0 {
 		args = append(args, fmt.Sprintf("--tls-san=%v", o.KsSan))
 	}
+	if len(o.EIP) != 0 {
+		args = append(args, fmt.Sprintf("--node-external-ip=%v", o.EIP))
+	}
+	args = append(args, o.Args...)
 	return args
 }
