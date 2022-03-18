@@ -19,10 +19,12 @@ ergo kube k3s bin [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
-      --debug           Prints the stack trace if an error occurs
-      --docker          If true, Use docker instead of containerd
-      --silent          Run in silent mode and prevents any ergo log output except panics & fatals
+      --config string         The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
+      --debug                 Prints the stack trace if an error occurs
+      --docker                If true, Use docker instead of containerd
+      --eip string            external IP addresses to advertise for node
+      --k3s-arg stringArray   k3s args
+      --silent                Run in silent mode and prevents any ergo log output except panics & fatals
 ```
 
 ### SEE ALSO

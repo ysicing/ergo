@@ -5,8 +5,10 @@ k3s
 ### Options
 
 ```
-      --docker   If true, Use docker instead of containerd
-  -h, --help     help for k3s
+      --docker                If true, Use docker instead of containerd
+      --eip string            external IP addresses to advertise for node
+  -h, --help                  help for k3s
+      --k3s-arg stringArray   k3s args
 ```
 
 ### Options inherited from parent commands
