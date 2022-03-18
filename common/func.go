@@ -55,3 +55,8 @@ func GetDefaultErgoCfg() string {
 	home := GetDefaultCfgDir()
 	return home + "/ergo.yml"
 }
+
+// GetK3SURL 获取k3s地址
+func GetK3SURL() string {
+	return fmt.Sprintf("%s/%s/k3s", K3sBinURL, K3sBinVersion)
+}

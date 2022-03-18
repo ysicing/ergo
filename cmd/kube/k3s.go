@@ -20,7 +20,6 @@ import (
 	es "github.com/ysicing/ergo/pkg/daemon/service"
 	"github.com/ysicing/ergo/pkg/downloader"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -79,7 +78,7 @@ func getbin() (string, error) {
 	filebin, err := exec.LookPath(common.K3sBinName)
 	if err != nil {
 		klog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
-		if _, err := downloader.Download(common.K3sBinURL, common.K3sBinPath); err != nil {
+		if _, err := downloader.Download(common.GetK3SURL(), common.K3sBinPath); err != nil {
 			return "", err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)
@@ -196,9 +195,6 @@ func initAction(cmd *cobra.Command, args []string) error {
 	}
 	klog.Donef("%v get nodes", kubectlbin)
 	klog.WriteString(string(getnodesoutput))
-	if err := checkhelm(); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -292,21 +288,4 @@ func configArgs(args []string, san string, docker, nonecni bool) []string {
 func checkBin(cmd string) bool {
 	_, err := exec.LookPath(cmd)
 	return err == nil
-}
-
-// checkhelm check helm
-func checkhelm() error {
-	cmdArgs := os.Args
-	klog := log.GetInstance()
-	if checkBin("helm") {
-		return nil
-	}
-	klog.Infof("helm not found, will try to install")
-	// Download helm
-	klog.Debug("Download helm")
-	if err := ssh.RunCmd(cmdArgs[0], "addons", "ysicing/helm"); err != nil {
-		klog.Errorf("install helm err: %v", err)
-		return err
-	}
-	return nil
 }
