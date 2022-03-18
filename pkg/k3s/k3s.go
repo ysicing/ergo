@@ -234,7 +234,7 @@ func (o *Option) Join() error {
 
 func (o *Option) configArgs() []string {
 	var args []string
-	if o.DockerOnly && excmd.CheckBin("docker") {
+	if o.DockerOnly || excmd.CheckBin("docker") {
 		args = append(args, "--docker")
 	}
 	if o.Mode == "server" {
