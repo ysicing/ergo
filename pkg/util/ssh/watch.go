@@ -8,30 +8,10 @@ import (
 	"path"
 	"strconv"
 	"strings"
-	"time"
 )
 
 const oneKBByte = 1024
 const oneMBByte = 1024 * 1024
-
-// LoggerFileSize is
-func (ss *SSH) LoggerFileSize(host, filename string, size int) {
-	t := time.NewTicker(3 * time.Second) //every 3s check file
-	defer t.Stop()
-	for {
-		<-t.C
-		length := ss.CmdToString(host, "ls -l "+filename+" | awk '{print $5}'", "")
-		length = strings.Replace(length, "\n", "", -1)
-		length = strings.Replace(length, "\r", "", -1)
-		lengthByte, _ := strconv.Atoi(length)
-		if lengthByte == size {
-			t.Stop()
-		}
-		lengthFloat := float64(lengthByte)
-		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", lengthFloat/oneMBByte), 64)
-		ss.Log.Debug("[%s]transfer total size is: %.2f%s", host, value, "MB")
-	}
-}
 
 // IsFileExist is
 func (ss *SSH) IsFileExist(host, remoteFilePath string) bool {
@@ -43,11 +23,19 @@ func (ss *SSH) IsFileExist(host, remoteFilePath string) bool {
 	//remoteFileCommand := fmt.Sprintf("ls -l %s| grep %s | grep -v grep |wc -l", remoteFileDirName, remoteFileName)
 	remoteFileCommand := fmt.Sprintf("ls -l %s/%s 2>/dev/null |wc -l", remoteFileDirName, remoteFileName)
 
-	data := ss.CmdToString(host, remoteFileCommand, " ")
+	data, err := ss.CmdToString(host, remoteFileCommand, " ")
+	defer func() {
+		if r := recover(); r != nil {
+			ss.Log.Errorf("[%s]remoteFileCommand err:%v", host, err)
+		}
+	}()
+	if err != nil {
+		panic(1)
+	}
 	count, err := strconv.Atoi(strings.TrimSpace(data))
 	defer func() {
 		if r := recover(); r != nil {
-			ss.Log.Errorf("[%s]RemoteFileExist:%s", host, err)
+			ss.Log.Errorf("[ssh][%s]RemoteFileExist:%v", host, err)
 		}
 	}()
 	if err != nil {

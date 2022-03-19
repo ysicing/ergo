@@ -7,13 +7,13 @@ import (
 	"sync"
 
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 type execOption struct {
-	local  bool
 	sshcfg sshutil.SSH
 	ips    []string
 }
@@ -23,8 +23,10 @@ func ExecCmd() *cobra.Command {
 	exec := &cobra.Command{
 		Use:     "exec",
 		Short:   "执行命令",
-		Version: "2.0.0",
+		Version: "3.2.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			address, _ := exnet.IsLocalHostAddrs()
+			cmd.sshcfg.LocalAddress = address
 			return cmd.Exec(args)
 		},
 	}
@@ -33,19 +35,22 @@ func ExecCmd() *cobra.Command {
 	exec.PersistentFlags().StringVar(&cmd.sshcfg.PkFile, "pk", "", "私钥")
 	exec.PersistentFlags().StringVar(&cmd.sshcfg.PkPass, "pkpass", "", "私钥密码")
 	exec.PersistentFlags().StringSliceVar(&cmd.ips, "ip", nil, "机器IP")
-	exec.PersistentFlags().BoolVar(&cmd.local, "local", false, "本地安装")
 	return exec
 }
 
 func (cmd *execOption) Exec(args []string) error {
 	cmd.sshcfg.Log = log.GetInstance()
-	if cmd.local {
+	if len(cmd.ips) == 0 {
 		return exec.LocalRun(args...)
 	}
 	var wg sync.WaitGroup
 	for _, ip := range cmd.ips {
 		wg.Add(1)
-		exec.RunSH(cmd.sshcfg, ip, &wg, args...)
+		if exnet.IsLocalIP(ip, cmd.sshcfg.LocalAddress) {
+			exec.LocalRun(args...)
+		} else {
+			exec.RunSH(cmd.sshcfg, ip, &wg, args...)
+		}
 	}
 	wg.Wait()
 	return nil

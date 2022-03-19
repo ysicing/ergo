@@ -11,7 +11,7 @@ require (
 	github.com/coreos/go-iptables v0.6.0
 	github.com/ergoapi/exgin v1.0.8
 	github.com/ergoapi/log v0.0.2
-	github.com/ergoapi/util v0.2.3
+	github.com/ergoapi/util v0.2.7
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
@@ -150,6 +150,7 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gorm.io/gorm v1.23.3 // indirect
 	k8s.io/api v0.23.4 // indirect
 	k8s.io/klog/v2 v2.40.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65 // indirect

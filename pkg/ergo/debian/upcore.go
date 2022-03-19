@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
@@ -118,7 +119,7 @@ func RunLocalShell(runtype string, log log.Logger) {
 		log.Errorf("write file %v, err: %v", tempfile, err)
 		return
 	}
-	if err := sshutil.RunCmd("/bin/bash", tempfile); err != nil {
+	if err := excmd.RunCmd("/bin/bash", tempfile); err != nil {
 		log.Errorf("run shell err: %v", err.Error())
 		return
 	}

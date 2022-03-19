@@ -1,6 +1,7 @@
 # Ergo CHANGELOG
 
-- v3.1.5
+- v3.2.0
+  - [x] 支持批量执行shell
   - [x] 优化k3s安装
 
 - v3.1.4

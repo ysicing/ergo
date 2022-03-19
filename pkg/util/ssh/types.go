@@ -5,6 +5,7 @@ package ssh
 
 import (
 	"fmt"
+	"net"
 	"os/exec"
 	"strings"
 	"time"
@@ -13,12 +14,13 @@ import (
 )
 
 type SSH struct {
-	User    string
-	Pass    string
-	PkFile  string
-	PkPass  string
-	Timeout *time.Duration
-	Log     log.Logger
+	User         string
+	Pass         string
+	PkFile       string
+	PkPass       string
+	Timeout      *time.Duration
+	LocalAddress *[]net.Addr
+	Log          log.Logger
 }
 
 func Md5FromLocal(localPath string) string {
@@ -46,4 +48,8 @@ func Sha256FromLocal(localPath string) string {
 	sha256 = strings.ReplaceAll(sha256, "\n", "")
 	sha256 = strings.ReplaceAll(sha256, "\r", "")
 	return sha256
+}
+
+func WrapExecResult(host, command string, output []byte, err error) error {
+	return fmt.Errorf("failed to execute command(%s) on host(%s): output(%s), error(%v)", command, host, output, err)
 }

@@ -63,6 +63,5 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkFile, "pk", "", "私钥")
 	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkPass, "pkpass", "", "私钥密码")
 	debian.PersistentFlags().StringSliceVar(&opt.IPs, "ip", nil, "机器IP")
-	debian.PersistentFlags().BoolVar(&opt.Local, "local", false, "本地安装")
 	return debian
 }

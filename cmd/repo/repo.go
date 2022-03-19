@@ -8,12 +8,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ergoapi/util/excmd"
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/cmd/helm/require"
 	"helm.sh/helm/v3/pkg/cli/output"
 )
@@ -113,11 +113,11 @@ func InitCmd(f factory.Factory) *cobra.Command {
 		Short: "add default repo",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			cmdArgs := os.Args
-			if err := ssh.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, common.DefaultRepoURL); err != nil {
+			if err := excmd.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, common.DefaultRepoURL); err != nil {
 				log.Debugf("添加默认库失败: %v", err)
 				return fmt.Errorf("添加默认库失败")
 			}
-			return ssh.RunCmd(cmdArgs[0], "repo", "update")
+			return excmd.RunCmd(cmdArgs[0], "repo", "update")
 		},
 	}
 	return cmd

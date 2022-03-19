@@ -150,7 +150,7 @@ func (o *Option) Init() error {
 		kubectlbin = common.KubectlBinPath
 	}
 	if o.CniNo {
-		o.Klog.Warnf("Cilium is recommended")
+		o.Klog.Warnf("Cilium is recommended: cilium install --ipv4-native-routing-cidr 10.42.0.0/16 --config cluster-pool-ipv4-cidr=10.42.0.0/16")
 	}
 	getnodesoutput, err := exec.Command(kubectlbin, "get", "nodes").CombinedOutput()
 	if err != nil {

@@ -11,6 +11,7 @@ import (
 	"text/template"
 
 	"github.com/ergoapi/util/environ"
+	"github.com/ergoapi/util/excmd"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/exid"
@@ -20,7 +21,6 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 var CodeType = []struct {
@@ -115,7 +115,7 @@ mkdir -p {{ .Path }}
 pushd {{ .Path }}
 kubebuilder init --domain {{ .Domain }} --repo {{ .Domain }}/{{ .Owner }}/{{ .Name }}  --license {{ .License }} --owner "{{ .Owner }}" --project-name {{ .Name }} --skip-go-version-check
 kubebuilder edit --multigroup={{ .Multigroup }}
-kubebuilder create api --group apps --version v1beta1 --kind Dubbo 
+kubebuilder create api --group apps --version v1beta1 --kind Dubbo
 # 已存在资源
 kubebuilder create api --group core --version v1 --kind Service --resource=false
 popd
@@ -147,7 +147,7 @@ func (code CodeGen) GenCrds() error {
 	if err := file.Writefile(tmpfile, b.String()); err != nil {
 		return err
 	}
-	if err := ssh.RunCmd("/bin/bash", tmpfile); err != nil {
+	if err := excmd.RunCmd("/bin/bash", tmpfile); err != nil {
 		code.Log.WriteString(b.String())
 		code.Log.Failf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)
 		return err

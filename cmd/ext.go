@@ -15,6 +15,7 @@ import (
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
+	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/gosuri/uitable"
@@ -24,7 +25,6 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/pkg/cli/output"
 )
 
@@ -157,11 +157,11 @@ func (ext *ExtOptions) limaPre(cobraCmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("请先安装brew")
 		}
-		err = ssh.RunCmd(brewbin, "update")
+		err = excmd.RunCmd(brewbin, "update")
 		if err != nil {
 			return fmt.Errorf("run: brew update ,err: %v", err)
 		}
-		err = ssh.RunCmd(brewbin, "install", "lima")
+		err = excmd.RunCmd(brewbin, "install", "lima")
 		if err != nil {
 			return fmt.Errorf("run: brew install lima ,err: %v", err)
 		}
@@ -212,13 +212,13 @@ func (ext *ExtOptions) lima(cobraCmd *cobra.Command, args []string) error {
 			ext.Log.Warnf("instance lima-ergo already exists")
 			return nil
 		}
-		err := ssh.RunCmd(limabin, "start", limacfg)
+		err := excmd.RunCmd(limabin, "start", limacfg)
 		if err != nil {
 			return fmt.Errorf("limactl start %v ,err: %v", limacfg, err)
 		}
 		return nil
 	}
-	err = ssh.RunCmd(limabin, args...)
+	err = excmd.RunCmd(limabin, args...)
 	if err != nil {
 		return fmt.Errorf("limactl %v ,err: %v", args[0], err)
 	}

@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/gosuri/uitable"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
-	"github.com/ysicing/ergo/pkg/util/ssh"
 	"helm.sh/helm/v3/pkg/cli/output"
 )
 
@@ -33,7 +33,7 @@ func (o *SearchOption) Run() error {
 		return nil
 	}
 	// 更新依赖
-	if err := ssh.RunCmd(o.DefaultArgs, "repo", "update"); err != nil {
+	if err := excmd.RunCmd(o.DefaultArgs, "repo", "update"); err != nil {
 		return fmt.Errorf("更新依赖失败: %v", err)
 	}
 	var res []*PluginList

@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strings"
 	"sync"
 
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
@@ -17,7 +16,7 @@ import (
 // RunSH 执行shell
 func RunSH(ssh sshutil.SSH, ip string, wg *sync.WaitGroup, execcmd ...string) {
 	defer wg.Done()
-	if err := ssh.CmdAsync(ip, strings.Join(execcmd, " ")); err != nil {
+	if err := ssh.CmdAsync(ip, execcmd...); err != nil {
 		fmt.Println(err.Error())
 	}
 }

@@ -7,16 +7,17 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
-	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/ergoapi/util/file"
 	"golang.org/x/crypto/ssh"
 )
 
 func (ss *SSH) sshAuthMethod(passwd, pkFile, pkPasswd string) (auth []ssh.AuthMethod) {
 	// pkfile存在， 就进行密钥验证， 如果不存在，则跳过密钥验证。
-	if fileExist(pkFile) {
+	if file.CheckFileExists(pkFile) {
 		am, err := ss.sshPrivateKeyMethod(pkFile, pkPasswd)
 		// 获取到密钥验证就添加， 没获取到就直接跳过。
 		if err == nil {
@@ -33,7 +34,11 @@ func (ss *SSH) sshAuthMethod(passwd, pkFile, pkPasswd string) (auth []ssh.AuthMe
 
 // 使用 pk认证， pk路径为 "/root/.ssh/id_rsa", pk有密码和无密码在这里面验证
 func (ss *SSH) sshPrivateKeyMethod(pkFile, pkPassword string) (am ssh.AuthMethod, err error) {
-	pkData := ss.readFile(pkFile)
+	pkData, err := ioutil.ReadFile(filepath.Clean(pkFile))
+	if err != nil {
+		return nil, err
+	}
+
 	var pk ssh.Signer
 	if pkPassword == "" {
 		pk, err = ssh.ParsePrivateKey(pkData)
@@ -48,21 +53,6 @@ func (ss *SSH) sshPrivateKeyMethod(pkFile, pkPassword string) (am ssh.AuthMethod
 		}
 	}
 	return ssh.PublicKeys(pk), nil
-}
-
-// readFile 从文件读取privateKey， 并返回[]byte 无需返回string。
-// 直接返回[]byte， 避免重复 []byte -> string -> []byte
-func (ss *SSH) readFile(name string) []byte {
-	content, err := ioutil.ReadFile(name)
-	if err != nil {
-		os.Exit(1)
-	}
-	return content
-}
-
-func fileExist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil || os.IsExist(err)
 }
 
 func (ss *SSH) sshPasswordMethod(passwd string) ssh.AuthMethod {
@@ -99,15 +89,16 @@ func (ss *SSH) addrReformat(host string) string {
 	return host
 }
 
-func (ss *SSH) Connect(host string) (*ssh.Session, error) {
+func (ss *SSH) Connect(host string) (*ssh.Client, *ssh.Session, error) {
 	client, err := ss.connect(host)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	session, err := client.NewSession()
 	if err != nil {
-		return nil, err
+		_ = client.Close()
+		return nil, nil, err
 	}
 
 	modes := ssh.TerminalModes{
@@ -117,8 +108,10 @@ func (ss *SSH) Connect(host string) (*ssh.Session, error) {
 	}
 
 	if err := session.RequestPty("xterm", 80, 40, modes); err != nil {
-		return nil, err
+		_ = session.Close()
+		_ = client.Close()
+		return nil, nil, err
 	}
 
-	return session, nil
+	return client, session, nil
 }
