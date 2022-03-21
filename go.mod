@@ -3,7 +3,7 @@ module github.com/ysicing/ergo
 go 1.17
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1515
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1529
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -150,7 +150,6 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
-	gorm.io/gorm v1.23.3 // indirect
 	k8s.io/api v0.23.4 // indirect
 	k8s.io/klog/v2 v2.40.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65 // indirect
