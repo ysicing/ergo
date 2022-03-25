@@ -25,7 +25,7 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"helm.sh/helm/v3/pkg/cli/output"
+	"github.com/ysicing/ergo/pkg/util/output"
 )
 
 type ExtOptions struct {

@@ -14,7 +14,7 @@ import (
 	"github.com/gosuri/uitable"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
-	"helm.sh/helm/v3/pkg/cli/output"
+	"github.com/ysicing/ergo/pkg/util/output"
 )
 
 type SearchOption struct {

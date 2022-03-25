@@ -17,7 +17,7 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/cloud/aliyun"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/qcloud"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"helm.sh/helm/v3/pkg/cli/output"
+	"github.com/ysicing/ergo/pkg/util/output"
 )
 
 func CRCmd(f factory.Factory) *cobra.Command {

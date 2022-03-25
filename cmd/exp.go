@@ -15,7 +15,7 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/experimental"
 	"github.com/ysicing/ergo/pkg/ergo/experimental/codegen"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"helm.sh/helm/v3/pkg/cli/output"
+	"github.com/ysicing/ergo/pkg/util/output"
 )
 
 func newCodeGenCmd(f factory.Factory) *cobra.Command {

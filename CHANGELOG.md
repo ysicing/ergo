@@ -1,5 +1,9 @@
 # Ergo CHANGELOG
 
+- v3.3.0
+  - [x] 支持kube resources
+  - [ ] 支持重建svc
+
 - v3.2.0
   - [x] 支持批量执行shell
   - [x] 优化k3s安装
