@@ -1,17 +1,15 @@
-## ergo kube k3s join
+## ergo kube k3s rebuild-svc
 
-join k3s cluster
+rebuild k3s service
 
 ```
-ergo kube k3s join [flags]
+ergo kube k3s rebuild-svc [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help           help for join
-      --token string   k3s server token
-      --url string     k3s server url
+  -h, --help   help for rebuild-svc
 ```
 
 ### Options inherited from parent commands
