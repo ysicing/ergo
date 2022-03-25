@@ -19,7 +19,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/flock v0.8.1
 	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
-	github.com/gopasspw/gopass v1.13.1
+	github.com/gopasspw/gopass v1.14.0
 	github.com/gosuri/uitable v0.0.4
 	github.com/hashicorp/go-version v1.4.0
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
@@ -66,6 +66,7 @@ require (
 	github.com/acobaugh/osrelease v0.1.0 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
