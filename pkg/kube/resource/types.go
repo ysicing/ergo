@@ -13,10 +13,10 @@ type Option struct {
 	Selector      string
 }
 
-func (p *Option) Validate() {
-	if len(p.SortBy) > 0 {
-		if p.SortBy != "cpu" {
-			p.SortBy = "memory"
+func (o *Option) Validate() {
+	if len(o.SortBy) > 0 {
+		if o.SortBy != "cpu" {
+			o.SortBy = "memory"
 		}
 	}
 }

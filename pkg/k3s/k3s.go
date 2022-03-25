@@ -33,6 +33,9 @@ type Option struct {
 	Mode string `json:"mode"`
 	Klog log.Logger
 	Args []string `json:"args"`
+
+	KubeCtx    string
+	KubeConfig string
 }
 
 func (o *Option) PreCheckK3sBin() (string, error) {
@@ -137,7 +140,7 @@ func (o *Option) Init() error {
 		QPS:   common.KubeQPS,
 		Burst: common.KubeBurst,
 	}
-	kapi, err := kube.NewFromConfig(cc, common.K3sKubeConfig)
+	kapi, err := kube.NewFromPath(cc, common.K3sKubeConfig)
 	if err != nil {
 		return fmt.Errorf("create kubeapi client err: %v", err)
 	}

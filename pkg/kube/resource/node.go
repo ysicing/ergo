@@ -6,14 +6,10 @@ import (
 	"strings"
 
 	"github.com/gosuri/uitable"
-	"k8s.io/apimachinery/pkg/labels"
 	"github.com/ysicing/ergo/internal/kube"
 	"github.com/ysicing/ergo/pkg/util/output"
+	"k8s.io/apimachinery/pkg/labels"
 )
-
-func (o *Option) NodeValidate() {
-	// TODO
-}
 
 func (o *Option) RunResourceNode() error {
 	selector := labels.Everything()

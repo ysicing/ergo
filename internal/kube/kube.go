@@ -33,6 +33,27 @@ func New(cc *ClientConfig) (client kubernetes.Interface, metricsClient *metrics.
 	return
 }
 
+// NewFromPath returns a new out-of-cluster kubernetes client.
+func NewFromPath(cc *ClientConfig, path string) (client kubernetes.Interface, err error) {
+	// use the current context in kubeconfig
+	config, err := clientcmd.BuildConfigFromFlags("", path)
+	if err != nil {
+		return
+	}
+
+	cc.apply(config)
+
+	// create the clientset
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return
+	}
+
+	client = clientset
+
+	return
+}
+
 // NewFromConfig returns a new out-of-cluster kubernetes client.
 func NewFromConfig(cc *ClientConfig) (client kubernetes.Interface, metricsClient *metrics.Clientset, err error) {
 	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()

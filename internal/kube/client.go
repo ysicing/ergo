@@ -2,35 +2,39 @@ package kube
 
 import (
 	"context"
+	"sort"
+	"time"
 
+	"github.com/ergoapi/zlog"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/kubectl/pkg/metricsutil"
 	metricsapi "k8s.io/metrics/pkg/apis/metrics"
 	metricsV1beta1api "k8s.io/metrics/pkg/apis/metrics/v1beta1"
 	metrics "k8s.io/metrics/pkg/client/clientset/versioned"
-	"k8s.io/kubectl/pkg/metricsutil"
 )
 
-type KubeClient struct {
+type Client struct {
 	apiClient     kubernetes.Interface
 	metricsClient *metrics.Clientset
 }
 
-func NewKubeClient(cc *ClientConfig) (*KubeClient, error) {
+func NewKubeClient(cc *ClientConfig) (*Client, error) {
 	client, metricsClient, err := New(cc)
 	if err != nil {
 		return nil, err
 	}
 
-	return &KubeClient{
+	return &Client{
 		apiClient:     client,
 		metricsClient: metricsClient,
 	}, nil
 }
 
-func (k *KubeClient) GetNodes(resourceName string, selector labels.Selector) (map[string]corev1.Node, error) {
+func (k *Client) GetNodes(resourceName string, selector labels.Selector) (map[string]corev1.Node, error) {
 	nodes := make(map[string]corev1.Node)
 	if len(resourceName) > 0 {
 		node, err := k.apiClient.CoreV1().Nodes().Get(context.TODO(), resourceName, metav1.GetOptions{})
@@ -53,7 +57,7 @@ func (k *KubeClient) GetNodes(resourceName string, selector labels.Selector) (ma
 }
 
 //GetActivePodByNodename
-func (k *KubeClient) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, error) {
+func (k *Client) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, error) {
 	fieldSelector, err := fields.ParseSelector("spec.nodeName=" + node.Name +
 		",status.phase!=" + string(corev1.PodSucceeded) +
 		",status.phase!=" + string(corev1.PodFailed))
@@ -69,7 +73,7 @@ func (k *KubeClient) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, 
 }
 
 //GetActivePodByPodname
-func (k *KubeClient) GetPodByPodname(podName string, namespace string) (*corev1.Pod, error) {
+func (k *Client) GetPodByPodname(podName string, namespace string) (*corev1.Pod, error) {
 	pod, err := k.apiClient.CoreV1().Pods(namespace).Get(context.TODO(), podName, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
@@ -102,7 +106,7 @@ type NodeResources struct {
 }
 
 //NodeResources
-func (k *KubeClient) GetNodeResources(sortBy string, selector labels.Selector) ([]NodeResources, error) {
+func (k *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]NodeResources, error) {
 	//resources := make(map[string]map[string]interface{})
 	var resources []NodeResources
 	var nodenames []string
@@ -141,7 +145,7 @@ func (k *KubeClient) GetNodeResources(sortBy string, selector labels.Selector) (
 		resource.Age = time.Since(nodes[nodename].CreationTimestamp.Time).String()
 		noderesource, err := getNodeAllocatedResources(nodes[nodename], activePodsList, NodeMetricsList)
 		if err != nil {
-			log.Printf("Couldn't get allocated resources of %s node: %s\n", nodename, err)
+			zlog.Error("Couldn't get allocated resources of %s node: %s", nodename, err)
 		}
 		resource.CPUUsages = noderesource.CPUUsages.String()
 		resource.CPURequests = noderesource.CPURequests.String()
@@ -178,7 +182,7 @@ type PodsResources struct {
 	MemoryUsagesFraction string `json:"memoryUsagesFraction" yaml:"memoryUsagesFraction"`
 }
 
-func (k *KubeClient) GetPodResources(podmetrics []metricsapi.PodMetrics, namespace string, sortBy string) ([]PodsResources, error) {
+func (k *Client) GetPodResources(podmetrics []metricsapi.PodMetrics, namespace string, sortBy string) ([]PodsResources, error) {
 	var resources []PodsResources
 
 	//判断是否排序
@@ -219,7 +223,7 @@ func (k *KubeClient) GetPodResources(podmetrics []metricsapi.PodMetrics, namespa
 }
 
 // PodMetricses returns all pods' usage metrics
-func (k *KubeClient) PodMetricses() (*metricsV1beta1api.PodMetricsList, error) {
+func (k *Client) PodMetricses() (*metricsV1beta1api.PodMetricsList, error) {
 	podMetricses, err := k.metricsClient.MetricsV1beta1().PodMetricses(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -229,7 +233,7 @@ func (k *KubeClient) PodMetricses() (*metricsV1beta1api.PodMetricsList, error) {
 }
 
 // GetNodeMetricsFromMetricsAPI
-func (k *KubeClient) GetNodeMetricsFromMetricsAPI(resourceName string, selector labels.Selector) (*metricsapi.NodeMetricsList, error) {
+func (k *Client) GetNodeMetricsFromMetricsAPI(resourceName string, selector labels.Selector) (*metricsapi.NodeMetricsList, error) {
 	var err error
 	versionedMetrics := &metricsV1beta1api.NodeMetricsList{}
 	mc := k.metricsClient.MetricsV1beta1()
@@ -256,15 +260,15 @@ func (k *KubeClient) GetNodeMetricsFromMetricsAPI(resourceName string, selector 
 }
 
 // GetPodMetricsFromMetricsAPI
-func (k *KubeClient) GetPodMetricsFromMetricsAPI(namespace string, labelSelector labels.Selector, fieldSelector fields.Selector) (*metricsapi.PodMetricsList, error) {
+func (k *Client) GetPodMetricsFromMetricsAPI(namespace string, labelSelector labels.Selector, fieldSelector fields.Selector) (*metricsapi.PodMetricsList, error) {
 	var err error
 	ns := metav1.NamespaceAll
 	if len(namespace) > 0 {
 		ns = namespace
 	}
 
-	versionedMetrics := &metricsV1beta1api.PodMetricsList{}
-	versionedMetrics, err = k.metricsClient.MetricsV1beta1().PodMetricses(ns).List(context.TODO(), metav1.ListOptions{LabelSelector: labelSelector.String(), FieldSelector: fieldSelector.String()})
+	// versionedMetrics := &metricsV1beta1api.PodMetricsList{}
+	versionedMetrics, err := k.metricsClient.MetricsV1beta1().PodMetricses(ns).List(context.TODO(), metav1.ListOptions{LabelSelector: labelSelector.String(), FieldSelector: fieldSelector.String()})
 	if err != nil {
 		return nil, err
 	}

@@ -65,5 +65,15 @@ func K3sCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 	k3s.AddCommand(getbin)
+	rebuildService := &cobra.Command{
+		Use:     "rebuild-svc",
+		Short:   "rebuild k3s service",
+		Version: "3.3.0",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, err := opt.PreCheckK3sBin()
+			return err
+		},
+	}
+	k3s.AddCommand(rebuildService)
 	return k3s
 }

@@ -3,7 +3,7 @@ module github.com/ysicing/ergo
 go 1.17
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1515
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1536
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -12,6 +12,7 @@ require (
 	github.com/ergoapi/exgin v1.0.8
 	github.com/ergoapi/log v0.0.2
 	github.com/ergoapi/util v0.2.7
+	github.com/ergoapi/zlog v0.0.3
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
@@ -36,12 +37,12 @@ require (
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.364
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.364
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.364
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.364
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.364
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.364
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.373
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
@@ -72,7 +73,6 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/ergoapi/errors v0.0.1 // indirect
-	github.com/ergoapi/zlog v0.0.3 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect

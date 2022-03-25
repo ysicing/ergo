@@ -173,7 +173,7 @@ func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsLis
 	usageMetrics := nodeMetricsByNodeName[node.Name]
 
 	capacity := NodeCapacity(&node)
-	var nodeAllocatedResources = NodeAllocatedResources{}
+
 	_cpuRequests, _cpuLimits, _memoryRequests, _memoryLimits := reqs[v1.ResourceCPU], limits[v1.ResourceCPU],
 		reqs[v1.ResourceMemory], limits[v1.ResourceMemory]
 	_cpuUsages, _memoryUsages := usageMetrics.Usage.Cpu().MilliValue(), usageMetrics.Usage.Memory().Value()
@@ -188,7 +188,7 @@ func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsLis
 	podCapacity := capacity.Pods().Value()
 	podFraction := calcPercentage(int64(len(podList.Items)), podCapacity)
 
-	nodeAllocatedResources = NodeAllocatedResources{
+	nodeAllocatedResources := NodeAllocatedResources{
 		CPUResources{
 			CPUUsages:           cpuUsages,
 			CPURequests:         cpuRequests,
@@ -242,7 +242,6 @@ func getPodAllocatedResources(pod *v1.Pod, podmetric *metricsapi.PodMetrics) (Po
 	//usageMetrics := podMetricsByPodName[pod.Name]
 	usageMetrics := getPodMetrics(podmetric)
 
-	var podAllocatedResources = PodAllocatedResources{}
 	_cpuRequests, _cpuLimits, _memoryRequests, _memoryLimits := reqs[v1.ResourceCPU], limits[v1.ResourceCPU],
 		reqs[v1.ResourceMemory], limits[v1.ResourceMemory]
 	_cpuUsages, _memoryUsages := usageMetrics[v1.ResourceCPU], usageMetrics[v1.ResourceMemory]
@@ -255,7 +254,7 @@ func getPodAllocatedResources(pod *v1.Pod, podmetric *metricsapi.PodMetrics) (Po
 	memoryRequests := NewMemoryResource(_memoryRequests.Value())
 	memoryLimits := NewMemoryResource(_memoryLimits.Value())
 
-	podAllocatedResources = PodAllocatedResources{
+	podAllocatedResources := PodAllocatedResources{
 		CPUUsages:            cpuUsages,
 		CPUUsagesFraction:    cpuUsages.calcPercentage(&_cpuLimits),
 		CPURequests:          cpuRequests,
@@ -336,7 +335,7 @@ func NewGpuResource(name v1.ResourceName, rl *v1.ResourceList) *resource.Quantit
 //calcPercentage
 func calcPercentage(dividend, divisor int64) float64 {
 	if divisor > 0 {
-		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", float64(float64(dividend)/float64(divisor)*100)), 64)
+		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", float64(dividend)/float64(divisor)*100), 64)
 		return value
 	}
 	return float64(0)

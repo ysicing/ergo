@@ -14,8 +14,8 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"helm.sh/helm/v3/cmd/helm/require"
 	"github.com/ysicing/ergo/pkg/util/output"
+	"helm.sh/helm/v3/cmd/helm/require"
 )
 
 func AddCmd(f factory.Factory) *cobra.Command {
