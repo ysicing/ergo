@@ -28,7 +28,7 @@ func K3sCmd(f factory.Factory) *cobra.Command {
 		Use:     "init",
 		Short:   "init k3s control-plane(master) node",
 		Long:    `example: ergo k3s init --docker`,
-		Version: "2.6.0",
+		Version: "3.3.0",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opt.Init()
 		},
@@ -36,6 +36,10 @@ func K3sCmd(f factory.Factory) *cobra.Command {
 	k3s.AddCommand(init)
 	init.PersistentFlags().StringVar(&opt.KsSan, "san", "ysicing.local", "Add additional hostname or IP as a Subject Alternative Name in the TLS cert")
 	init.PersistentFlags().BoolVar(&opt.CniNo, "nocni", true, "If true, Use cni none")
+	init.PersistentFlags().StringVar(&opt.PodCIDR, "pod-cidr", "10.42.0.0/16", "IPv4/IPv6 network CIDRs to use for pod IPs")
+	init.PersistentFlags().StringVar(&opt.SvcCIDR, "svc-cidr", "10.43.0.0/16", "IPv4/IPv6 network CIDRs to use for service IPs")
+	init.PersistentFlags().StringVar(&opt.DnSSvcIP, "dns-svcip", "10.43.0.10", " IPv4 Cluster IP for coredns service. Should be in your service-cidr range")
+
 	join := &cobra.Command{
 		Use:     "join",
 		Short:   "join k3s cluster",
@@ -65,15 +69,5 @@ func K3sCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 	k3s.AddCommand(getbin)
-	rebuildService := &cobra.Command{
-		Use:     "rebuild-svc",
-		Short:   "rebuild k3s service",
-		Version: "3.3.0",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			_, err := opt.PreCheckK3sBin()
-			return err
-		},
-	}
-	k3s.AddCommand(rebuildService)
 	return k3s
 }

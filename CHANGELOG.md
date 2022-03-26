@@ -2,7 +2,7 @@
 
 - v3.3.0
   - [x] 支持kube resources
-  - [ ] 支持重建svc
+  - [x] 优化k3s安装,支持配置podcidr,svccidr
 
 - v3.2.0
   - [x] 支持批量执行shell

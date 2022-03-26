@@ -25,6 +25,10 @@ type Option struct {
 	CniNo      bool   `json:"cniNo"`
 	KsSan      string `json:"ksSan"`
 	EIP        string `json:"eip"`
+	PodCIDR    string `json:"podCIDR"`
+	SvcCIDR    string `json:"svcCIDR"`
+	DnSSvcIP   string `json:"dnsSvcIP"`
+
 	// Join
 	KsAddr  string `json:"ksAddr"`
 	KsToken string `json:"ksToken"`
@@ -66,6 +70,7 @@ func (o *Option) Init() error {
 	}
 	k3sargs := []string{
 		"server",
+		"--tls-san=kapi.k3s.local",
 		"--disable=servicelb,traefik",
 		"--disable-helm-controller",
 		"--kube-proxy-arg=proxy-mode=ipvs",
@@ -153,7 +158,7 @@ func (o *Option) Init() error {
 		kubectlbin = common.KubectlBinPath
 	}
 	if o.CniNo {
-		o.Klog.Warnf("Cilium is recommended: cilium install --ipv4-native-routing-cidr 10.42.0.0/16 --config cluster-pool-ipv4-cidr=10.42.0.0/16")
+		o.Klog.Warnf("Cilium is recommended: cilium install --ipv4-native-routing-cidr %s --config cluster-pool-ipv4-cidr=%s", o.PodCIDR, o.PodCIDR)
 	}
 	getnodesoutput, err := exec.Command(kubectlbin, "get", "nodes").CombinedOutput()
 	if err != nil {
@@ -248,6 +253,9 @@ func (o *Option) configArgs() []string {
 		if len(o.KsSan) != 0 {
 			args = append(args, fmt.Sprintf("--tls-san=%v", o.KsSan))
 		}
+		args = append(args, fmt.Sprintf("--cluster-cidr=%v", o.PodCIDR))
+		args = append(args, fmt.Sprintf("--service-cidr=%v", o.SvcCIDR))
+		args = append(args, fmt.Sprintf("--cluster-dns=%v", o.DnSSvcIP))
 	}
 
 	if len(o.EIP) != 0 {
