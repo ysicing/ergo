@@ -1,12 +1,12 @@
 arch: "x86_64"
 images:
-  - location: "~/.ergo/data/iso/debian-11-generic-amd64-20220310-944.qcow2"
+  - location: "~/.ergo/data/iso/debian-11-generic-amd64-20220328-962.qcow2"
     arch: "x86_64"
-  - location: "https://cloud.debian.org/images/cloud/bullseye/20220310-944/debian-11-generic-amd64-20220310-944.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/bullseye/20220328-962/debian-11-generic-amd64-20220328-962.qcow2"
     arch: "x86_64"
-  # - location: "~/hack/iso/debian-11-generic-arm64-20220310-944.qcow2"
+  # - location: "~/hack/iso/debian-11-generic-arm64-20220328-962.qcow2"
   #   arch: "aarch64"
-  # - location: "https://cloud.debian.org/images/cloud/bullseye/20220310-944/debian-11-generic-arm64-20220310-944.qcow2"
+  # - location: "https://cloud.debian.org/images/cloud/bullseye/20220328-962/debian-11-generic-arm64-20220328-962.qcow2"
   #   arch: "aarch64"
 cpus: 2
 memory: "4GiB"
