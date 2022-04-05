@@ -1,17 +1,17 @@
 module github.com/ysicing/ergo
 
-go 1.17
+go 1.18
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1536
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1545
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/containerd/continuity v0.2.2
 	github.com/coreos/go-iptables v0.6.0
 	github.com/ergoapi/exgin v1.0.8
-	github.com/ergoapi/log v0.0.2
-	github.com/ergoapi/util v0.2.7
+	github.com/ergoapi/log v0.0.3
+	github.com/ergoapi/util v0.2.8
 	github.com/ergoapi/zlog v0.0.3
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
@@ -44,7 +44,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.373
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.373
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
-	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
+	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.8.1
@@ -57,12 +57,13 @@ require (
 )
 
 require (
-	github.com/6tail/lunar-go v1.2.14 // indirect
+	github.com/6tail/lunar-go v1.2.16 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
-	github.com/Microsoft/go-winio v0.5.1 // indirect
-	github.com/ProtonMail/go-crypto v0.0.0-20220113124808-70ae35bab23f // indirect
+	github.com/Microsoft/go-winio v0.5.2 // indirect
+	github.com/ProtonMail/go-crypto v0.0.0-20220404123522-616f957b79ad // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
+	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d // indirect
 	github.com/acobaugh/osrelease v0.1.0 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -79,7 +80,7 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
-	github.com/go-logr/logr v1.2.2 // indirect
+	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -101,7 +102,7 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
-	github.com/kevinburke/ssh_config v1.1.0 // indirect
+	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
@@ -143,14 +144,14 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
+	golang.org/x/net v0.0.0-20220403103023-749bd193bc2b // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220318055525-2edf467146b5 // indirect
+	golang.org/x/sys v0.0.0-20220405052023-b1e9470b6e64 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
+	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
@@ -158,9 +159,9 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	k8s.io/cli-runtime v0.23.5 // indirect
-	k8s.io/klog/v2 v2.40.1 // indirect
+	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65 // indirect
-	k8s.io/utils v0.0.0-20220127004650-9b3446523e65 // indirect
+	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 )

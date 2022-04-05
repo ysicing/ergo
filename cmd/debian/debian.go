@@ -84,8 +84,9 @@ func (cmd *Option) Swap(f factory.Factory) error {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
 			if file.CheckFileExists("/etc/apt/sources.list") {
 				debian.RunLocalShell("swap", cmd.SSHCfg.Log)
+			} else {
+				cmd.SSHCfg.Log.Warn("仅支持Debian系")
 			}
-			cmd.SSHCfg.Log.Warn("仅支持Debian系")
 		} else {
 			wg.Add(1)
 			go debian.RunAddDebSwap(cmd.SSHCfg, ip, &wg)

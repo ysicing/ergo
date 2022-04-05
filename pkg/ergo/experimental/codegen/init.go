@@ -149,7 +149,7 @@ func (code CodeGen) GenCrds() error {
 	}
 	if err := excmd.RunCmd("/bin/bash", tmpfile); err != nil {
 		code.Log.WriteString(b.String())
-		code.Log.Failf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)
+		code.Log.Fatalf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)
 		return err
 	}
 	file.RemoveFiles(tmpfile)

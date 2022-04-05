@@ -3,6 +3,7 @@
 - v3.3.0
   - [x] 支持kube resources
   - [x] 优化k3s安装,支持配置podcidr,svccidr
+  - [x] 优化debain swap
 
 - v3.2.0
   - [x] 支持批量执行shell
