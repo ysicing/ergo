@@ -1,5 +1,8 @@
 # Ergo CHANGELOG
 
+- v3.4.0
+  - [x] 内置kubectl命令
+
 - v3.3.0
   - [x] 支持kube resources
   - [x] 优化k3s安装,支持配置podcidr,svccidr
