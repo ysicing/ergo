@@ -1,6 +1,6 @@
 BUILD_VERSION   ?= $(shell cat version.txt || echo "0.1")
 BUILD_DATE      := $(shell date "+%F %T")
-COMMIT_SHA1     := $(shell git rev-parse HEAD || echo "0.0.0")
+GIT_COMMIT     := $(shell git rev-parse HEAD || echo "0.0.0")
 
 help: ## this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {sub("\\\\n",sprintf("\n%22c"," "), $$2);printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -28,15 +28,26 @@ golint: ## lint
 default: fmt golint ## fmt code
 
 build: clean ## 构建二进制
-	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${COMMIT_SHA1}"
-	#@bash hack/docker/build.sh ${version} ${tagversion} ${commit_sha1}
+	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${GIT_COMMIT}"
 	# go get github.com/mitchellh/gox
 	@gox -osarch="darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
     	-ldflags   "-w -s \
     				-X 'github.com/ysicing/ergo/version.Version=${BUILD_VERSION}' \
                     -X 'github.com/ysicing/ergo/version.BuildDate=${BUILD_DATE}' \
-                    -X 'github.com/ysicing/ergo/version.GitCommitHash=${COMMIT_SHA1}'"
+                        -X 'github.com/ysicing/ergo/version.GitCommitHash=${GIT_COMMIT}' \
+										    -X 'k8s.io/client-go/pkg/version.gitVersion=${BUILD_VERSION}' \
+    										-X 'k8s.io/client-go/pkg/version.gitCommit=${GIT_COMMIT}' \
+    										-X 'k8s.io/client-go/pkg/version.gitTreeState=dirty' \
+    										-X 'k8s.io/client-go/pkg/version.buildDate=${BUILD_DATE}' \
+												-X 'k8s.io/client-go/pkg/version.gitMajor=1' \
+												-X 'k8s.io/client-go/pkg/version.gitMinor=23' \
+    										-X 'k8s.io/component-base/version.gitVersion=${BUILD_VERSION}' \
+    										-X 'k8s.io/component-base/version.gitCommit=${GIT_COMMIT}' \
+                        -X 'k8s.io/component-base/version.gitTreeState=dirty' \
+												-X 'k8s.io/component-base/version.gitMajor=1' \
+												-X 'k8s.io/component-base/version.gitMinor=23' \
+    										-X 'k8s.io/component-base/version.buildDate=${BUILD_DATE}'"
 
 docker: build ## 构建镜像
 	@echo "build docker images ${BUILD_VERSION}"
@@ -61,7 +72,15 @@ install: clean ## install
 		-ldflags   "-w -s \
 						-X 'github.com/ysicing/ergo/version.Version=${BUILD_VERSION}' \
                         -X 'github.com/ysicing/ergo/version.BuildDate=${BUILD_DATE}' \
-                        -X 'github.com/ysicing/ergo/version.GitCommitHash=${COMMIT_SHA1}'"
+                        -X 'github.com/ysicing/ergo/version.GitCommitHash=${GIT_COMMIT}' \
+										    -X 'k8s.io/client-go/pkg/version.gitVersion=${BUILD_VERSION}' \
+    										-X 'k8s.io/client-go/pkg/version.gitCommit=${GIT_COMMIT}' \
+    										-X 'k8s.io/client-go/pkg/version.gitTreeState=dirty' \
+    										-X 'k8s.io/client-go/pkg/version.buildDate=${BUILD_DATE}' \
+    										-X 'k8s.io/component-base/version.gitVersion=${BUILD_VERSION}' \
+    										-X 'k8s.io/component-base/version.gitCommit=${GIT_COMMIT}' \
+                        -X 'k8s.io/component-base/version.gitTreeState=dirty' \
+    										-X 'k8s.io/component-base/version.buildDate=${BUILD_DATE}'"
 
 deb: build ## build deb
 	./deb.sh
