@@ -41,7 +41,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.390
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.373
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.373
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.390
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
