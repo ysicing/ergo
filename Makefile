@@ -29,7 +29,7 @@ default: fmt golint ## fmt code
 
 build: clean ## 构建二进制
 	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${GIT_COMMIT}"
-	# go get github.com/mitchellh/gox
+	# go install github.com/mitchellh/gox@latest
 	@gox -osarch="darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
     	-ldflags   "-w -s \
@@ -49,7 +49,7 @@ build: clean ## 构建二进制
 												-X 'k8s.io/component-base/version.gitMinor=23' \
     										-X 'k8s.io/component-base/version.buildDate=${BUILD_DATE}'"
 
-docker: ## upx binary
+upx: ## upx binary
 	@echo "upx binray"
 	@upx -9 dist/*
 
