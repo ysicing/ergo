@@ -10,6 +10,7 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/alidns"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 func (p *provider) getDNSClient() *alidns.Client {
@@ -40,7 +41,7 @@ func (p *provider) DomainList(ctx context.Context) (cloud.DomainList, error) {
 		return nil, fmt.Errorf("qcloud api error has returned: %s", err)
 	}
 	var dls cloud.DomainList
-	p.zlog.Debugf("DomainTotal %v", response.TotalCount)
+	log.Flog.Debugf("DomainTotal %v", response.TotalCount)
 	for _, d := range response.Domains.Domain {
 		domain := cloud.Domain{
 			Name:     d.DomainName,

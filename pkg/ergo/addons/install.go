@@ -12,15 +12,14 @@ import (
 
 	"github.com/ysicing/ergo/pkg/downloader"
 
-	"github.com/ergoapi/log"
-	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/lock"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type InstallOption struct {
-	Log       log.Logger
 	Name      string
 	Repo      string
 	Force     bool
@@ -30,7 +29,7 @@ type InstallOption struct {
 func (o *InstallOption) Run() error {
 	l, _ := lock.LoadFile(common.GetLockfile())
 	if l.Has(o.Name, o.Repo) && !o.Force {
-		o.Log.Warnf("已经安装 %v, 跳过", o.Name)
+		log.Flog.Warnf("已经安装 %v, 跳过", o.Name)
 		return nil
 	}
 	// 加载repo index
@@ -44,7 +43,7 @@ func (o *InstallOption) Run() error {
 	if p.Kind != common.PluginKind {
 		return fmt.Errorf("仅支持Plugin")
 	}
-	o.Log.Donef("%s %s 加载完成", o.Repo, o.Name)
+	log.Flog.Donef("%s %s 加载完成", o.Repo, o.Name)
 	// spew.Dump(p)
 	var installerr error
 	switch p.Spec.Type {
@@ -62,10 +61,10 @@ func (o *InstallOption) Run() error {
 		installerr = fmt.Errorf("不支持的类型")
 	}
 	if installerr != nil {
-		o.Log.Errorf("%s 安装失败", o.Name)
+		log.Flog.Errorf("%s 安装失败", o.Name)
 		return installerr
 	}
-	o.Log.Donef("%v 已安装完成", o.Name)
+	log.Flog.Donef("%v 已安装完成", o.Name)
 	l.Add(&lock.Installed{
 		Name:    o.Name,
 		Repo:    o.Repo,
@@ -79,10 +78,10 @@ func (o *InstallOption) Run() error {
 
 func (o *InstallOption) shell(p Spec) error {
 	temp, _ := ioutil.TempFile(common.GetDefaultCacheDir(), "ergo-shell-")
-	o.Log.Debugf("temp path: %v", temp.Name())
+	log.Flog.Debugf("temp path: %v", temp.Name())
 	temp.WriteString(p.Shell)
-	if err := excmd.RunCmd("/bin/bash", temp.Name()); err != nil {
-		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
+	if err := exec.RunCmd("/bin/bash", temp.Name()); err != nil {
+		log.Flog.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
 		return err
 	}
 	return nil
@@ -90,13 +89,13 @@ func (o *InstallOption) shell(p Spec) error {
 
 func (o *InstallOption) curl(p Spec) error {
 	temp, _ := ioutil.TempFile(common.GetDefaultCacheDir(), "ergo-curl-")
-	o.Log.Debugf("temp path: %v", temp.Name())
+	log.Flog.Debugf("temp path: %v", temp.Name())
 	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.URL), temp.Name())
 	if err != nil {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
-	if err := excmd.RunCmd("/bin/bash", temp.Name()); err != nil {
-		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
+	if err := exec.RunCmd("/bin/bash", temp.Name()); err != nil {
+		log.Flog.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
 		return err
 	}
 	return nil
@@ -108,16 +107,16 @@ func (o *InstallOption) compose(p Spec) error {
 	if err != nil {
 		return fmt.Errorf("%s %s 下载失败: %s", o.Repo, o.Name, err)
 	}
-	compose := "docker-compose -f " + pf + " up -d"
-	return excmd.RunCmd("/bin/bash", "-c", compose)
+	compose := "docker compose -f " + pf + " up -d"
+	return exec.RunCmd("/bin/bash", "-c", compose)
 }
 
 func (o *InstallOption) kube(p Spec) error {
 	temp, _ := ioutil.TempFile(os.TempDir(), "ergo-kube-")
-	o.Log.Debugf("temp path: %v", temp.Name())
+	log.Flog.Debugf("temp path: %v", temp.Name())
 	temp.WriteString(p.Kube)
-	if err := excmd.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {
-		o.Log.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
+	if err := exec.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {
+		log.Flog.Errorf("%s %s 执行失败: %s", o.Repo, o.Name, err)
 		return err
 	}
 	return nil
@@ -133,7 +132,7 @@ func (o *InstallOption) bin(p Spec) error {
 		}
 	}
 	if url == "" {
-		o.Log.Warnf("不支持当前操作系统: %s-%s", binos, binarch)
+		log.Flog.Warnf("不支持当前操作系统: %s-%s", binos, binarch)
 		return nil
 	}
 	binx := fmt.Sprintf("%s/ergo-%s", common.GetDefaultBinDir(), p.Bin)
@@ -145,5 +144,5 @@ func (o *InstallOption) bin(p Spec) error {
 	if len(p.LinkPath) > 0 && !file.CheckFileExists(p.LinkPath) {
 		os.Link(binx, fmt.Sprintf("/usr/local/bin/%s", p.LinkPath))
 	}
-	return excmd.RunCmd(os.Args[0], p.Bin)
+	return exec.RunCmd(os.Args[0], p.Bin)
 }

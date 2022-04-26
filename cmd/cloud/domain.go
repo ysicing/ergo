@@ -59,7 +59,7 @@ func newCloudDomainList(f factory.Factory) *cobra.Command {
 			if ct.Provider == cloud.ProviderQcloud.Value() {
 				l.Debugf("load qcloud domain")
 				// 腾讯云
-				p, err := qcloud.NewDNS(qcloud.WithLog(l), qcloud.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
+				p, err := qcloud.NewDNS(qcloud.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create qcloud api client err: %v", err)
 				} else {
@@ -74,7 +74,7 @@ func newCloudDomainList(f factory.Factory) *cobra.Command {
 			if ct.Provider == cloud.ProviderAliyun.Value() {
 				l.Debugf("load aliyun domain")
 				// 阿里云
-				p, err := aliyun.NewDNS(aliyun.WithLog(l), aliyun.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
+				p, err := aliyun.NewDNS(aliyun.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create aliyun api client err: %v", err)
 				} else {

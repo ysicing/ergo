@@ -14,11 +14,11 @@ import (
 	"github.com/blang/semver"
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/color"
-	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/zos"
 	gv "github.com/hashicorp/go-version"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
+	"github.com/ysicing/ergo/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/logo"
 )
 
@@ -110,7 +110,7 @@ func Upgrade() {
 	}
 	// TODO linux brew
 	if zos.IsMacOS() {
-		if err := excmd.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo"); err != nil {
+		if err := exec.RunCmd("/bin/zsh", "-c", "brew upgrade ysicing/tap/ergo"); err != nil {
 			return
 		}
 	} else {

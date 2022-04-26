@@ -7,19 +7,20 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 // RunAddDebSwap 添加swap space
 func RunAddDebSwap(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer func() {
-		ssh.Log.StopWait()
+		log.Flog.StopWait()
 		wg.Done()
 	}()
-	ssh.Log.StartWait(fmt.Sprintf("%s add swap space on debian", ip))
+	log.Flog.StartWait(fmt.Sprintf("%s add swap space on debian", ip))
 	err := ssh.CmdAsync(ip, AddDebSource)
 	if err != nil {
-		ssh.Log.Fatal(ip, err.Error())
+		log.Flog.Fatal(ip, err.Error())
 		return
 	}
 	for i := 0; i <= 10; i++ {

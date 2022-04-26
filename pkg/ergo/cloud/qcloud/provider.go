@@ -3,13 +3,8 @@
 
 package qcloud
 
-import (
-	"github.com/ergoapi/log"
-)
-
 type provider struct {
 	region    string
 	apikey    string
 	apisecret string
-	zlog      log.Logger
 }

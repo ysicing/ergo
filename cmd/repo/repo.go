@@ -8,19 +8,19 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ergoapi/util/excmd"
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
+	"github.com/ysicing/ergo/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/output"
 	"helm.sh/helm/v3/cmd/helm/require"
 )
 
 func AddCmd(f factory.Factory) *cobra.Command {
 	o := &repo.AddOption{
-		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
@@ -38,7 +38,6 @@ func AddCmd(f factory.Factory) *cobra.Command {
 
 func DelCmd(f factory.Factory) *cobra.Command {
 	o := &repo.DelOption{
-		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
@@ -56,7 +55,6 @@ func DelCmd(f factory.Factory) *cobra.Command {
 
 func UpdateCmd(f factory.Factory) *cobra.Command {
 	o := &repo.UpdateOption{
-		Log:     f.GetLog(),
 		RepoCfg: common.GetDefaultRepoCfg(),
 	}
 	cmd := &cobra.Command{
@@ -72,7 +70,6 @@ func UpdateCmd(f factory.Factory) *cobra.Command {
 }
 
 func ListCmd(f factory.Factory) *cobra.Command {
-	log := f.GetLog()
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "list repo",
@@ -80,7 +77,7 @@ func ListCmd(f factory.Factory) *cobra.Command {
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			f, err := repo.LoadFile(common.GetDefaultRepoCfg())
 			if err != nil || len(f.Repos) == 0 {
-				log.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
+				log.Flog.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
 				return nil
 			}
 			switch strings.ToLower(common.ListOutput) {
@@ -89,7 +86,7 @@ func ListCmd(f factory.Factory) *cobra.Command {
 			case "yaml":
 				return output.EncodeYAML(os.Stdout, f.Repos)
 			default:
-				log.Infof("上次变更时间: %v", f.Generated)
+				log.Flog.Infof("上次变更时间: %v", f.Generated)
 				table := uitable.New()
 				table.AddRow("name", "path", "source")
 				for _, re := range f.Repos {
@@ -107,17 +104,16 @@ func ListCmd(f factory.Factory) *cobra.Command {
 }
 
 func InitCmd(f factory.Factory) *cobra.Command {
-	log := f.GetLog()
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "add default repo",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			cmdArgs := os.Args
-			if err := excmd.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, common.DefaultRepoURL); err != nil {
-				log.Debugf("添加默认库失败: %v", err)
+			if err := exec.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, common.DefaultRepoURL); err != nil {
+				log.Flog.Debugf("添加默认库失败: %v", err)
 				return fmt.Errorf("添加默认库失败")
 			}
-			return excmd.RunCmd(cmdArgs[0], "repo", "update")
+			return exec.RunCmd(cmdArgs[0], "repo", "update")
 		},
 	}
 	return cmd

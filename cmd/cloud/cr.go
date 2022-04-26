@@ -57,7 +57,7 @@ func newCRList(f factory.Factory) *cobra.Command {
 			if ct.Provider == cloud.ProviderQcloud.Value() {
 				l.StartWait("开始加载腾讯云镜像")
 				// 腾讯云
-				p, err := qcloud.NewTCR(qcloud.WithLog(l), qcloud.WithRegion("ap-beijing"), qcloud.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
+				p, err := qcloud.NewTCR(qcloud.WithRegion("ap-beijing"), qcloud.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create qcloud api client err: %v", err)
 				} else {
@@ -74,7 +74,7 @@ func newCRList(f factory.Factory) *cobra.Command {
 			if ct.Provider == cloud.ProviderAliyun.Value() {
 				// 阿里云
 				l.StartWait("开始加载阿里云镜像")
-				p, err := aliyun.NewACR(aliyun.WithLog(l), aliyun.WithRegion("cn-beijing"), aliyun.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
+				p, err := aliyun.NewACR(aliyun.WithRegion("cn-beijing"), aliyun.WithAPI(ct.Secrets.AID, ct.Secrets.AKey))
 				if err != nil {
 					l.Errorf("create aliyun api client err: %v", err)
 				} else {

@@ -10,8 +10,39 @@ import (
 	"os/exec"
 	"strings"
 
+	elog "github.com/ergoapi/log"
+
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
+
+type LogWriter struct {
+	logger elog.Logger
+	t      string
+}
+
+func NewLogWrite(logger elog.Logger, t string) *LogWriter {
+	lw := &LogWriter{}
+	lw.logger = logger
+	return lw
+}
+
+func (lw *LogWriter) Write(p []byte) (n int, err error) {
+	if lw.t == "" {
+		lw.logger.Debug(string(p))
+	} else {
+		lw.logger.Error(string(p))
+	}
+	return len(p), nil
+}
+
+func RunCmd(name string, arg ...string) error {
+	cmd := exec.Command(name, arg[:]...) // #nosec
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = NewLogWrite(log.Flog, "err")
+	cmd.Stdout = NewLogWrite(log.Flog, "")
+	return cmd.Run()
+}
 
 func LookPath(filename string) (string, bool) {
 	p, _ := os.LookupEnv("PATH")

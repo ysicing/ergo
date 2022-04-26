@@ -11,9 +11,7 @@ import (
 	"text/template"
 
 	"github.com/ergoapi/util/environ"
-	"github.com/ergoapi/util/excmd"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/exid"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
@@ -21,6 +19,8 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/manifoldco/promptui"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/exec"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 var CodeType = []struct {
@@ -37,9 +37,7 @@ var CodeType = []struct {
 	},
 }
 
-type CodeGen struct {
-	Log log.Logger
-}
+type CodeGen struct{}
 
 var Project = []struct {
 	Name   string
@@ -75,7 +73,7 @@ func (code CodeGen) GoClone() error {
 	pid, _, _ := project.Run()
 	p := Project[pid]
 	gopath := environ.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
-	code.Log.Debugf("GoPath: %v", gopath)
+	log.Flog.Debugf("GoPath: %v", gopath)
 	nameprompt := promptui.Prompt{
 		Label: "项目名, eg: ysicing/goexample",
 	}
@@ -97,7 +95,7 @@ func (code CodeGen) GoClone() error {
 		return err
 	}
 	file.Rmdir(dir + "/.git")
-	code.Log.Donef("\U0001F389 Start Git Clone %v %v", p.URL, dir)
+	log.Flog.Donef("\U0001F389 Start Git Clone %v %v", p.URL, dir)
 	return nil
 }
 
@@ -135,7 +133,7 @@ func (code CodeGen) GenCrds() error {
 		c.Name = exid.GenUUID()
 	}
 	gopath := environ.GetEnv("GOPATH", zos.GetHomeDir()+"/go")
-	code.Log.Debugf("GoPath: %v", gopath)
+	log.Flog.Debugf("GoPath: %v", gopath)
 	c.Path = fmt.Sprintf("%v/%v/%v", gopath, c.Domain, c.Name)
 	c.License = "apache2"
 	c.Owner = zos.GetUser().Username
@@ -147,13 +145,13 @@ func (code CodeGen) GenCrds() error {
 	if err := file.Writefile(tmpfile, b.String()); err != nil {
 		return err
 	}
-	if err := excmd.RunCmd("/bin/bash", tmpfile); err != nil {
-		code.Log.WriteString(b.String())
-		code.Log.Fatalf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)
+	if err := exec.RunCmd("/bin/bash", tmpfile); err != nil {
+		log.Flog.WriteString(b.String())
+		log.Flog.Fatalf("init crd project %v, tmpfile: %v, err: %v", c.Path, tmpfile, err)
 		return err
 	}
 	file.RemoveFiles(tmpfile)
-	code.Log.Debugf("clean tmp file: %v", tmpfile)
-	code.Log.Donef("init crd project: %v", c.Path)
+	log.Flog.Debugf("clean tmp file: %v", tmpfile)
+	log.Flog.Donef("init crd project: %v", c.Path)
 	return nil
 }

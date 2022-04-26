@@ -9,8 +9,6 @@ import (
 	"os/exec"
 	"strings"
 	"time"
-
-	"github.com/ergoapi/log"
 )
 
 type SSH struct {
@@ -20,7 +18,6 @@ type SSH struct {
 	PkPass       string
 	Timeout      *time.Duration
 	LocalAddress *[]net.Addr
-	Log          log.Logger
 }
 
 func Md5FromLocal(localPath string) string {

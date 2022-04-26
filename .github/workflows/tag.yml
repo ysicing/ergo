@@ -25,6 +25,11 @@ jobs:
         run: |
           echo "install ghr"
           go install github.com/tcnksm/ghr@latest
+      - name: install upx
+        run: |
+          echo "install upx"
+          sudo apt-get update -qq
+          sudo apt-get install -y upx
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -32,6 +37,8 @@ jobs:
         run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
+          make build
+          make upx
           make dpush
 
           pushd dist

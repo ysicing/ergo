@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ergoapi/log"
-	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
+	"github.com/ysicing/ergo/pkg/util/exec"
+	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
@@ -54,13 +54,13 @@ reboot
 // RunUpgradeCore 升级内核
 func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer func() {
-		ssh.Log.StopWait()
+		log.Flog.StopWait()
 		wg.Done()
 	}()
-	ssh.Log.StartWait(fmt.Sprintf("%s start upcore", ip))
+	log.Flog.StartWait(fmt.Sprintf("%s start upcore", ip))
 	err := ssh.CmdAsync(ip, UpgradeCore)
 	if err != nil {
-		ssh.Log.Fatal(ip, err.Error())
+		log.Flog.Fatal(ip, err.Error())
 		return
 	}
 	for i := 0; i <= 10; i++ {
@@ -73,13 +73,13 @@ func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 // RunAddDebSource 添加ergo deb源
 func RunAddDebSource(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer func() {
-		ssh.Log.StopWait()
+		log.Flog.StopWait()
 		wg.Done()
 	}()
-	ssh.Log.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
+	log.Flog.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
 	err := ssh.CmdAsync(ip, AddDebSource)
 	if err != nil {
-		ssh.Log.Fatal(ip, err.Error())
+		log.Flog.Fatal(ip, err.Error())
 		return
 	}
 	for i := 0; i <= 10; i++ {
@@ -92,14 +92,14 @@ func RunAddDebSource(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 func RunWait(ssh sshutil.SSH, ip string) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
-		ssh.Log.Debugf("%v waiting for reboot", ip)
+		log.Flog.Debugf("%v waiting for reboot", ip)
 		time.Sleep(10 * time.Second)
 		return false
 	}
 	return true
 }
 
-func RunLocalShell(runtype string, log log.Logger) {
+func RunLocalShell(runtype string) {
 	var shelldata string
 	switch runtype {
 	case "init":
@@ -116,11 +116,11 @@ func RunLocalShell(runtype string, log log.Logger) {
 	tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", runtype, ztime.NowUnix())
 	err := file.Writefile(tempfile, shelldata)
 	if err != nil {
-		log.Errorf("write file %v, err: %v", tempfile, err)
+		log.Flog.Errorf("write file %v, err: %v", tempfile, err)
 		return
 	}
-	if err := excmd.RunCmd("/bin/bash", tempfile); err != nil {
-		log.Errorf("run shell err: %v", err.Error())
+	if err := exec.RunCmd("/bin/bash", tempfile); err != nil {
+		log.Flog.Errorf("run shell err: %v", err.Error())
 		return
 	}
 }

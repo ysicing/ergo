@@ -14,9 +14,7 @@ import (
 )
 
 func Install(f factory.Factory) *cobra.Command {
-	o := &addons.InstallOption{
-		Log: f.GetLog(),
-	}
+	o := &addons.InstallOption{}
 	cmd := &cobra.Command{
 		Use:   "install [repo] [name] [flags]",
 		Short: "install add-ons",
@@ -41,9 +39,7 @@ func Install(f factory.Factory) *cobra.Command {
 }
 
 func UnInstall(f factory.Factory) *cobra.Command {
-	o := &addons.UnInstallOption{
-		Log: f.GetLog(),
-	}
+	o := &addons.UnInstallOption{}
 	cmd := &cobra.Command{
 		Use:   "uninstall [repo] [name] [flags]",
 		Short: "uninstall add-ons",
@@ -66,9 +62,7 @@ func UnInstall(f factory.Factory) *cobra.Command {
 }
 
 func List(f factory.Factory) *cobra.Command {
-	o := &addons.ListOption{
-		Log: f.GetLog(),
-	}
+	o := &addons.ListOption{}
 	cmd := &cobra.Command{
 		Use:   "list [flags]",
 		Short: "list add-ons",
@@ -80,9 +74,7 @@ func List(f factory.Factory) *cobra.Command {
 }
 
 func Search(f factory.Factory) *cobra.Command {
-	o := &addons.SearchOption{
-		Log: f.GetLog(),
-	}
+	o := &addons.SearchOption{}
 	cmd := &cobra.Command{
 		Use:   "search [flags]",
 		Short: "search add-ons",

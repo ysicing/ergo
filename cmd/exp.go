@@ -19,9 +19,7 @@ import (
 )
 
 func newCodeGenCmd(f factory.Factory) *cobra.Command {
-	c := &codegen.CodeOptions{
-		Log: f.GetLog(),
-	}
+	c := &codegen.CodeOptions{}
 	cmd := &cobra.Command{
 		Use:   "code [flags]",
 		Short: "初始化项目",
@@ -88,9 +86,7 @@ func showConfigAction(cmd *cobra.Command, args []string) error {
 }
 
 func newExperimentalCmd(f factory.Factory) *cobra.Command {
-	exp := experimental.Options{
-		Log: f.GetLog(),
-	}
+	exp := experimental.Options{}
 	cmd := &cobra.Command{
 		Use:     "experimental [flags]",
 		Short:   "Experimental commands that may be modified or deprecated",

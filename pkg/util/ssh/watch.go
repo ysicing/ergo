@@ -8,6 +8,8 @@ import (
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 const oneKBByte = 1024
@@ -26,7 +28,7 @@ func (ss *SSH) IsFileExist(host, remoteFilePath string) bool {
 	data, err := ss.CmdToString(host, remoteFileCommand, " ")
 	defer func() {
 		if r := recover(); r != nil {
-			ss.Log.Errorf("[%s]remoteFileCommand err:%v", host, err)
+			log.Flog.Errorf("[%s]remoteFileCommand err:%v", host, err)
 		}
 	}()
 	if err != nil {
@@ -35,7 +37,7 @@ func (ss *SSH) IsFileExist(host, remoteFilePath string) bool {
 	count, err := strconv.Atoi(strings.TrimSpace(data))
 	defer func() {
 		if r := recover(); r != nil {
-			ss.Log.Errorf("[ssh][%s]RemoteFileExist:%v", host, err)
+			log.Flog.Errorf("[ssh][%s]RemoteFileExist:%v", host, err)
 		}
 	}()
 	if err != nil {

@@ -9,11 +9,13 @@ import (
 	"io"
 	"strings"
 	"sync"
+
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 //Cmd is in host exec cmd
 func (ss *SSH) Cmd(host string, cmd string) ([]byte, error) {
-	ss.Log.Debugf("[%s] %s", host, cmd)
+	log.Flog.Debugf("[%s] %s", host, cmd)
 	client, session, err := ss.Connect(host)
 	if err != nil {
 		return nil, fmt.Errorf("[%s] create ssh session failed, err: %v", host, err)
@@ -46,7 +48,7 @@ func (ss *SSH) CmdAsync(host string, cmds ...string) error {
 		if cmd == "" {
 			continue
 		}
-		ss.Log.Infof("[%s] run cmd: %v", host, cmd)
+		log.Flog.Infof("[%s] run cmd: %v", host, cmd)
 		if err := func(cmd string) error {
 			client, session, err := ss.Connect(host)
 			if err != nil {

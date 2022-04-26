@@ -14,6 +14,7 @@ import (
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/pkg/sftp"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -21,7 +22,7 @@ func (ss *SSH) RemoteMd5Sum(host, remoteFilePath string) string {
 	cmd := fmt.Sprintf("md5sum %s | cut -d\" \" -f1", remoteFilePath)
 	remoteMD5, err := ss.CmdToString(host, cmd, "")
 	if err != nil {
-		ss.Log.Errorf("[%s]count remote md5 failed %s %v", host, remoteFilePath, err)
+		log.Flog.Errorf("[%s]count remote md5 failed %s %v", host, remoteFilePath, err)
 	}
 	return remoteMD5
 }
@@ -125,11 +126,11 @@ func (ss *SSH) Upload(host, localPath, remotePath string) error {
 func (ss *SSH) copyLocalDirToRemote(host string, sftpClient *sftp.Client, localPath, remotePath string) {
 	localFiles, err := ioutil.ReadDir(localPath)
 	if err != nil {
-		ss.Log.Error("read local dir %s failed: %v", localPath, err)
+		log.Flog.Error("read local dir %s failed: %v", localPath, err)
 		return
 	}
 	if err = sftpClient.Mkdir(remotePath); err != nil {
-		ss.Log.Error("mkdir remote dir %s failed: %v", remotePath, err)
+		log.Flog.Error("mkdir remote dir %s failed: %v", remotePath, err)
 		return
 	}
 	for _, file := range localFiles {
@@ -137,14 +138,14 @@ func (ss *SSH) copyLocalDirToRemote(host string, sftpClient *sftp.Client, localP
 		rfp := path.Join(remotePath, file.Name())
 		if file.IsDir() {
 			if err = sftpClient.Mkdir(rfp); err != nil {
-				ss.Log.Error("mkdir remote dir %s failed: %v", rfp, err)
+				log.Flog.Error("mkdir remote dir %s failed: %v", rfp, err)
 				return
 			}
 			ss.copyLocalDirToRemote(host, sftpClient, lfp, rfp)
 		} else {
 			err := ss.copyLocalFileToRemote(host, sftpClient, lfp, rfp)
 			if err != nil {
-				ss.Log.Error("copy local file %s to remote host %s %s failed: %v", lfp, host, rfp, err)
+				log.Flog.Error("copy local file %s to remote host %s %s failed: %v", lfp, host, rfp, err)
 				return
 			}
 		}
@@ -158,7 +159,7 @@ func (ss *SSH) copyLocalFileToRemote(host string, sftpClient *sftp.Client, local
 	if ss.IsFileExist(host, remotePath) {
 		dstMd5 = ss.RemoteMd5Sum(host, remotePath)
 		if srcMd5 == dstMd5 {
-			ss.Log.Warn("file %s md5sum is same with remote file %s, skip copy", localPath, remotePath)
+			log.Flog.Warn("file %s md5sum is same with remote file %s, skip copy", localPath, remotePath)
 			return nil
 		}
 	}
@@ -193,7 +194,7 @@ func (ss *SSH) copyLocalFileToRemote(host string, sftpClient *sftp.Client, local
 			speed = length / oneMBByte
 		}
 		totalLength, totalUnit := toSizeFromInt(total)
-		ss.Log.Debugf("[%s]transfer local [%s] to Dst [%s] total size is: %.2f%s ;speed is %d%s", host, localPath, remotePath, totalLength, totalUnit, speed, unit)
+		log.Flog.Debugf("[%s]transfer local [%s] to Dst [%s] total size is: %.2f%s ;speed is %d%s", host, localPath, remotePath, totalLength, totalUnit, speed, unit)
 	}
 	dstMd5 = ss.RemoteMd5Sum(host, remotePath)
 	if srcMd5 != dstMd5 {

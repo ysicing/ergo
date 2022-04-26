@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
@@ -16,6 +15,7 @@ import (
 	"github.com/ysicing/ergo/internal/kube"
 	es "github.com/ysicing/ergo/pkg/daemon/service"
 	"github.com/ysicing/ergo/pkg/downloader"
+	"github.com/ysicing/ergo/pkg/util/log"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -34,8 +34,7 @@ type Option struct {
 	KsToken string `json:"ksToken"`
 
 	// ext
-	Mode string `json:"mode"`
-	Klog log.Logger
+	Mode string   `json:"mode"`
 	Args []string `json:"args"`
 
 	KubeCtx    string
@@ -46,19 +45,19 @@ func (o *Option) PreCheckK3sBin() (string, error) {
 	// check k3s bin
 	filebin, err := exec.LookPath(common.K3sBinName)
 	if err != nil {
-		o.Klog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
+		log.Flog.Infof("not found k3s bin, will down k3s %v", common.K3sBinVersion)
 		if _, err := downloader.Download(common.GetK3SURL(), common.K3sBinPath); err != nil {
 			return "", err
 		}
 		os.Chmod(common.K3sBinPath, common.FileMode0755)
-		o.Klog.Done("k3s download complete.")
+		log.Flog.Done("k3s download complete.")
 		filebin, _ = exec.LookPath(common.K3sBinName)
 	}
 	output, err := exec.Command(filebin, "--version").CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("seems like there are issues with your k3s client: \n\n%s", output)
 	}
-	o.Klog.Debugf("k3s version: %v", string(output))
+	log.Flog.Debugf("k3s version: %v", string(output))
 	return filebin, nil
 }
 
@@ -110,37 +109,36 @@ func (o *Option) Init() error {
 	es := new(es.ErgoService)
 	s, err := service.New(es, svcConfig)
 	if err != nil {
-		o.Klog.Error(err)
 		return err
 	}
 	// start k3s
 	if err := s.Install(); err != nil {
 		return err
 	}
-	o.Klog.Donef("k3s server install complete.")
+	log.Flog.Donef("k3s server install complete.")
 	if err := s.Start(); err != nil {
 		return err
 	}
-	o.Klog.Donef("k3s server start complete.")
+	log.Flog.Donef("k3s server start complete.")
 	if !excmd.CheckBin("kubectl") {
 		os.Symlink(filebin, common.KubectlBinPath)
-		o.Klog.Donef("create kubectl soft link")
+		log.Flog.Donef("create kubectl soft link")
 	}
-	o.Klog.Debug("waiting cluster ready")
+	log.Flog.Debug("waiting cluster ready")
 	t1 := time.Now()
 	for {
 		if file.CheckFileExists(common.K3sKubeConfig) {
 			d := fmt.Sprintf("%v/.kube", zos.GetHomeDir())
 			os.MkdirAll(d, common.FileMode0644)
 			os.Symlink(common.K3sKubeConfig, fmt.Sprintf("%v/config", d))
-			o.Klog.Donef("create kubeconfig soft link %v ---> %v/config", common.K3sKubeConfig, d)
+			log.Flog.Donef("create kubeconfig soft link %v ---> %v/config", common.K3sKubeConfig, d)
 			break
 		}
 		time.Sleep(time.Second * 5)
-		o.Klog.Debug(".")
+		log.Flog.Debug(".")
 	}
 	t2 := time.Now()
-	o.Klog.Donef("k3s cluster ready, cost: %v", t2.Sub(t1))
+	log.Flog.Donef("k3s cluster ready, cost: %v", t2.Sub(t1))
 	cc := &kube.ClientConfig{
 		QPS:   common.KubeQPS,
 		Burst: common.KubeBurst,
@@ -154,18 +152,18 @@ func (o *Option) Init() error {
 	}
 	kubectlbin, err := exec.LookPath("kubectl")
 	if err != nil {
-		o.Klog.Warnf("look kubectl path err: %v, will try default bin path: %v", err, common.KubectlBinPath)
+		log.Flog.Warnf("look kubectl path err: %v, will try default bin path: %v", err, common.KubectlBinPath)
 		kubectlbin = common.KubectlBinPath
 	}
 	if o.CniNo {
-		o.Klog.Warnf("Cilium is recommended: cilium install --ipv4-native-routing-cidr %s --config cluster-pool-ipv4-cidr=%s", o.PodCIDR, o.PodCIDR)
+		log.Flog.Warnf("Cilium is recommended: cilium install --ipv4-native-routing-cidr %s --config cluster-pool-ipv4-cidr=%s", o.PodCIDR, o.PodCIDR)
 	}
 	getnodesoutput, err := exec.Command(kubectlbin, "get", "nodes").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("seems like there are issues with your kube client: \n\n%s", getnodesoutput)
 	}
-	o.Klog.Donef("%v get nodes", kubectlbin)
-	o.Klog.WriteString(string(getnodesoutput))
+	log.Flog.Donef("%v get nodes", kubectlbin)
+	log.Flog.WriteString(string(getnodesoutput))
 	return nil
 }
 
@@ -214,7 +212,6 @@ func (o *Option) Join() error {
 	es := new(es.ErgoService)
 	s, err := service.New(es, svcConfig)
 	if err != nil {
-		o.Klog.Error(err)
 		return err
 	}
 	// write envs
@@ -228,15 +225,15 @@ func (o *Option) Join() error {
 	if err := s.Install(); err != nil {
 		return err
 	}
-	o.Klog.Donef("k3s agent install complete")
+	log.Flog.Donef("k3s agent install complete")
 	if err := s.Start(); err != nil {
 		return err
 	}
 	if !excmd.CheckBin("kubectl") {
 		os.Symlink(filebin, common.KubectlBinPath)
-		o.Klog.Donef("create kubectl soft link")
+		log.Flog.Donef("create kubectl soft link")
 	}
-	o.Klog.Donef("k3s agent started")
+	log.Flog.Donef("k3s agent started")
 	return nil
 }
 

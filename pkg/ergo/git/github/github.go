@@ -7,9 +7,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/ptr"
 	"github.com/google/go-github/v39/github"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"golang.org/x/oauth2"
 )
 
@@ -22,7 +22,6 @@ func getNameFromURL(name, url string) string {
 }
 
 func CleanPackage(user, token string) {
-	ghlog := log.GetInstance()
 	ctx := context.TODO()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
@@ -36,34 +35,34 @@ func CleanPackage(user, token string) {
 		},
 	})
 	if err != nil {
-		ghlog.Panicf("list package err: %v", err)
+		log.Flog.Panicf("list package err: %v", err)
 	}
 	for _, p := range packages {
-		ghlog.Debugf("package %v", p.GetName())
+		log.Flog.Debugf("package %v", p.GetName())
 		packagesversions, _, err := client.Users.PackageGetAllVersions(ctx, user, "container", getNameFromURL(p.GetName(), p.GetHTMLURL()))
 		if err != nil {
-			ghlog.Debugf("list package version err: %v, skip", err)
+			log.Flog.Debugf("list package version err: %v, skip", err)
 			continue
 		}
 		for _, pv := range packagesversions {
-			clean(ctx, client, ghlog, pv, p.GetOwner().GetName(), p.GetName(), getNameFromURL(p.GetName(), p.GetHTMLURL()))
+			clean(ctx, client, pv, p.GetOwner().GetName(), p.GetName(), getNameFromURL(p.GetName(), p.GetHTMLURL()))
 		}
 	}
 }
 
-func clean(ctx context.Context, client *github.Client, log log.Logger, p *github.PackageVersion, user, name, urlname string) {
+func clean(ctx context.Context, client *github.Client, p *github.PackageVersion, user, name, urlname string) {
 	for _, v := range p.Metadata.Container.Tags {
 		if strings.Contains(v, "-") {
 			if resp, err := client.Users.PackageDeleteVersion(ctx, user, "container", urlname, p.GetID()); err != nil {
 				if resp.StatusCode == 400 {
-					log.Warnf("%v cannot delete the last tagged version [ %v ] of %v.", user, v, name)
+					log.Flog.Warnf("%v cannot delete the last tagged version [ %v ] of %v.", user, v, name)
 				} else if resp.StatusCode == 404 {
-					log.Warnf("%v package %v version [%v] not found", user, name, v)
+					log.Flog.Warnf("%v package %v version [%v] not found", user, name, v)
 				} else {
-					log.Errorf("start clean user %v package %v version %v, err: %v", user, name, v, err)
+					log.Flog.Errorf("start clean user %v package %v version %v, err: %v", user, name, v, err)
 				}
 			} else {
-				log.Donef("clean user %v package %v version %v done", user, name, v)
+				log.Flog.Donef("clean user %v package %v version %v done", user, name, v)
 			}
 		}
 	}

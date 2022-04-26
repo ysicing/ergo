@@ -8,17 +8,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ergoapi/log"
-	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/gosuri/uitable"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
+	"github.com/ysicing/ergo/pkg/util/exec"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 
 type SearchOption struct {
-	Log         log.Logger
 	Name        string
 	DefaultArgs string
 	Prefix      bool
@@ -29,23 +28,23 @@ func (o *SearchOption) Run() error {
 	// index
 	r, err := repo.LoadFile(common.GetDefaultRepoCfg())
 	if err != nil || len(r.Repos) == 0 {
-		o.Log.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
+		log.Flog.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
 		return nil
 	}
 	// 更新依赖
-	if err := excmd.RunCmd(o.DefaultArgs, "repo", "update"); err != nil {
+	if err := exec.RunCmd(o.DefaultArgs, "repo", "update"); err != nil {
 		return fmt.Errorf("更新依赖失败: %v", err)
 	}
 	var res []*PluginList
 	for _, i := range r.Repos {
 		index := common.GetRepoIndexFileByName(i.Name)
 		if !file.CheckFileExists(index) {
-			o.Log.Debugf("not found %s index", i.Name)
+			log.Flog.Debugf("not found %s index", i.Name)
 			continue
 		}
 		pf, err := LoadIndexFile(index)
 		if err != nil {
-			o.Log.Errorf("load plugin index file %v err: %v", index, err)
+			log.Flog.Errorf("load plugin index file %v err: %v", index, err)
 			continue
 		}
 		// res = append(res, pf.Plugins...)
@@ -68,7 +67,7 @@ func (o *SearchOption) Run() error {
 		}
 	}
 	if len(res) == 0 {
-		o.Log.Warnf("没有搜索到相关插件")
+		log.Flog.Warnf("没有搜索到相关插件")
 		return nil
 	}
 	table := uitable.New()
@@ -83,7 +82,7 @@ func (o *SearchOption) Run() error {
 		} else {
 			p, err := LoadPlugin(re.Name, re.Repo, re.Path)
 			if err != nil {
-				o.Log.Errorf("load plugin %v err: %v", re.Name, err)
+				log.Flog.Errorf("load plugin %v err: %v", re.Name, err)
 				continue
 			}
 			table.AddRow(re.Repo, re.Name, p.Spec.Version)

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
@@ -33,7 +34,7 @@ apt remove -y ufw lxd lxd-client lxcfs lxc-common
 
 apt install -y nfs-common conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
 
-mkdir -pv /etc/systemd/journald.conf.d /var/log/journal 
+mkdir -pv /etc/systemd/journald.conf.d /var/log/journal
 
 cat > /etc/systemd/journald.conf.d/95-k8s-journald.conf <<EOF
 [Journal]
@@ -89,7 +90,7 @@ net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
 
 #不允许接受含有源路由信息的ip包
-net.ipv4.conf.all.accept_source_route = 0  
+net.ipv4.conf.all.accept_source_route = 0
 net.ipv4.conf.default.accept_source_route = 0
 
 #打开TCP SYN cookies保护, 一定程度预防SYN攻击
@@ -99,11 +100,11 @@ net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_max_syn_backlog = 3072
 
 #SYN的重试次数,适当降低该值,有助于防范SYN攻击
-net.ipv4.tcp_synack_retries = 3  
+net.ipv4.tcp_synack_retries = 3
 net.ipv4.tcp_syn_retries = 3
 
 #关闭Linux kernel的路由重定向功能
-# net.ipv4.conf.all.send_redirects = 0  
+# net.ipv4.conf.all.send_redirects = 0
 # net.ipv4.conf.default.send_redirects = 0
 
 #不允许ip重定向信息
@@ -113,11 +114,11 @@ net.ipv4.tcp_syn_retries = 3
 # net.ipv4.conf.all.secure_redirects = 0
 
 # icmp ping
-# net.ipv4.icmp_echo_ignore_broadcasts = 1  
+# net.ipv4.icmp_echo_ignore_broadcasts = 1
 # net.ipv4.icmp_ignore_bogus_error_responses = 1
 
 #进程快速回收,避免系统中存在大量TIME_WAIT进程
-net.ipv4.tcp_tw_recycle = 1  
+net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_fin_timeout = 30 # 缩短TIME_WAIT时间,加速端口回收
 
 #端口重用, 一般不开启,仅对客户端有效果,对于高并发客户端,可以复用TIME_WAIT连接端口,避免源端口耗尽建连失败
@@ -128,7 +129,7 @@ net.ipv4.tcp_tw_reuse = 0
 
 # conntrack优化
 net.netfilter.nf_conntrack_tcp_be_liberal = 1 # 容器环境下, 开启这个参数可以避免 NAT 过的 TCP 连接 带宽上不去。
-net.netfilter.nf_conntrack_tcp_loose = 1 
+net.netfilter.nf_conntrack_tcp_loose = 1
 net.netfilter.nf_conntrack_max = 3200000
 net.netfilter.nf_conntrack_buckets = 1600512
 net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30
@@ -194,12 +195,12 @@ exit 0
 
 func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
 	defer func() {
-		ssh.Log.StopWait()
+		log.Flog.StopWait()
 		wg.Done()
 	}()
-	ssh.Log.StartWait(fmt.Sprintf("start init %v", ip))
+	log.Flog.StartWait(fmt.Sprintf("start init %v", ip))
 	if err := ssh.CmdAsync(ip, InitSH); err != nil {
-		ssh.Log.Errorf("ip %v, err: %v", ip, err)
+		log.Flog.Errorf("ip %v, err: %v", ip, err)
 		return
 	}
 }

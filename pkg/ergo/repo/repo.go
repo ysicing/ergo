@@ -16,8 +16,8 @@ import (
 	"github.com/ergoapi/util/exid"
 
 	"github.com/ysicing/ergo/pkg/downloader"
+	"github.com/ysicing/ergo/pkg/util/log"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/gofrs/flock"
 	"github.com/ysicing/ergo/common"
@@ -25,7 +25,6 @@ import (
 )
 
 type AddOption struct {
-	Log     log.Logger
 	Name    string
 	URL     string
 	RepoCfg string
@@ -35,7 +34,7 @@ func (o *AddOption) Run() error {
 	// Ensure the file directory exists as it is required for file locking
 	err := os.MkdirAll(filepath.Dir(o.RepoCfg), os.ModePerm)
 	if err != nil && !os.IsExist(err) {
-		o.Log.Errorf("create plugin file err: %v", err)
+		log.Flog.Errorf("create plugin file err: %v", err)
 		return err
 	}
 	// Acquire a file lock for process synchronization
@@ -54,7 +53,7 @@ func (o *AddOption) Run() error {
 		defer fileLock.Unlock()
 	}
 	if err != nil {
-		o.Log.Warnf("其他进程正在更新")
+		log.Flog.Warnf("其他进程正在更新")
 		return err
 	}
 	b, err := ioutil.ReadFile(o.RepoCfg)
@@ -63,7 +62,7 @@ func (o *AddOption) Run() error {
 	}
 	var f File
 	if err := yaml.Unmarshal(b, &f); err != nil {
-		o.Log.Errorf("解析 %v 失败: %v", o.RepoCfg, err)
+		log.Flog.Errorf("解析 %v 失败: %v", o.RepoCfg, err)
 		return err
 	}
 
@@ -83,10 +82,10 @@ func (o *AddOption) Run() error {
 	if f.Has(o.Name) {
 		existing := f.Get(o.Name)
 		if c != *existing {
-			o.Log.Warnf("Repo(%s)已经存在", o.Name)
+			log.Flog.Warnf("Repo(%s)已经存在", o.Name)
 			return nil
 		}
-		o.Log.Warnf("已经存在%q相同的配置, skipping", o.Name)
+		log.Flog.Warnf("已经存在%q相同的配置, skipping", o.Name)
 		return nil
 	}
 
@@ -94,12 +93,11 @@ func (o *AddOption) Run() error {
 	if err := f.WriteFile(o.RepoCfg, common.FileMode0600); err != nil {
 		return err
 	}
-	o.Log.Donef("%q 添加成功", o.Name)
+	log.Flog.Donef("%q 添加成功", o.Name)
 	return nil
 }
 
 type DelOption struct {
-	Log     log.Logger
 	Names   []string
 	RepoCfg string
 }
@@ -107,14 +105,14 @@ type DelOption struct {
 func (o *DelOption) Run() error {
 	r, err := LoadFile(o.RepoCfg)
 	if err != nil || len(r.Repos) == 0 {
-		o.Log.Warn("no plugin or service repo configured")
+		log.Flog.Warn("no plugin or service repo configured")
 		return nil
 	}
 
 	for _, name := range o.Names {
 		repo := r.Get(name)
 		if !r.Remove(name) {
-			o.Log.Warnf("不存在 %q", name)
+			log.Flog.Warnf("不存在 %q", name)
 			continue
 		}
 		r.Generated = time.Now()
@@ -124,15 +122,14 @@ func (o *DelOption) Run() error {
 		index := common.GetRepoIndexFileByName(repo.Name)
 		if file.CheckFileExists(index) {
 			file.RemoveFiles(index)
-			o.Log.Debugf("%q清理索引文件", name)
+			log.Flog.Debugf("%q清理索引文件", name)
 		}
-		o.Log.Donef("%q已经被移除", name)
+		log.Flog.Donef("%q已经被移除", name)
 	}
 	return nil
 }
 
 type UpdateOption struct {
-	Log     log.Logger
 	Names   []string
 	RepoCfg string
 }
@@ -154,7 +151,7 @@ func (o *UpdateOption) Run() error {
 	for _, name := range o.Names {
 		repo := r.Get(name)
 		if repo == nil {
-			o.Log.Warnf("不存在 %q", name)
+			log.Flog.Warnf("不存在 %q", name)
 			continue
 		}
 		index := common.GetRepoIndexFileByName(repo.Name)
@@ -165,31 +162,31 @@ func (o *UpdateOption) Run() error {
 		if repo.Mode != common.RepoLocalMode && strings.HasPrefix(repo.URL, "http") {
 			_, err := url.Parse(repo.URL)
 			if err != nil {
-				o.Log.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
+				log.Flog.Warnf("%v invalid repo url format: %s", repo.Name, repo.URL)
 				continue
 			}
 			_, err = downloader.Download(repo.URL, index)
 			if err != nil {
-				o.Log.Debugf("%q 更新索引失败: %v", name, err)
+				log.Flog.Debugf("%q 更新索引失败: %v", name, err)
 				continue
 			} else {
-				o.Log.Debugf("%q 已经更新索引: %v", name, index)
+				log.Flog.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		} else {
 			if !file.CheckFileExists(repo.URL) {
-				o.Log.Warnf("%v invalid local file: %s", repo.Name, repo.URL)
+				log.Flog.Warnf("%v invalid local file: %s", repo.Name, repo.URL)
 				continue
 			}
 			file.RemoveFiles(index)
 			if err := downloader.CopyLocal(index, repo.URL); err != nil {
-				o.Log.Debugf("%q 更新索引失败: %v", name, err)
+				log.Flog.Debugf("%q 更新索引失败: %v", name, err)
 				continue
 			} else {
-				o.Log.Debugf("%q 已经更新索引: %v", name, index)
+				log.Flog.Debugf("%q 已经更新索引: %v", name, index)
 			}
 		}
-		o.Log.Infof("%s 更新成功", name)
+		log.Flog.Infof("%s 更新成功", name)
 	}
-	o.Log.Done("索引全部更新完成")
+	log.Flog.Done("索引全部更新完成")
 	return nil
 }

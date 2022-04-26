@@ -6,7 +6,6 @@ package op
 import (
 	"sync"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/ergo/ops/exec"
@@ -39,7 +38,6 @@ func ExecCmd() *cobra.Command {
 }
 
 func (cmd *execOption) Exec(args []string) error {
-	cmd.sshcfg.Log = log.GetInstance()
 	if len(cmd.ips) == 0 {
 		return exec.LocalRun(args...)
 	}

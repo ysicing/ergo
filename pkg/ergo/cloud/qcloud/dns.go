@@ -12,6 +12,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 func NewDNS(opts ...Option) (cloud.DNSCloud, error) {
@@ -44,7 +45,7 @@ func (p *provider) DomainList(ctx context.Context) (cloud.DomainList, error) {
 		return nil, err
 	}
 	var dls cloud.DomainList
-	p.zlog.Debugf("DomainTotal %v", *response.Response.DomainCountInfo.DomainTotal)
+	log.Flog.Debugf("DomainTotal %v", *response.Response.DomainCountInfo.DomainTotal)
 	for _, d := range response.Response.DomainList {
 		domain := cloud.Domain{
 			Name:     *d.Name,

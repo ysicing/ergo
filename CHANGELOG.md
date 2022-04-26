@@ -2,6 +2,8 @@
 
 - v3.4.0
   - [x] 内置kubectl命令
+  - [x] 优化日志
+  - [x] upx压缩二进制
 
 - v3.3.0
   - [x] 支持kube resources

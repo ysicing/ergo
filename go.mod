@@ -11,8 +11,7 @@ require (
 	github.com/coreos/go-iptables v0.6.0
 	github.com/ergoapi/exgin v1.0.8
 	github.com/ergoapi/log v0.0.3
-	github.com/ergoapi/util v0.2.8
-	github.com/ergoapi/zlog v0.0.3
+	github.com/ergoapi/util v0.2.12
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
@@ -47,13 +46,13 @@ require (
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gotest.tools v2.2.0+incompatible
-	helm.sh/helm/v3 v3.8.1
-	k8s.io/api v0.23.5
-	k8s.io/apimachinery v0.23.5
-	k8s.io/client-go v0.23.5
-	k8s.io/component-base v0.23.5
-	k8s.io/kubectl v0.23.5
-	k8s.io/metrics v0.23.5
+	helm.sh/helm/v3 v3.8.2
+	k8s.io/api v0.23.6
+	k8s.io/apimachinery v0.23.6
+	k8s.io/client-go v0.23.6
+	k8s.io/component-base v0.23.6
+	k8s.io/kubectl v0.23.6
+	k8s.io/metrics v0.23.6
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -81,6 +80,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/ergoapi/errors v0.0.1 // indirect
+	github.com/ergoapi/zlog v0.0.3 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/fatih/camelcase v1.0.0 // indirect
@@ -187,8 +187,8 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
-	k8s.io/cli-runtime v0.23.5 // indirect
-	k8s.io/component-helpers v0.23.5 // indirect
+	k8s.io/cli-runtime v0.23.6 // indirect
+	k8s.io/component-helpers v0.23.6 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect

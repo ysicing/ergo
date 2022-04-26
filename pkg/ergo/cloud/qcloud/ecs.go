@@ -19,6 +19,7 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 
@@ -66,18 +67,18 @@ func (p *provider) createpre() cvmOption {
 	response, err := client.DescribeSubnets(request)
 	if err != nil {
 		if _, ok := err.(*errors.TencentCloudSDKError); ok {
-			p.zlog.Errorf("An API error has returned: %s", err)
+			log.Flog.Errorf("An API error has returned: %s", err)
 		}
-		p.zlog.Panicf("subnet panic: %v", err)
+		log.Flog.Panicf("subnet panic: %v", err)
 	}
 	if *response.Response.TotalCount == 0 {
 		request := vpc.NewCreateDefaultVpcRequest()
 		_, err := client.CreateDefaultVpc(request)
 		if err != nil {
 			if _, ok := err.(*errors.TencentCloudSDKError); ok {
-				p.zlog.Errorf("An API error has returned: %s", err)
+				log.Flog.Errorf("An API error has returned: %s", err)
 			}
-			p.zlog.Panicf("subnet panic: %v", err)
+			log.Flog.Panicf("subnet panic: %v", err)
 		}
 		p.createpre()
 	}
@@ -137,7 +138,7 @@ func (p *provider) Create(ctx context.Context, option cloud.CreateOption) error 
 	}
 	request.InstanceCount = common.Int64Ptr(1)
 	password := pwgen.GeneratePassword(16, false)
-	p.zlog.Debugf("password: %v", password)
+	log.Flog.Debugf("password: %v", password)
 	request.LoginSettings = &cvm.LoginSettings{
 		Password: common.StringPtr(password),
 	}
@@ -156,11 +157,11 @@ func (p *provider) Create(ctx context.Context, option cloud.CreateOption) error 
 	_, err := client.RunInstances(request)
 	if err != nil {
 		if _, ok := err.(*errors.TencentCloudSDKError); ok {
-			p.zlog.Errorf("An API error has returned: %s", err)
+			log.Flog.Errorf("An API error has returned: %s", err)
 		}
-		p.zlog.Panicf("subnet panic: %v", err)
+		log.Flog.Panicf("subnet panic: %v", err)
 	}
-	p.zlog.Donef("创建成功")
+	log.Flog.Donef("创建成功")
 	return nil
 }
 func (p *provider) Destroy(ctx context.Context, option cloud.DestroyOption) error {

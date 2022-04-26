@@ -5,7 +5,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/ergoapi/zlog"
+	"github.com/ysicing/ergo/pkg/util/log"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
@@ -145,7 +145,7 @@ func (k *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]No
 		resource.Age = time.Since(nodes[nodename].CreationTimestamp.Time).String()
 		noderesource, err := getNodeAllocatedResources(nodes[nodename], activePodsList, NodeMetricsList)
 		if err != nil {
-			zlog.Error("Couldn't get allocated resources of %s node: %s", nodename, err)
+			log.Flog.Errorf("Couldn't get allocated resources of %s node: %s", nodename, err)
 		}
 		resource.CPUUsages = noderesource.CPUUsages.String()
 		resource.CPURequests = noderesource.CPURequests.String()

@@ -5,12 +5,11 @@ package codegen
 import (
 	"strings"
 
-	"github.com/ergoapi/log"
 	"github.com/manifoldco/promptui"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type CodeOptions struct {
-	Log log.Logger
 }
 
 func (code CodeOptions) Init() {
@@ -35,18 +34,18 @@ func (code CodeOptions) Init() {
 	}
 	codetypeid, _, _ := codetype.Run()
 	selectcodetypevalue := CodeType[codetypeid].Key
-	code.Log.Infof("\U0001F389 选择 %v", selectcodetypevalue)
-	codefunc := &CodeGen{Log: code.Log}
+	log.Flog.Infof("\U0001F389 选择 %v", selectcodetypevalue)
+	codefunc := &CodeGen{}
 	if selectcodetypevalue == "go" {
-		code.Log.Infof("Start downloading the template...")
+		log.Flog.Infof("Start downloading the template...")
 		if err := codefunc.GoClone(); err != nil {
-			code.Log.Fatal(err)
+			log.Flog.Fatal(err)
 			return
 		}
 	} else {
-		code.Log.Infof("Start Gen Crds template...")
+		log.Flog.Infof("Start Gen Crds template...")
 		if err := codefunc.GenCrds(); err != nil {
-			code.Log.Fatal(err)
+			log.Flog.Fatal(err)
 			return
 		}
 	}

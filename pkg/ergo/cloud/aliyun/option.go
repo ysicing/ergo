@@ -3,8 +3,6 @@
 
 package aliyun
 
-import "github.com/ergoapi/log"
-
 type Option func(*provider)
 
 func WithAPI(key, secret string) Option {
@@ -20,8 +18,8 @@ func WithRegion(region string) Option {
 	}
 }
 
-func WithLog(log log.Logger) Option {
-	return func(p *provider) {
-		p.zlog = log
-	}
-}
+// func WithLog(log log.Logger) Option {
+// 	return func(p *provider) {
+// 		p.zlog = log
+// 	}
+// }

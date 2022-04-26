@@ -6,16 +6,13 @@ package kube
 import (
 	"fmt"
 
-	"github.com/ergoapi/log"
 	"github.com/spf13/cobra"
 	k3 "github.com/ysicing/ergo/pkg/k3s"
 	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 func K3sCmd(f factory.Factory) *cobra.Command {
-	opt := k3.Option{
-		Klog: log.GetInstance(),
-	}
+	opt := k3.Option{}
 	k3s := &cobra.Command{
 		Use:   "k3s",
 		Short: "k3s",

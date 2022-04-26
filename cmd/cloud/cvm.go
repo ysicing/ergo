@@ -7,28 +7,23 @@ import (
 	"context"
 	"strings"
 
-	"github.com/ergoapi/log"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/config"
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/qcloud"
 	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type CvmOption struct {
-	*flags.GlobalFlags
-	log    log.Logger
 	action string
 }
 
 // CvmCmd ergo cvm
 func CvmCmd(f factory.Factory) *cobra.Command {
-	opt := &CvmOption{
-		log: f.GetLog(),
-	}
+	opt := &CvmOption{}
 	cvm := &cobra.Command{
 		Use:     "cvm [flags]",
 		Short:   "开通竞价机器",
@@ -51,7 +46,7 @@ func (c *CvmOption) Run() error {
 
 	if len(ergocfg.Cloud) == 0 {
 		// 不存在
-		c.log.Debug("not found cloud provider, will gen one")
+		log.Flog.Debug("not found cloud provider, will gen one")
 		newprovider := addProvider()
 		ergocfg.Cloud = append(ergocfg.Cloud, newprovider)
 		ergocfg.Dump()
@@ -66,7 +61,7 @@ func (c *CvmOption) Run() error {
 		selectitem := append(ergocfg.Cloud, config.Provider{
 			Provider: "new",
 		})
-		c.log.Debugf("加载配置成功: %v", selectitem)
+		log.Flog.Debugf("加载配置成功: %v", selectitem)
 		ps := promptui.Select{
 			Label: "选择凭证",
 			Items: selectitem,
@@ -103,7 +98,7 @@ func (c *CvmOption) Run() error {
 		if !strings.HasPrefix(region, "ap") {
 			region = "ap-nanjing"
 		}
-		p, err := qcloud.NewCvm(qcloud.WithLog(c.log), qcloud.WithAPI(aid, akey), qcloud.WithRegion(region))
+		p, err := qcloud.NewCvm(qcloud.WithAPI(aid, akey), qcloud.WithRegion(region))
 		if err != nil {
 			return err
 		}

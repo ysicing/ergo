@@ -13,6 +13,7 @@ import (
 
 	"github.com/ergoapi/exgin"
 	"github.com/gin-gonic/gin"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 var (
@@ -44,7 +45,7 @@ var (
 					input.type = "submit";
 					input.value = "删除选中";
 					pre.parentNode.append(input);
-				}			
+				}
 			}
 		}
     </script>
@@ -71,7 +72,7 @@ func (exp *Options) SimpleFile() {
 		authGroup = g.Group("/")
 	}
 	getGroup := authGroup.Group("/", writeHead)
-	exp.Log.Debug("dir: ", exp.SimpleFileCfg.Dir)
+	log.Flog.Debug("dir: ", exp.SimpleFileCfg.Dir)
 	getGroup.StaticFS("/", gin.Dir(exp.SimpleFileCfg.Dir, true))
 	authGroup.POST("/", exp.uploadFile)
 	authGroup.POST("/del/", exp.delFile)

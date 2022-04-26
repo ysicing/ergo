@@ -49,7 +49,11 @@ build: clean ## 构建二进制
 												-X 'k8s.io/component-base/version.gitMinor=23' \
     										-X 'k8s.io/component-base/version.buildDate=${BUILD_DATE}'"
 
-docker: build ## 构建镜像
+docker: ## upx binary
+	@echo "upx binray"
+	@upx -9 dist/*
+
+docker: ## 构建镜像
 	@echo "build docker images ${BUILD_VERSION}"
 	@docker build -t ysicing/ergo .
 	@docker build -t ysicing/ergo:${BUILD_VERSION} .

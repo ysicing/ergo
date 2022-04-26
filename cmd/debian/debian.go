@@ -11,6 +11,7 @@ import (
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/debian"
 	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
@@ -26,7 +27,6 @@ func (cmd *Option) prepare(f factory.Factory) {
 	if len(cmd.IPs) == 0 {
 		cmd.IPs = append(cmd.IPs, "127.0.0.1")
 	}
-	cmd.SSHCfg.Log = f.GetLog()
 }
 
 func (cmd *Option) Init(f factory.Factory) error {
@@ -34,7 +34,7 @@ func (cmd *Option) Init(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			debian.RunLocalShell("init", cmd.SSHCfg.Log)
+			debian.RunLocalShell("init")
 		} else {
 			wg.Add(1)
 			go debian.RunInit(cmd.SSHCfg, ip, &wg)
@@ -49,7 +49,7 @@ func (cmd *Option) UpCore(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			debian.RunLocalShell("upcore", cmd.SSHCfg.Log)
+			debian.RunLocalShell("upcore")
 		} else {
 			wg.Add(1)
 			go debian.RunUpgradeCore(cmd.SSHCfg, ip, &wg)
@@ -65,9 +65,9 @@ func (cmd *Option) Apt(f factory.Factory) error {
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
 			if file.CheckFileExists("/etc/apt/sources.list") {
-				debian.RunLocalShell("apt", cmd.SSHCfg.Log)
+				debian.RunLocalShell("apt")
 			}
-			cmd.SSHCfg.Log.Warn("仅支持Debian系")
+			log.Flog.Warn("仅支持Debian系")
 		} else {
 			wg.Add(1)
 			go debian.RunAddDebSource(cmd.SSHCfg, ip, &wg)
@@ -83,9 +83,9 @@ func (cmd *Option) Swap(f factory.Factory) error {
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
 			if file.CheckFileExists("/etc/apt/sources.list") {
-				debian.RunLocalShell("swap", cmd.SSHCfg.Log)
+				debian.RunLocalShell("swap")
 			} else {
-				cmd.SSHCfg.Log.Warn("仅支持Debian系")
+				log.Flog.Warn("仅支持Debian系")
 			}
 		} else {
 			wg.Add(1)
