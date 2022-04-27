@@ -1,5 +1,7 @@
 # Ergo CHANGELOG
 
+- v3.4.1
+
 - v3.4.0
   - [x] 内置kubectl命令
   - [x] 优化日志
