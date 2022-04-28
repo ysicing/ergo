@@ -36,12 +36,12 @@ require (
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.11.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.390
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.391
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.390
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.390
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.390
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.390
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.390
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.391
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
