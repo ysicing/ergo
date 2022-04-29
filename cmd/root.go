@@ -64,7 +64,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	// rootCmd.AddCommand(newSecCmd(f))
 	rootCmd.AddCommand(newExtCmd(f))
 	rootCmd.AddCommand(newExperimentalCmd(f))
-	rootCmd.AddCommand(newKubeCmd(f))
+	rootCmd.AddCommand(NewKubeCmd())
 	rootCmd.AddCommand(newDebugCmd())
 	// Add plugin commands
 	rootCmd.AddCommand(KubectlCommand())

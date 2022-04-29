@@ -5,6 +5,8 @@ package common
 
 import (
 	"fmt"
+	"os"
+	"runtime"
 
 	"github.com/ergoapi/util/zos"
 )
@@ -59,4 +61,21 @@ func GetDefaultErgoCfg() string {
 // GetK3SURL 获取k3s地址
 func GetK3SURL() string {
 	return fmt.Sprintf("%s/%s/k3s", K3sBinURL, K3sBinVersion)
+}
+
+func GetDefaultKubeConfig() string {
+	d := fmt.Sprintf("%v/.kube", zos.GetHomeDir())
+	os.MkdirAll(d, FileMode0644)
+	return fmt.Sprintf("%v/config", d)
+}
+
+// GetBinURL 获取bin地址
+func GetBinURL(binName string) string {
+	url := "https://sh.ysicing.me/cli/%s/%s-linux-%s"
+	return fmt.Sprintf(url, binName, binName, runtime.GOARCH)
+}
+
+func GetCustomConfig(name string) string {
+	home := zos.GetHomeDir()
+	return fmt.Sprintf("%s/%s/%s", home, DefaultCfgDir, name)
 }

@@ -15,8 +15,8 @@
 兼容性:
 
 - [x] 100% 支持 `Debian 11`
-- [ ] 绝大数功能在macOS上测试通过
-- [ ] 部分功能在非Debian系上测试通过
+- [ ] 绝大数功能在Debian上测试通过
+- [ ] 部分功能在macOS系上测试通过
 
 ## ergo能干什么 / What does Ergo do?
 

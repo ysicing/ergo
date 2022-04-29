@@ -1,6 +1,7 @@
 # Ergo CHANGELOG
 
-- v3.4.1
+- v3.5.0
+  - [ ] k3s安装架构调整，参考autok3s
 
 - v3.4.0
   - [x] 内置kubectl命令

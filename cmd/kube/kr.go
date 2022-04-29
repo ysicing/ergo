@@ -3,7 +3,6 @@ package kube
 import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/pkg/kube/resource"
-	"github.com/ysicing/ergo/pkg/util/factory"
 	"k8s.io/kubectl/pkg/util/templates"
 )
 
@@ -19,7 +18,7 @@ var (
 	`)
 )
 
-func KRCmd(f factory.Factory) *cobra.Command {
+func KRCmd() *cobra.Command {
 	o := resource.Option{}
 	kr := &cobra.Command{
 		Use:   "res",
