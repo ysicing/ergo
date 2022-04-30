@@ -30,11 +30,12 @@ const (
 	Table Format = "table"
 	JSON  Format = "json"
 	YAML  Format = "yaml"
+	Text  Format = "text"
 )
 
 // Formats returns a list of the string representation of the supported formats
 func Formats() []string {
-	return []string{Table.String(), JSON.String(), YAML.String()}
+	return []string{Table.String(), JSON.String(), YAML.String(), Text.String()}
 }
 
 // FormatsWithDesc returns a list of the string representation of the supported formats
@@ -44,6 +45,7 @@ func FormatsWithDesc() map[string]string {
 		Table.String(): "Output result in human-readable format",
 		JSON.String():  "Output result in JSON format",
 		YAML.String():  "Output result in YAML format",
+		Text.String():  "Output result in text format",
 	}
 }
 
@@ -65,6 +67,8 @@ func (o Format) Write(out io.Writer, w Writer) error {
 		return w.WriteJSON(out)
 	case YAML:
 		return w.WriteYAML(out)
+	case Text:
+		return w.WriteText(out)
 	}
 	return ErrInvalidFormatType
 }
@@ -79,6 +83,8 @@ func ParseFormat(s string) (out Format, err error) {
 		out, err = JSON, nil
 	case YAML.String():
 		out, err = YAML, nil
+	case Text.String():
+		out, err = Text, nil
 	default:
 		out, err = "", ErrInvalidFormatType
 	}
@@ -96,6 +102,9 @@ type Writer interface {
 	// WriteYAML will write YAML formatted output into the given io.Writer,
 	// returning an error if any occur
 	WriteYAML(out io.Writer) error
+	// WriteText will write text formatted output into the given io.Writer,
+	// returning an error if any occur
+	WriteText(out io.Writer) error
 }
 
 // EncodeJSON is a helper function to decorate any error message with a bit more
@@ -132,6 +141,16 @@ func EncodeTable(out io.Writer, table *uitable.Table) error {
 	_, err := out.Write(raw)
 	if err != nil {
 		return errors.Wrap(err, "unable to write table output")
+	}
+	return nil
+}
+
+// EncodeText is a helper function to decorate any error message with a bit
+// more context and avoid writing the same code over and over for printers
+func EncodeText(out io.Writer, raw []byte) error {
+	_, err := out.Write(raw)
+	if err != nil {
+		return errors.Wrap(err, "unable to write text output")
 	}
 	return nil
 }

@@ -1,20 +1,10 @@
 package kube
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-
-	"github.com/logrusorgru/aurora/v3"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/kubectl/pkg/metricsutil"
 	metricsapi "k8s.io/metrics/pkg/apis/metrics"
-)
-
-const (
-	warningThreshold  = 80.00
-	criticalThreshold = 90.00
 )
 
 // CPUResources describes node allocated resources.
@@ -147,7 +137,7 @@ func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsLis
 	reqs, limits := map[v1.ResourceName]resource.Quantity{}, map[v1.ResourceName]resource.Quantity{}
 
 	for _, pod := range podList.Items {
-		podReqs, podLimits, err := PodRequestsAndLimits(&pod)
+		podReqs, podLimits, err := PodRequestsAndLimits(pod)
 		if err != nil {
 			return NodeAllocatedResources{}, err
 		}
@@ -173,7 +163,6 @@ func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsLis
 	usageMetrics := nodeMetricsByNodeName[node.Name]
 
 	capacity := NodeCapacity(&node)
-
 	_cpuRequests, _cpuLimits, _memoryRequests, _memoryLimits := reqs[v1.ResourceCPU], limits[v1.ResourceCPU],
 		reqs[v1.ResourceMemory], limits[v1.ResourceMemory]
 	_cpuUsages, _memoryUsages := usageMetrics.Usage.Cpu().MilliValue(), usageMetrics.Usage.Memory().Value()
@@ -215,7 +204,7 @@ func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsLis
 }
 
 //getPodAllocatedResources
-func getPodAllocatedResources(pod *v1.Pod, podmetric *metricsapi.PodMetrics) (PodAllocatedResources, error) {
+func getPodAllocatedResources(pod v1.Pod, podmetric *metricsapi.PodMetrics) (PodAllocatedResources, error) {
 	reqs, limits := map[v1.ResourceName]resource.Quantity{}, map[v1.ResourceName]resource.Quantity{}
 
 	podReqs, podLimits, err := PodRequestsAndLimits(pod)
@@ -271,7 +260,7 @@ func getPodAllocatedResources(pod *v1.Pod, podmetric *metricsapi.PodMetrics) (Po
 // containers of the pod. If pod overhead is non-nil, the pod overhead is added to the
 // total container resource requests and to the total container limits which have a
 // non-zero quantity.
-func PodRequestsAndLimits(pod *v1.Pod) (reqs, limits v1.ResourceList, err error) {
+func PodRequestsAndLimits(pod v1.Pod) (reqs, limits v1.ResourceList, err error) {
 	reqs, limits = v1.ResourceList{}, v1.ResourceList{}
 	for _, container := range pod.Spec.Containers {
 		addResourceList(reqs, container.Resources.Requests)
@@ -322,122 +311,4 @@ func maxResourceList(list, new v1.ResourceList) {
 			}
 		}
 	}
-}
-
-// NewGpuResource returns the list of NewGpuResource
-func NewGpuResource(name v1.ResourceName, rl *v1.ResourceList) *resource.Quantity {
-	if val, ok := (*rl)[name]; ok {
-		return &val
-	}
-	return rl.Name(name, resource.DecimalSI)
-}
-
-//calcPercentage
-func calcPercentage(dividend, divisor int64) float64 {
-	if divisor > 0 {
-		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", float64(dividend)/float64(divisor)*100), 64)
-		return value
-	}
-	return float64(0)
-}
-
-type MemoryResource struct {
-	*resource.Quantity
-}
-
-//NewMemoryResource
-func NewMemoryResource(value int64) *MemoryResource {
-	return &MemoryResource{resource.NewQuantity(value, resource.BinarySI)}
-}
-
-//calcPercentage
-func (r *MemoryResource) calcPercentage(divisor *resource.Quantity) float64 {
-	return calcPercentage(r.Value(), divisor.Value())
-}
-
-func (r *MemoryResource) String() string {
-	// XXX: Support more units
-	return fmt.Sprintf("%vMi", r.Value()/(1024*1024))
-}
-
-//ToQuantity
-func (r *MemoryResource) ToQuantity() *resource.Quantity {
-	return resource.NewQuantity(r.Value(), resource.BinarySI)
-}
-
-type CPUResource struct {
-	*resource.Quantity
-}
-
-//NewCPUResource
-func NewCPUResource(value int64) *CPUResource {
-	r := resource.NewMilliQuantity(value, resource.DecimalSI)
-	return &CPUResource{r}
-}
-
-//String
-func (r *CPUResource) String() string {
-	// XXX: Support more units
-	return fmt.Sprintf("%vm", r.MilliValue())
-}
-
-//float64ToString float64转string
-func float64ToString(s float64) string {
-	//return strconv.FormatFloat(s, 'G', -1, 32)
-	return fmt.Sprintf("%v%%", strconv.FormatFloat(s, 'G', -1, 64))
-}
-
-//StringTofloat64
-func stringTofloat64(a string) float64 {
-	value, _ := strconv.ParseFloat(a, 64)
-	return value
-}
-
-//calcPercentage
-func (r *CPUResource) calcPercentage(divisor *resource.Quantity) float64 {
-	return calcPercentage(r.MilliValue(), divisor.MilliValue())
-}
-
-//ToQuantity
-func (r *CPUResource) ToQuantity() *resource.Quantity {
-	return resource.NewMilliQuantity(r.MilliValue(), resource.DecimalSI)
-}
-
-//FieldString
-func FieldString(str string) float64 {
-	switch {
-	case strings.Contains(str, "%"):
-		str1 := strings.Split(str, "%")
-		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", stringTofloat64(str1[0])), 64)
-		return value
-	case strings.Contains(str, "Mi"):
-		str1 := strings.Split(str, "Mi")
-		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", stringTofloat64(str1[0])), 64)
-		return value
-	case strings.Contains(str, "m"):
-		str1 := strings.Split(str, "m")
-		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", stringTofloat64(str1[0])), 64)
-		return value
-	default:
-		return float64(0)
-	}
-}
-
-//Compare
-func ExceedsCompare(a string) string {
-	if FieldString(a) > float64(criticalThreshold) {
-		return redColor(a)
-	} else if FieldString(a) > float64(warningThreshold) {
-		return yellowColor(a)
-	} else {
-		return a
-	}
-}
-
-func redColor(s string) string {
-	return fmt.Sprintf("%s", aurora.Red(s))
-}
-
-func yellowColor(s string) string {
-	return fmt.Sprintf("%s", aurora.Yellow(s))
 }

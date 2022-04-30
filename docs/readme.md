@@ -1,4 +1,4 @@
-# ergo
+# 二狗 ergo
 
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
 ![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/tag?style=flat-square)
@@ -15,10 +15,10 @@
 兼容性:
 
 - [x] 100% 支持 `Debian 11`
-- [ ] 绝大数功能在macOS上测试通过
-- [ ] 部分功能在非Debian系上测试通过
+- [ ] 绝大数功能在Debian上测试通过
+- [ ] 部分功能在macOS系上测试通过
 
-## ergo能干什么 / What does Ergo do?
+## ergo能干什么
 
 - 将常用脚本或者公有云操作抽象成cli命令, 简化工作
 - 灵活的自定义插件管理工具,像使用`helm repo`方式管理插件
@@ -56,7 +56,7 @@ ergo version
 
 ### 源码编译安装
 
-- 支持go v1.16+
+- 支持go v1.18+
 
 ```bash
 # Clone the repo
@@ -92,12 +92,16 @@ ergo ops wget https://github.com/ysicing/ergo/releases/latest/download/ergo_linu
 > 默认支持`ergo-`插件, 类似krew
 
 ```bash
-# 列出插件
-ergo plugin list
-[warn]   Unable to read directory "/Users/ysicing/bin" from your PATH: open /Users/ysicing/bin: no such file or directory. Skipping...
-The following compatible plugins are available:
-[info]   doge /usr/local/bin/ergo-doge
-[info]   hello /Users/ysicing/.ergo/bin/ergo-hello
+# 列出已安装插件
+ergo addons list
+repo   	name      	version
+ysicing	docker    	latest
+ysicing	dockercfg 	latest
+ysicing	go        	1.18.1
+ysicing	etcd      	3.5
+ysicing	etcdctl   	3.5.3
+ysicing	mysql     	5.7
+ysicing	postgresql	14
 
 # ergo-doge插件
 cat /usr/local/bin/ergo-doge                                   
@@ -110,22 +114,16 @@ haha
 
 # 插件仓库列表
 ergo repo list
-[info]   上次变更时间: 2021-10-13 15:37:18.782145 +0800 CST
-NAME      URL                                                           
-default   https://raw.githubusercontent.com/ysicing/ergo-plugin/master/default.yaml
+[info]   上次变更时间: 2022-04-26 00:03:13.617004838 +0800 CST
+name   	path                                                                       	source
+ysicing	https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml	remote
 
 # 列出远程插件
-ergo plugin ls-remote 
-[done] √ 索引全部更新完成
-[done] √ 加载完成.
-repo          	name 	version  	homepage                           	desc                                            	url
-default-plugin	helm 	v3.7.1   	https://helm.sh                    	The Kubernetes Package Manager                  	https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
+ergo addons search
+Repo   	Name
+ysicing	autok3s
+ysicing	cilium
 ```
-
-#### 存在问题
-
-- Q: docker compose命令不识别
-  - A: 需要使用compose v2版本 [配置文档](https://github.com/docker/compose#linux)
 
 #### 其他开源项目
 
@@ -133,8 +131,10 @@ default-plugin	helm 	v3.7.1   	https://helm.sh                    	The Kubernete
 
 - [loft-sh/devspace](https://github.com/loft-sh/devspace)
 - [cdk-team/CDK](https://github.com/cdk-team/CDK)
-- [kubernetes/kubectl](https://github.com/kubernetes/kubernetes)
+- [kubernetes/kubernetes](https://github.com/kubernetes/kubernetes)
 - [helm/helm](https://github.com/helm/helm)
+- [cilium/cilium-cli](https://github.com/cilium/cilium-cli)
+- [cnrancher/autok3s](https://github.com/cnrancher/autok3s)
 
 ## 🎉🎉 赞助商
 

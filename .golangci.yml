@@ -16,7 +16,7 @@ linters:
   # rules, and then enable those linters.
   disable-all: true
   enable:
-    - deadcode
+    # - deadcode
     - gosimple
     - govet
     - ineffassign
