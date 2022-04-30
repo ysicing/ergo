@@ -13,6 +13,9 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/pkg/providers"
 	"github.com/ysicing/ergo/pkg/util/log"
+
+	// default provider
+	_ "github.com/ysicing/ergo/internal/pkg/providers/native"
 )
 
 var (
