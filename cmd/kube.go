@@ -4,18 +4,21 @@
 package cmd
 
 import (
+	"github.com/ergoapi/util/zos"
 	"github.com/spf13/cobra"
-	kube2 "github.com/ysicing/ergo/cmd/kube"
-	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/cmd/kube"
 )
 
-func newKubeCmd(f factory.Factory) *cobra.Command {
+func NewKubeCmd() *cobra.Command {
 	k := &cobra.Command{
 		Use:   "kube",
 		Short: "kube ops tools",
 		Long:  `kube manage tools. eg: k3s install, k8s manage restart`,
 		Args:  cobra.NoArgs,
 	}
-	k.AddCommand(kube2.K3sCmd(f))
+	if zos.IsLinux() {
+		k.AddCommand(kube.K3sInitCmd())
+	}
+	k.AddCommand(kube.KRCmd())
 	return k
 }

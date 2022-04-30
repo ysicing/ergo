@@ -27,14 +27,16 @@ const (
 )
 
 const (
-	K3sBinName    = "k3s"
-	K3sBinPath    = "/usr/local/bin/k3s"
-	K3sBinVersion = "v1.23.4+k3s1"
-	K3sBinURL     = "https://github.com/k3s-io/k3s/releases/download"
-	K3sAgentEnv   = "/etc/systemd/system/k3s-agent.service.env"
-	K3sKubeConfig = "/etc/rancher/k3s/k3s.yaml"
-	CiliumName    = "cilium"
-	CiliumCliURL  = "https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz"
+	K3sBinName      = "k3s"
+	K3sBinPath      = "/usr/local/bin/k3s"
+	K3sBinVersion   = "v1.23.4+k3s1"
+	K3sBinURL       = "https://github.com/k3s-io/k3s/releases/download"
+	K3sAgentEnv     = "/etc/systemd/system/k3s-agent.service.env"
+	K3sKubeConfig   = "/etc/rancher/k3s/k3s.yaml"
+	CiliumName      = "cilium"
+	CiliumCliURL    = "https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz"
+	InitFileName    = ".initdone"
+	InitModeCluster = ".incluster"
 )
 
 const (

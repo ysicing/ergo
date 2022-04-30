@@ -53,6 +53,10 @@ upx: ## upx binary
 	@echo "upx binray"
 	@upx -9 dist/*
 
+getbin: ## getbin
+	@echo "get bin"
+	@./hack/scripts/getbin.sh
+
 docker: ## 构建镜像
 	@echo "build docker images ${BUILD_VERSION}"
 	@docker build -t ysicing/ergo .

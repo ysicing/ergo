@@ -13,3 +13,5 @@ release.sh
 ergo.rb
 
 hack/deb/*.deb
+hack/bin/*-linux-amd64
+hack/bin/*-linux-arm64

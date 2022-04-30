@@ -38,6 +38,7 @@ jobs:
       run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
+          make getbin
           make build
           make upx
           ./dist/ergo_linux_amd64 version

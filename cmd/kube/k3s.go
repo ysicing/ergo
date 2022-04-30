@@ -4,67 +4,54 @@
 package kube
 
 import (
-	"fmt"
+	"os"
 
+	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
-	k3 "github.com/ysicing/ergo/pkg/k3s"
-	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/cmd/flags"
+	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/providers"
+	"github.com/ysicing/ergo/pkg/util/log"
 )
 
-func K3sCmd(f factory.Factory) *cobra.Command {
-	opt := k3.Option{}
-	k3s := &cobra.Command{
-		Use:   "k3s",
-		Short: "k3s",
-		Args:  cobra.NoArgs,
+var (
+	initCmd = &cobra.Command{
+		Use:   "init",
+		Short: "Run this command in order to set up the QuCheng control plane",
 	}
-	k3s.PersistentFlags().BoolVar(&opt.DockerOnly, "docker", false, "If true, Use docker instead of containerd")
-	k3s.PersistentFlags().StringVar(&opt.EIP, "eip", "", "external IP addresses to advertise for node")
-	k3s.PersistentFlags().StringArrayVar(&opt.Args, "k3s-arg", nil, "k3s args")
-	init := &cobra.Command{
-		Use:     "init",
-		Short:   "init k3s control-plane(master) node",
-		Long:    `example: ergo k3s init --docker`,
-		Version: "3.3.0",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return opt.Init()
-		},
-	}
-	k3s.AddCommand(init)
-	init.PersistentFlags().StringVar(&opt.KsSan, "san", "ysicing.local", "Add additional hostname or IP as a Subject Alternative Name in the TLS cert")
-	init.PersistentFlags().BoolVar(&opt.CniNo, "nocni", true, "If true, Use cni none")
-	init.PersistentFlags().StringVar(&opt.PodCIDR, "pod-cidr", "10.42.0.0/16", "IPv4/IPv6 network CIDRs to use for pod IPs")
-	init.PersistentFlags().StringVar(&opt.SvcCIDR, "svc-cidr", "10.43.0.0/16", "IPv4/IPv6 network CIDRs to use for service IPs")
-	init.PersistentFlags().StringVar(&opt.DnSSvcIP, "dns-svcip", "10.43.0.10", " IPv4 Cluster IP for coredns service. Should be in your service-cidr range")
+	cp providers.Provider
+)
 
-	join := &cobra.Command{
-		Use:     "join",
-		Short:   "join k3s cluster",
-		Version: "2.6.0",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(opt.KsAddr) == 0 || len(opt.KsToken) == 0 {
-				return fmt.Errorf("k3s server or k3s token is null")
+func K3sInitCmd() *cobra.Command {
+	name := "native"
+	if file.CheckFileExists(common.GetDefaultKubeConfig()) {
+		name = "incluster"
+	}
+	if reg, err := providers.GetProvider(name); err != nil {
+		log.Flog.Fatalf("failed to get provider: %s", err)
+	} else {
+		cp = reg
+	}
+	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, cp.GetCreateFlags()))
+	initCmd.Example = cp.GetUsageExample("create")
+	initCmd.PreRun = func(cmd *cobra.Command, args []string) {
+		defaultArgs := os.Args
+		if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
+			log.Flog.Donef("cluster is already initialized, just run %s get cluster status", color.SGreen("%s kube status", defaultArgs[0]))
+			os.Exit(0)
+		}
+	}
+	initCmd.Run = func(cmd *cobra.Command, args []string) {
+		if name != "incluster" {
+			if err := cp.InitSystem(); err != nil {
+				log.Flog.Fatalf("presystem init err, reason: %s", err)
 			}
-			return nil
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return opt.Join()
-		},
-	}
-	k3s.AddCommand(join)
-	join.PersistentFlags().StringVar(&opt.KsAddr, "url", "", "k3s server url")
-	join.PersistentFlags().StringVar(&opt.KsToken, "token", "", "k3s server token")
+		}
 
-	getbin := &cobra.Command{
-		Use:     "bin",
-		Short:   "download k3s bin",
-		Long:    `example: ergo k3s getbin `,
-		Version: "2.8.0",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			_, err := opt.PreCheckK3sBin()
-			return err
-		},
+		if err := cp.InitCluster(); err != nil {
+			log.Flog.Fatalf("init cluster err: %v", err)
+		}
 	}
-	k3s.AddCommand(getbin)
-	return k3s
+	return initCmd
 }
