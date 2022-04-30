@@ -21,22 +21,7 @@ jobs:
         run: |
           echo "install gox"
           go install github.com/mitchellh/gox@latest
-      - name: get k3s
-        run: |
-          echo "fetch k3s"
-          wget -O ./hack/bin/k3s-linux-amd64 https://github.com/k3s-io/k3s/releases/download/v1.23.6%2Bk3s1/k3s
-          wget -O ./hack/bin/k3s-linux-arm64 https://github.com/k3s-io/k3s/releases/download/v1.23.6%2Bk3s1/k3s-arm64
-          chmod +x ./hack/bin/k3s-linux-amd64 ./hack/bin/k3s-linux-arm64
-      - name: get helm
-        run: |
-          echo "fetch helm"
-          wget -O /tmp/helm-v3.8.1-linux-amd64.tar.gz https://get.helm.sh/helm-v3.8.1-linux-amd64.tar.gz
-          wget -O /tmp/helm-v3.8.2-linux-arm64.tar.gz https://get.helm.sh/helm-v3.8.2-linux-arm64.tar.gz
-          tar xzvfC /tmp/helm-v3.8.1-linux-amd64.tar.gz /tmp
-          cp -a /tmp/linux-amd64/helm ./hack/bin/helm-linux-amd64
-          tar xzvfC /tmp/helm-v3.8.2-linux-arm64.tar.gz /tmp
-          cp -a /tmp/linux-arm64/helm ./hack/bin/helm-linux-arm64
-          chmod +x ./hack/bin/helm-linux-amd64 ./hack/bin/helm-linux-arm64
+
       - name: install ghr
         run: |
           echo "install ghr"
@@ -53,6 +38,7 @@ jobs:
         run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
+          make getbin
           make build
           make upx
           make dpush
