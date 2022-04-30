@@ -1,6 +1,6 @@
 ## ergo kube init
 
-Run this command in order to set up the QuCheng control plane
+Run this command in order to set up the control plane
 
 ```
 ergo kube init [flags]

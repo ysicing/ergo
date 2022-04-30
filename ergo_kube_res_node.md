@@ -21,7 +21,7 @@ ergo kube res node
 ### Options inherited from parent commands
 
 ```
-      --config string       The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
+      --config string       The ergo config file to use (default "/Users/ysicing/.ergo/config/ergo.yml")
       --context string      context to use for Kubernetes config
       --debug               Prints the stack trace if an error occurs
       --kubeconfig string   kubeconfig file to use for Kubernetes config
