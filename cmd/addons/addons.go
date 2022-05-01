@@ -22,11 +22,15 @@ func Install(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {
 				iargs := strings.Split(args[0], "/")
-				if len(iargs) != 2 {
+				if len(iargs) == 2 {
+					o.Repo = iargs[0]
+					o.Name = iargs[1]
+				} else if len(iargs) == 1 && iargs[0] != "ysicing" {
+					o.Repo = "ysicing"
+					o.Name = iargs[0]
+				} else {
 					return fmt.Errorf("ergo addons install [repo/name] or [repo] [name]")
 				}
-				o.Repo = iargs[0]
-				o.Name = iargs[1]
 			} else {
 				o.Repo = args[0]
 				o.Name = args[1]
@@ -46,11 +50,15 @@ func UnInstall(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {
 				iargs := strings.Split(args[0], "/")
-				if len(iargs) != 2 {
-					return fmt.Errorf("ergo addons uninstall [repo/name] or [repo] [name]")
+				if len(iargs) == 2 {
+					o.Repo = iargs[0]
+					o.Name = iargs[1]
+				} else if len(iargs) == 1 && iargs[0] != "ysicing" {
+					o.Repo = "ysicing"
+					o.Name = iargs[0]
+				} else {
+					return fmt.Errorf("ergo addons install [repo/name] or [repo] [name]")
 				}
-				o.Repo = iargs[0]
-				o.Name = iargs[1]
 			} else {
 				o.Repo = args[0]
 				o.Name = args[1]

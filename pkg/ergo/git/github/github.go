@@ -8,18 +8,10 @@ import (
 	"strings"
 
 	"github.com/ergoapi/util/ptr"
-	"github.com/google/go-github/v39/github"
+	"github.com/google/go-github/v44/github"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"golang.org/x/oauth2"
 )
-
-func getNameFromURL(name, url string) string {
-	if strings.Contains(name, "/") {
-		s := strings.Split(url, "/")
-		return s[len(s)-1]
-	}
-	return name
-}
 
 func CleanPackage(user, token string) {
 	ctx := context.TODO()
@@ -39,21 +31,26 @@ func CleanPackage(user, token string) {
 	}
 	for _, p := range packages {
 		log.Flog.Debugf("package %v", p.GetName())
-		packagesversions, _, err := client.Users.PackageGetAllVersions(ctx, user, "container", getNameFromURL(p.GetName(), p.GetHTMLURL()))
+		packagesversions, _, err := client.Users.PackageGetAllVersions(ctx, user, "container", p.GetName(), &github.PackageListOptions{
+			ListOptions: github.ListOptions{
+				PerPage: 300,
+			},
+			PackageType: ptr.StringPtr("container"),
+		})
 		if err != nil {
 			log.Flog.Debugf("list package version err: %v, skip", err)
 			continue
 		}
 		for _, pv := range packagesversions {
-			clean(ctx, client, pv, p.GetOwner().GetName(), p.GetName(), getNameFromURL(p.GetName(), p.GetHTMLURL()))
+			clean(ctx, client, pv, p.GetOwner().GetName(), p.GetName())
 		}
 	}
 }
 
-func clean(ctx context.Context, client *github.Client, p *github.PackageVersion, user, name, urlname string) {
+func clean(ctx context.Context, client *github.Client, p *github.PackageVersion, user, name string) {
 	for _, v := range p.Metadata.Container.Tags {
 		if strings.Contains(v, "-") {
-			if resp, err := client.Users.PackageDeleteVersion(ctx, user, "container", urlname, p.GetID()); err != nil {
+			if resp, err := client.Users.PackageDeleteVersion(ctx, user, "container", name, p.GetID()); err != nil {
 				if resp.StatusCode == 400 {
 					log.Flog.Warnf("%v cannot delete the last tagged version [ %v ] of %v.", user, v, name)
 				} else if resp.StatusCode == 404 {

@@ -15,6 +15,7 @@ import (
 	"github.com/ysicing/ergo/pkg/util/log"
 
 	// default provider
+	_ "github.com/ysicing/ergo/internal/pkg/providers/incluster"
 	_ "github.com/ysicing/ergo/internal/pkg/providers/native"
 )
 

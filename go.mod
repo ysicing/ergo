@@ -17,7 +17,7 @@ require (
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/flock v0.8.1
-	github.com/google/go-github/v39 v39.2.1-0.20211020014439-17a925b6f848
+	github.com/google/go-github/v44 v44.0.0
 	github.com/gopasspw/gopass v1.14.0
 	github.com/gosuri/uitable v0.0.4
 	github.com/hashicorp/go-version v1.4.0
