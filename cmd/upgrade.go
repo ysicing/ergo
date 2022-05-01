@@ -8,6 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/version"
 )
 
@@ -33,6 +34,7 @@ func newUpgradeCmd() *cobra.Command {
 
 func (cmd *UpgradeCmd) Run() error {
 	if cmd.proxy {
+		log.Flog.Debug("load proxy")
 		os.Setenv("CNPROXY", common.PluginGithubJiasu)
 		defer func() {
 			os.Unsetenv("CNPROXY")

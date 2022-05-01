@@ -37,7 +37,9 @@ func newExtCmd(f factory.Factory) *cobra.Command {
 	}
 	cmd.AddCommand(ghClean(f))
 	cmd.AddCommand(syncImage(f))
-	cmd.AddCommand(lima(f))
+	if runtime.GOOS == "darwin" {
+		cmd.AddCommand(lima(f))
+	}
 	return cmd
 }
 
