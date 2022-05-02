@@ -11,7 +11,7 @@ require (
 	github.com/coreos/go-iptables v0.6.0
 	github.com/ergoapi/exgin v1.0.8
 	github.com/ergoapi/log v0.0.3
-	github.com/ergoapi/util v0.2.12
+	github.com/ergoapi/util v0.2.13
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
