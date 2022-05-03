@@ -27,7 +27,7 @@ golint: ## lint
 
 default: fmt golint ## fmt code
 
-build: clean ## 构建二进制
+build: clean getbin ## 构建二进制
 	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${GIT_COMMIT}"
 	# go install github.com/mitchellh/gox@latest
 	@gox -osarch="darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64" \
