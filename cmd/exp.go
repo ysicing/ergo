@@ -81,8 +81,7 @@ func showConfigAction(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("failed to load YAML file %q: %w", fp, err)
 	}
-	output.EncodeYAML(os.Stdout, ergocfg)
-	return nil
+	return output.EncodeYAML(os.Stdout, ergocfg)
 }
 
 func newExperimentalCmd(f factory.Factory) *cobra.Command {

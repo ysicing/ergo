@@ -51,11 +51,12 @@ func clean(ctx context.Context, client *github.Client, p *github.PackageVersion,
 	for _, v := range p.Metadata.Container.Tags {
 		if strings.Contains(v, "-") {
 			if resp, err := client.Users.PackageDeleteVersion(ctx, user, "container", name, p.GetID()); err != nil {
-				if resp.StatusCode == 400 {
+				switch resp.StatusCode {
+				case 400:
 					log.Flog.Warnf("%v cannot delete the last tagged version [ %v ] of %v.", user, v, name)
-				} else if resp.StatusCode == 404 {
+				case 404:
 					log.Flog.Warnf("%v package %v version [%v] not found", user, name, v)
-				} else {
+				default:
 					log.Flog.Errorf("start clean user %v package %v version %v, err: %v", user, name, v, err)
 				}
 			} else {

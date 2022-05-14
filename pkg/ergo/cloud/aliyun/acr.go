@@ -54,11 +54,11 @@ func (c acrclient) NameSpaces() []string {
 // Repos 仓库列表
 func (c acrclient) Repos(num int, ns ...string) (qdata []Repo) {
 	c.request.Method = "GET"
-	//if len(ns) > 0 {
+	// if len(ns) > 0 {
 	//	c.request.PathPattern = fmt.Sprintf("/repos/%v", ns[0])
-	//} else {
+	// } else {
 	c.request.PathPattern = "/repos"
-	//}
+	// }
 	body := `{}`
 	c.request.Content = []byte(body)
 	ri := 1

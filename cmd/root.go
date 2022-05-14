@@ -156,7 +156,7 @@ func HandlePluginCommand(pluginHandler PluginHandler, cmdArgs []string) error {
 		if strings.HasPrefix(arg, "-") {
 			break
 		}
-		remainingArgs = append(remainingArgs, strings.Replace(arg, "-", "_", -1))
+		remainingArgs = append(remainingArgs, strings.ReplaceAll(arg, "-", "_"))
 	}
 
 	if len(remainingArgs) == 0 {

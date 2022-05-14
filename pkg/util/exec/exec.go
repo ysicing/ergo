@@ -37,7 +37,7 @@ func (lw *LogWriter) Write(p []byte) (n int, err error) {
 }
 
 func RunCmd(name string, arg ...string) error {
-	cmd := exec.Command(name, arg[:]...) // #nosec
+	cmd := exec.Command(name, arg...) // #nosec
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = NewLogWrite(log.Flog, "err")
 	cmd.Stdout = NewLogWrite(log.Flog, "")

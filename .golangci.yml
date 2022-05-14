@@ -16,28 +16,44 @@ linters:
   # rules, and then enable those linters.
   disable-all: true
   enable:
-    # - deadcode
-    - gosimple
-    - govet
-    - ineffassign
-    - unused
-    - varcheck
-    - staticcheck
+    - bodyclose
     - dogsled
+    - dupl
+    - depguard
+    # - deadcode
+    # - errcheck
+    - exhaustive
+    - exportloopref
     - gofmt
+    # - gosimple
     - goimports
+    - golint
+    - govet
     # - gosec
-    - misspell
+    # - gofumpt
+    # - goconst
+    # - gocritic
+    # - gomnd
+    - ineffassign
     - nakedret
+    - nolintlint
+    - misspell
+    # - prealloc
+    - predeclared
+    - revive
+    # - staticcheck
     - stylecheck
     - structcheck
-    - golint
+    - thelper
+    - tparallel
+    - typecheck
+    # - unused
     - unconvert
     - unparam
+    - varcheck
     - whitespace
-    # - gofumpt
-#  disable:
-#    - errcheck
+    # - wsl
+
 issues:
   exclude-rules:
     - linters:
@@ -56,3 +72,6 @@ linters-settings:
     threshold: 400
   errcheck:
     check-blank: false
+  gofumpt:
+    extra-rules: false
+    lang-version: "1.18"

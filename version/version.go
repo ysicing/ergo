@@ -14,7 +14,6 @@ import (
 	"github.com/blang/semver"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/zos"
-	gv "github.com/hashicorp/go-version"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/exec"
@@ -84,8 +83,8 @@ func ShowVersion() {
 		return
 	}
 	if lastversion != "" && !strings.Contains(lastversion, defaultVersion) {
-		nowversion, _ := gv.NewVersion(Version)
-		needupgrade := nowversion.LessThan(gv.Must(gv.NewVersion(lastversion)))
+		nowversion := semver.MustParse(lastversion)
+		needupgrade := nowversion.LT(semver.MustParse(lastversion))
 		if needupgrade {
 			log.Flog.Infof("当前最新版本 %v, 可以使用 %v 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
 			return

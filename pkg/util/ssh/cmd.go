@@ -13,7 +13,7 @@ import (
 	"github.com/ysicing/ergo/pkg/util/log"
 )
 
-//Cmd is in host exec cmd
+// Cmd is in host exec cmd
 func (ss *SSH) Cmd(host string, cmd string) ([]byte, error) {
 	log.Flog.Debugf("[%s] %s", host, cmd)
 	client, session, err := ss.Connect(host)
@@ -92,7 +92,7 @@ func (ss *SSH) CmdAsync(host string, cmds ...string) error {
 	return nil
 }
 
-//CmdToString is in host exec cmd and replace to spilt str
+// CmdToString is in host exec cmd and replace to spilt str
 func (ss *SSH) CmdToString(host, cmd, spilt string) (string, error) {
 	data, err := ss.Cmd(host, cmd)
 	if err != nil {

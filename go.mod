@@ -3,7 +3,7 @@ module github.com/ysicing/ergo
 go 1.18
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1581
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1592
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -20,7 +20,6 @@ require (
 	github.com/google/go-github/v44 v44.0.0
 	github.com/gopasspw/gopass v1.14.1
 	github.com/gosuri/uitable v0.0.4
-	github.com/hashicorp/go-version v1.4.0
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
 	github.com/manifoldco/promptui v0.9.0

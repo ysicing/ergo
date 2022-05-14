@@ -15,8 +15,8 @@ type CodeOptions struct {
 func (code CodeOptions) Init() {
 	searcher := func(input string, index int) bool {
 		p := CodeType[index]
-		name := strings.Replace(strings.ToLower(p.Key), " ", "", -1)
-		input = strings.Replace(strings.ToLower(input), " ", "", -1)
+		name := strings.ReplaceAll(strings.ToLower(p.Key), " ", "")
+		input = strings.ReplaceAll(strings.ToLower(input), " ", "")
 		return strings.Contains(name, input)
 	}
 	templates := &promptui.SelectTemplates{

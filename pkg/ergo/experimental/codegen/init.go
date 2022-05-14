@@ -58,8 +58,8 @@ func (code CodeGen) GoClone() error {
 		Items: Project,
 		Searcher: func(input string, index int) bool {
 			p := Project[index]
-			name := strings.Replace(strings.ToLower(p.Name), " ", "", -1)
-			input = strings.Replace(strings.ToLower(input), " ", "", -1)
+			name := strings.ReplaceAll(strings.ToLower(p.Name), " ", "")
+			input = strings.ReplaceAll(strings.ToLower(input), " ", "")
 			return strings.Contains(name, input)
 		},
 		Size: 4,

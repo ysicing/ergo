@@ -1,7 +1,8 @@
 # Ergo CHANGELOG
 
-- v3.5.1
+- v4.0.0
   - [x] 默认仅macOS支持lima子命令
+  - [ ] 
 
 - v3.5.0
   - [ ] k3s安装架构调整，参考autok3s

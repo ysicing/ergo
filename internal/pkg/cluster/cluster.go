@@ -269,11 +269,11 @@ func (p *Cluster) configServerOptions() []string {
 	args = append(args, "--disable-network-policy", "--disable-helm-controller", "--disable=servicelb,traefik")
 	var tlsSans string
 	for _, tlsSan := range p.TLSSans {
-		tlsSans = tlsSans + fmt.Sprintf(" --tls-san=%s", tlsSan)
+		tlsSans += fmt.Sprintf(" --tls-san=%s", tlsSan)
 	}
-	tlsSans = tlsSans + " --tls-san=kapi.ysicing.local"
+	tlsSans += " --tls-san=kapi.ysicing.local"
 	if len(p.EIP) != 0 {
-		tlsSans = tlsSans + fmt.Sprintf(" --tls-san=%s", p.EIP)
+		tlsSans += fmt.Sprintf(" --tls-san=%s", p.EIP)
 	}
 	if len(tlsSans) != 0 {
 		args = append(args, tlsSans)
