@@ -3,6 +3,7 @@ run:
   skip-dirs:
     - docs
     - hack
+    - internal/pkg/static
 
 output:
   # colored-line-number|line-number|json|tab|checkstyle|code-climate|junit-xml|github-actions

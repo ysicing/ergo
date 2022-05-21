@@ -15,3 +15,4 @@ ergo.rb
 hack/deb/*.deb
 hack/bin/*-linux-amd64
 hack/bin/*-linux-arm64
+internal/pkg/static/zz_generated*.go

@@ -1,20 +1,17 @@
 package cluster
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"runtime"
 	"sync"
 	"time"
 
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/file"
 	"github.com/kardianos/service"
-	"github.com/ysicing/ergo/hack/bin"
+
 	"github.com/ysicing/ergo/hack/scripts"
 	"github.com/ysicing/ergo/internal/pkg/types"
 	"github.com/ysicing/ergo/pkg/downloader"
@@ -193,20 +190,20 @@ func (p *Cluster) download(binName string) error {
 func (p *Cluster) unpack(binName string) error {
 	// TODO 判断系统
 	// 解压k3s
-	log.Flog.Debugf("unpacking %s-linux-%s", binName, runtime.GOARCH)
-	sourcefile, err := bin.BinFS.ReadFile(fmt.Sprintf("%s-linux-%s", binName, runtime.GOARCH))
-	if err != nil {
-		return err
-	}
-	installFile, err := os.OpenFile(fmt.Sprintf("/usr/local/bin/%s", binName), os.O_CREATE|os.O_RDWR|os.O_TRUNC, common.FileMode0755)
-	defer func() { _ = installFile.Close() }()
-	if err != nil {
-		return err
-	}
-	if _, err := io.Copy(installFile, bytes.NewReader(sourcefile)); err != nil {
-		return err
-	}
-	log.Flog.Donef("unpack %s complete", binName)
+	// log.Flog.Debugf("unpacking %s-linux-%s", binName, runtime.GOARCH)
+	// sourcefile, err := bin.BinFS.ReadFile(fmt.Sprintf("%s-linux-%s", binName, runtime.GOARCH))
+	// if err != nil {
+	// 	return err
+	// }
+	// installFile, err := os.OpenFile(fmt.Sprintf("/usr/local/bin/%s", binName), os.O_CREATE|os.O_RDWR|os.O_TRUNC, common.FileMode0755)
+	// defer func() { _ = installFile.Close() }()
+	// if err != nil {
+	// 	return err
+	// }
+	// if _, err := io.Copy(installFile, bytes.NewReader(sourcefile)); err != nil {
+	// 	return err
+	// }
+	// log.Flog.Donef("unpack %s complete", binName)
 	return nil
 }
 

@@ -57,6 +57,9 @@ getbin: ## getbin
 	@echo "get bin"
 	@./hack/scripts/getbin.sh
 
+generate: ## generate
+	go generate ./...
+
 docker: ## 构建镜像
 	@echo "build docker images ${BUILD_VERSION}"
 	@docker build -t ysicing/ergo .
