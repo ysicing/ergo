@@ -16,12 +16,12 @@ func main() {
 				Recursive: true,
 			},
 		},
-		Package:    "static",
+		Package:    "staticbin",
 		Arch:       "arm64",
 		NoCompress: true,
 		NoMemCopy:  true,
 		NoMetadata: true,
-		Output:     "internal/pkg/static/zz_generated_bindata.go",
+		Output:     "internal/staticbin/zz_generated_bindata.go",
 	}
 	if err := bindata.Translate(bc); err != nil {
 		logrus.Fatal(err)
@@ -33,12 +33,12 @@ func main() {
 				Recursive: true,
 			},
 		},
-		Package:    "static",
+		Package:    "staticbin",
 		Arch:       "amd64",
 		NoCompress: true,
 		NoMemCopy:  true,
 		NoMetadata: true,
-		Output:     "internal/pkg/static/zz_generated_bindata.go",
+		Output:     "internal/staticbin/zz_generated_bindata.go",
 	}
 	if err := bindata.Translate(bc); err != nil {
 		logrus.Fatal(err)
@@ -51,11 +51,11 @@ func main() {
 				FileSuffix: ".sh",
 			},
 		},
-		Package:    "static",
+		Package:    "staticsh",
 		NoCompress: true,
 		NoMemCopy:  true,
 		NoMetadata: true,
-		Output:     "internal/pkg/static/zz_generated_scriptdata.go",
+		Output:     "internal/staticsh/zz_generated_scriptdata.go",
 	}
 	if err := bindata.Translate(bc); err != nil {
 		logrus.Fatal(err)

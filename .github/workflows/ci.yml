@@ -38,6 +38,7 @@ jobs:
       run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
+          make getbin
           make generate
           make build
           make upx

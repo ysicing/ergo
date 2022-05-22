@@ -77,8 +77,8 @@ func (k *K8sStatusCollector) status(ctx context.Context) *Status {
 	if err := k.nodesStatus(ctx, status); err != nil {
 		log.Flog.Errorf("failed to get nodes status: %v", err)
 	}
-	if err := k.quchengStatus(ctx, status); err != nil {
-		log.Flog.Errorf("failed to get qucheng status: %v", err)
+	if err := k.bigcatStatus(ctx, status); err != nil {
+		log.Flog.Errorf("failed to get bigcat status: %v", err)
 	}
 	return status
 }
@@ -130,7 +130,7 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 	return false, nil
 }
 
-func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) error {
+func (k *K8sStatusCollector) bigcatStatus(ctx context.Context, status *Status) error {
 	// 集群
 	k.deploymentStatus(ctx, "kube-system", "coredns", "k8s", status)
 	k.deploymentStatus(ctx, "kube-system", "metrics-server", "k8s", status)

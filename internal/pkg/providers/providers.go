@@ -23,6 +23,7 @@ type Provider interface {
 	JoinCluster() error
 	GetCreateFlags() []types.Flag
 	InitSystem() error
+	InitBigcat() error
 }
 
 // RegisterProvider registers a provider.Factory by name.

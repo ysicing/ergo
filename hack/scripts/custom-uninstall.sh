@@ -74,18 +74,18 @@ iptables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | iptables-restor
 ip6tables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | ip6tables-restore
 
 if command -v systemctl; then
-    systemctl disable k3s-server.service
-    systemctl reset-failed k3s-server
+		if [ -f "/etc/systemd/system/k3s-server.service" ]; then
+				systemctl disable k3s-server.service
+    		systemctl reset-failed k3s-server
+				rm -f /etc/systemd/system/k3s-server.service
+		fi
+		[ -f "/etc/systemd/system/k3s-server.service.env" ] && rm -f /etc/systemd/system/k3s-server.service.env
     systemctl daemon-reload
-
 fi
 
 if command -v rc-update; then
     rc-update delete k3s-server default
 fi
-
-[ -f "/etc/systemd/system/k3s-server.service" ] && rm -f /etc/systemd/system/k3s-server.service
-[ -f "/etc/systemd/system/k3s-server.service.env" ] && rm -f /etc/systemd/system/k3s-server.service.env
 
 # remove_uninstall() {
 #     rm -f /usr/local/bin/k3s-uninstall.sh
@@ -115,7 +115,20 @@ done
 #     rm -f /etc/yum.repos.d/rancher-k3s-common*.repo
 # fi
 
-[ -f "/usr/local/bin/k3s" ] && rm -f /usr/local/bin/k3s
-[ -f "/usr/local/bin/helm" ] && (
+if [ -f "/usr/local/bin/k3s" ]; then
+	rm -f /usr/local/bin/k3s
+fi
+if [ -f "/usr/local/bin/helm" ]; then
 	helm repo list | grep install && helm repo remove install || true
-)
+fi
+
+# clean kube config
+if [ -f "/root/.kube/config" ]; then
+	mv /root/.kube/config /root/.kube/config.bak
+fi
+
+if [ -d "$HOME/.ergo/data/hack" ]; then
+  rm -rf $HOME/.ergo/data/hack
+fi
+
+exit 0

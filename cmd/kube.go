@@ -18,6 +18,7 @@ func NewKubeCmd() *cobra.Command {
 	}
 	if zos.IsLinux() {
 		k.AddCommand(kube.InitCmd())
+		k.AddCommand(kube.UninstallCmd())
 	}
 	k.AddCommand(kube.StatusCmd())
 	return k

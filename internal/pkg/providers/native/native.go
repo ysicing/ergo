@@ -64,7 +64,7 @@ func (p *Native) GetProviderName() string {
 // InitCluster init cluster.
 func (p *Native) InitCluster() (err error) {
 	log.Flog.Info("start init cluster")
-	return p.InitCluster()
+	return p.InitKubeCluster()
 }
 
 // JoinCluster join cluster.
@@ -73,10 +73,14 @@ func (p *Native) JoinCluster() (err error) {
 }
 
 func (p *Native) InitSystem() error {
-	log.Flog.Debug("start system init")
+	log.Flog.Info("start system init")
 	if err := p.SystemInit(); err != nil {
 		return err
 	}
-	log.Flog.Debug("system init passed")
+	log.Flog.Donef("system init passed")
 	return nil
+}
+
+func (p *Native) InitBigcat() error {
+	return p.InstallBigCat()
 }

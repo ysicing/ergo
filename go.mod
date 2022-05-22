@@ -21,6 +21,7 @@ require (
 	github.com/google/go-github/v44 v44.0.0
 	github.com/gopasspw/gopass v1.14.1
 	github.com/gosuri/uitable v0.0.4
+	github.com/imroc/req/v3 v3.11.3
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
 	github.com/manifoldco/promptui v0.9.0
@@ -81,6 +82,7 @@ require (
 	github.com/daviddengcn/go-colortext v0.0.0-20160507010035-511bcaf42ccd // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/elazarl/goproxy v0.0.0-20220115173737-adb46da277ac // indirect
+	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/ergoapi/errors v0.0.1 // indirect
 	github.com/ergoapi/zlog v0.0.3 // indirect
@@ -113,8 +115,9 @@ require (
 	github.com/google/gops v0.3.22 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/googleapis/gnostic v0.5.5 // indirect
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf // indirect
@@ -145,6 +148,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
 	github.com/muesli/crunchy v0.4.0 // indirect
+	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/otiai10/copy v1.7.0 // indirect
@@ -211,11 +215,11 @@ require (
 replace (
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
 	github.com/rhysd/go-github-selfupdate v1.2.3 => github.com/BeidouCloudPlatform/go-github-selfupdate v1.2.4-0.20220122124055-98116fd13821
-	k8s.io/api v0.24.0 => k8s.io/api v0.23.6
-	k8s.io/apimachinery v0.24.0 => k8s.io/apimachinery v0.23.6
-	k8s.io/cli-runtime v0.24.0 => k8s.io/cli-runtime v0.23.6
-	k8s.io/client-go v0.24.0 => k8s.io/client-go v0.23.6
-	k8s.io/component-base v0.24.0 => k8s.io/component-base v0.23.6
-	k8s.io/kubectl v0.24.0 => k8s.io/kubectl v0.23.6
-	k8s.io/metrics v0.24.0 => k8s.io/metrics v0.23.6
+// k8s.io/api v0.24.0 => k8s.io/api v0.23.6
+// k8s.io/apimachinery v0.24.0 => k8s.io/apimachinery v0.23.6
+// k8s.io/cli-runtime v0.24.0 => k8s.io/cli-runtime v0.23.6
+// k8s.io/client-go v0.24.0 => k8s.io/client-go v0.23.6
+// k8s.io/component-base v0.24.0 => k8s.io/component-base v0.23.6
+// k8s.io/kubectl v0.24.0 => k8s.io/kubectl v0.23.6
+// k8s.io/metrics v0.24.0 => k8s.io/metrics v0.23.6
 )

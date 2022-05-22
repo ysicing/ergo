@@ -35,12 +35,14 @@ const (
 	K3sBinURL          = "https://github.com/k3s-io/k3s/releases/download"
 	K3sAgentEnv        = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig      = "/etc/rancher/k3s/k3s.yaml"
+	HelmBinName        = "helm"
 	CiliumName         = "cilium"
 	CiliumCliURL       = "https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz"
 	InitFileName       = ".initdone"
 	InitModeCluster    = ".incluster"
 	StatusWaitDuration = 5 * time.Minute
 	WaitRetryInterval  = 5 * time.Second
+	DefaultSystem      = "cce-system"
 )
 
 const (
@@ -72,5 +74,6 @@ var (
 )
 
 const (
-	DefaultRepoURL = "https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml"
+	DefaultRepoURL   = "https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml"
+	DefaultChartRepo = "https://charts.bitnami.com/bitnami"
 )

@@ -2,9 +2,9 @@ package cluster
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
+	"runtime"
 	"sync"
 	"time"
 
@@ -12,9 +12,7 @@ import (
 	"github.com/ergoapi/util/file"
 	"github.com/kardianos/service"
 
-	"github.com/ysicing/ergo/hack/scripts"
 	"github.com/ysicing/ergo/internal/pkg/types"
-	"github.com/ysicing/ergo/pkg/downloader"
 	"github.com/ysicing/ergo/pkg/util/initsystem"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"golang.org/x/sync/syncmap"
@@ -82,7 +80,7 @@ func (p *Cluster) GetCreateOptions() []types.Flag {
 	}
 }
 
-func (p *Cluster) InitCluster() error {
+func (p *Cluster) InitKubeCluster() error {
 	if err := p.InitK3sCluster(); err != nil {
 		return err
 	}
@@ -176,47 +174,17 @@ func (p *Cluster) InitK3sCluster() error {
 	return nil
 }
 
-func (p *Cluster) download(binName string) error {
-	log.Flog.Debugf("unpack %s bin failed, will download from remote.", binName)
-	binPath := fmt.Sprintf("/usr/local/bin/%s", binName)
-	if _, err := downloader.Download(common.GetBinURL(binName), binPath); err != nil {
-		return err
-	}
-	os.Chmod(binPath, common.FileMode0755)
-	log.Flog.Donef("download %s complete", binName)
-	return nil
-}
-
-func (p *Cluster) unpack(binName string) error {
-	// TODO 判断系统
-	// 解压k3s
-	// log.Flog.Debugf("unpacking %s-linux-%s", binName, runtime.GOARCH)
-	// sourcefile, err := bin.BinFS.ReadFile(fmt.Sprintf("%s-linux-%s", binName, runtime.GOARCH))
-	// if err != nil {
-	// 	return err
-	// }
-	// installFile, err := os.OpenFile(fmt.Sprintf("/usr/local/bin/%s", binName), os.O_CREATE|os.O_RDWR|os.O_TRUNC, common.FileMode0755)
-	// defer func() { _ = installFile.Close() }()
-	// if err != nil {
-	// 	return err
-	// }
-	// if _, err := io.Copy(installFile, bytes.NewReader(sourcefile)); err != nil {
-	// 	return err
-	// }
-	// log.Flog.Donef("unpack %s complete", binName)
-	return nil
-}
-
 // loadLocalBin load bin from local file system
 func (p *Cluster) loadLocalBin(binName string) (string, error) {
 	filebin, err := exec.LookPath(binName)
 	if err != nil {
-		if err := p.unpack(binName); err != nil {
-			if err := p.download(binName); err != nil {
+		sourcebin := fmt.Sprintf("%s/hack/bin/k3s-%s-%s", common.GetDefaultDataDir(), runtime.GOOS, runtime.GOARCH)
+		filebin = fmt.Sprintf("/usr/local/bin/%s", binName)
+		if file.CheckFileExists(sourcebin) {
+			if err := exec.Command("cp", sourcebin, filebin).Run(); err != nil {
 				return "", err
 			}
 		}
-		filebin, _ = exec.LookPath(binName)
 	}
 	output, err := exec.Command(filebin, "--help").CombinedOutput()
 	if err != nil {
@@ -281,55 +249,11 @@ func (p *Cluster) configServerOptions() []string {
 	return args
 }
 
-func (p *Cluster) Uninstall() error {
-	initfile := common.GetCustomConfig(common.InitFileName)
-	if !file.CheckFileExists(initfile) {
-		log.Flog.Warn("no cluster need uninstall")
-		return nil
-	}
-	var uninstallBytes []byte
-	checkfile := common.GetCustomConfig(common.InitModeCluster)
-	mode := "native"
-	if file.CheckFileExists(checkfile) {
-		uninstallBytes = scripts.InClusterUninstallShell
-		mode = "incluster"
-	} else {
-		uninstallBytes = scripts.CustomUninstallShell
-	}
-
-	uninstallShell := fmt.Sprintf("%s/uninstall.sh", common.GetDefaultCacheDir())
-	log.Flog.Debugf("gen %s uninstall script: %v", mode, uninstallShell)
-	if err := ioutil.WriteFile(uninstallShell, uninstallBytes, common.FileMode0755); err != nil {
-		return err
-	}
-	defer func() {
-		os.Remove(uninstallShell)
-	}()
-
-	if err := qcexec.RunCmd("/bin/bash", uninstallShell); err != nil {
-		return err
-	}
-
-	os.Remove(checkfile)
-
-	if mode == "incluster" {
-		// TODO native 删除默认配置文件
-		os.Remove(common.GetCustomConfig(common.InitModeCluster))
-	}
-	os.Remove(initfile)
-	return nil
-}
-
 func (p *Cluster) SystemInit() (err error) {
-	initBytes := scripts.InitShell
-	initShell := fmt.Sprintf("%s/init.system.sh", common.GetDefaultCacheDir())
+	initShell := fmt.Sprintf("%s/hack/scripts/system-init.sh", common.GetDefaultDataDir())
 	log.Flog.Debugf("gen init shell: %v", initShell)
-	if err := ioutil.WriteFile(initShell, initBytes, common.FileMode0755); err != nil {
-		return err
-	}
 	if err := qcexec.RunCmd("/bin/bash", initShell); err != nil {
 		return err
 	}
-	os.Remove(initShell)
 	return nil
 }

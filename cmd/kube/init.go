@@ -12,6 +12,8 @@ import (
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/pkg/providers"
+	"github.com/ysicing/ergo/internal/staticbin"
+	"github.com/ysicing/ergo/internal/staticsh"
 	"github.com/ysicing/ergo/pkg/util/log"
 
 	// default provider
@@ -47,6 +49,10 @@ func InitCmd() *cobra.Command {
 		}
 	}
 	initCmd.Run = func(cmd *cobra.Command, args []string) {
+		if err := stageFiles(); err != nil {
+			log.Flog.Fatalf("failed to stage files: %s", err)
+			return
+		}
 		if name != "incluster" {
 			if err := cp.InitSystem(); err != nil {
 				log.Flog.Fatalf("presystem init err, reason: %s", err)
@@ -56,6 +62,20 @@ func InitCmd() *cobra.Command {
 		if err := cp.InitCluster(); err != nil {
 			log.Flog.Fatalf("init cluster err: %v", err)
 		}
+		if err := cp.InitBigcat(); err != nil {
+			log.Flog.Fatalf("init bigcat err: %v", err)
+		}
 	}
 	return initCmd
+}
+
+func stageFiles() error {
+	dataDir := common.GetDefaultDataDir()
+	if err := staticbin.Stage(dataDir); err != nil {
+		return err
+	}
+	if err := staticsh.Stage(dataDir); err != nil {
+		return err
+	}
+	return nil
 }
