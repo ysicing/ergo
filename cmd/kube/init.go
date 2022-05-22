@@ -54,17 +54,21 @@ func InitCmd() *cobra.Command {
 			return
 		}
 		if name != "incluster" {
-			if err := cp.InitSystem(); err != nil {
+			if err := cp.PreSystemInit(); err != nil {
 				log.Flog.Fatalf("presystem init err, reason: %s", err)
+			}
+			if err := cp.CreateCluster(); err != nil {
+				log.Flog.Fatalf("precheck err, reason: %v", err)
 			}
 		}
 
-		if err := cp.InitCluster(); err != nil {
+		if err := cp.CreateCluster(); err != nil {
 			log.Flog.Fatalf("init cluster err: %v", err)
 		}
-		if err := cp.InitBigcat(); err != nil {
-			log.Flog.Fatalf("init bigcat err: %v", err)
+		if err := cp.InitBigCat(); err != nil {
+			log.Flog.Fatalf("init BigCat err: %v", err)
 		}
+		cp.Show()
 	}
 	return initCmd
 }

@@ -79,3 +79,8 @@ func GetCustomConfig(name string) string {
 	home := zos.GetHomeDir()
 	return fmt.Sprintf("%s/%s/%s", home, DefaultCfgDir, name)
 }
+
+func GetDefaultConfig() string {
+	home := zos.GetHomeDir()
+	return home + "/" + DefaultCfgDir + "/cluster.yaml"
+}

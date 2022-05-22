@@ -1,6 +1,9 @@
 package incluster
 
 import (
+	"fmt"
+
+	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/pkg/cluster"
@@ -11,11 +14,6 @@ import (
 
 // providerName is the name of this provider.
 const providerName = "incluster"
-
-const createUsageExample = `
-	create default cluster:
-		ergo kube k3s init
-`
 
 type InCluster struct {
 	*cluster.Cluster
@@ -35,6 +33,11 @@ func newProvider() *InCluster {
 	}
 }
 
+const createUsageExample = `
+	create BigCat cluster:
+		ergo kube init
+`
+
 // GetUsageExample returns native usage example prompt.
 func (p *InCluster) GetUsageExample(action string) string {
 	switch action {
@@ -47,32 +50,71 @@ func (p *InCluster) GetUsageExample(action string) string {
 
 // GetCreateFlags returns native create flags.
 func (p *InCluster) GetCreateFlags() []types.Flag {
-	return nil
+	fs := p.GetCreateExtOptions()
+	return fs
 }
 
 func (p *InCluster) GetProviderName() string {
 	return p.Provider
 }
 
-// InitCluster init cluster.
-func (p *InCluster) InitCluster() (err error) {
+// CreateCluster create cluster.
+func (p *InCluster) CreateCluster() (err error) {
+	log.Flog.Warn("exists cluster, check cluster status")
 	return nil
 }
 
-// JoinCluster join cluster.
-func (p *InCluster) JoinCluster() (err error) {
+// JoinNode join node.
+func (p *InCluster) JoinNode() (err error) {
 	return nil
 }
 
-func (p *InCluster) InitSystem() error {
-	return nil
-}
-
-func (p *InCluster) InitBigcat() error {
-	log.Flog.Info("start init bigcat")
+func (p *InCluster) InitBigCat() error {
+	log.Flog.Info("start init BigCat")
 	if err := p.InstallBigCat(); err != nil {
 		return err
 	}
 	file.Writefile(common.GetCustomConfig(common.InitModeCluster), "in cluster ok")
 	return nil
+}
+
+func (p *InCluster) CreateCheck() error {
+	// no need to support.
+	return nil
+}
+
+func (p *InCluster) PreSystemInit() error {
+	// no need to support.
+	return nil
+}
+
+// GenerateManifest generates manifest deploy command.
+func (p *InCluster) GenerateManifest() []string {
+	// no need to support.
+	return nil
+}
+
+// Show show cluster info.
+func (p *InCluster) Show() {
+	loginip := p.Metadata.EIP
+	if len(loginip) <= 0 {
+		loginip = exnet.LocalIPs()[0]
+	}
+	// cfg, _ := config.LoadConfig()
+	// if cfg != nil {
+	// 	cfg.DB = "sqlite"
+	// 	cfg.Token = kutil.GetNodeToken()
+	// 	cfg.Master = []config.Node{
+	// 		{
+	// 			Name: zos.GetHostname(),
+	// 			Host: loginip,
+	// 			Init: true,
+	// 		},
+	// 	}
+	// 	cfg.SaveConfig()
+	// }
+
+	log.Flog.Info("----------------------------")
+	log.Flog.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+	log.Flog.Donef("docs: %s", "https://github.com/ysicing/ergo")
 }

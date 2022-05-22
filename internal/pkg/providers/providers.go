@@ -19,11 +19,13 @@ type Provider interface {
 	GetProviderName() string
 	// Get command usage example.
 	GetUsageExample(action string) string
-	InitCluster() error
-	JoinCluster() error
+	CreateCluster() error
+	JoinNode() error
+	InitBigCat() error
 	GetCreateFlags() []types.Flag
-	InitSystem() error
-	InitBigcat() error
+	CreateCheck() error
+	PreSystemInit() error
+	Show()
 }
 
 // RegisterProvider registers a provider.Factory by name.
@@ -31,6 +33,7 @@ func RegisterProvider(name string, p Factory) {
 	providersMutex.Lock()
 	defer providersMutex.Unlock()
 	if _, found := providers[name]; !found {
+		// log.Flog.Infof("registered provider %s", name)
 		providers[name] = p
 	}
 }

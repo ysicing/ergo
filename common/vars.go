@@ -20,6 +20,38 @@ const (
 )
 
 const (
+	// KubernetesDir is the directory Kubernetes owns for storing various configuration files
+	KubernetesDir = "/etc/kubernetes"
+	// ManifestsSubDirName defines directory name to store manifests
+	ManifestsSubDirName = "manifests"
+	// ControlPlaneNumCPU is the number of CPUs required on control-plane
+	ControlPlaneNumCPU = 2
+	// ControlPlaneMem is the number of megabytes of memory required on the control-plane
+	// Below that amount of RAM running a stable control plane would be difficult.
+	ControlPlaneMem = 1700
+)
+
+const (
+	// CRISocketContainerd is the containerd CRI endpoint
+	CRISocketContainerd = "unix:///var/run/containerd/containerd.sock"
+	// CRISocketCRIO is the cri-o CRI endpoint
+	CRISocketCRIO = "unix:///var/run/crio/crio.sock"
+	// CRISocketCRIDocker is the cri-dockerd CRI endpoint
+	CRISocketCRIDocker = "unix:///var/run/cri-dockerd.sock"
+	// CRISocketDocker is the cri-dockerd CRI endpoint
+	CRISocketDocker = "unix:///var/run/docker.sock"
+	// DefaultCRISocket defines the default CRI socket
+	DefaultCRISocket = CRISocketContainerd
+
+	// StatusRunning instance running status.
+	StatusRunning = "Running"
+	// StatusCreating instance creating status.
+	StatusCreating = "Creating"
+	// StatusFailed instance failed status.
+	StatusFailed = "Failed"
+)
+
+const (
 	RepoRemoteMode    = "remote"
 	RepoLocalMode     = "local"
 	PluginGithubJiasu = "https://ghproxy.hk1.godu.dev"
@@ -43,6 +75,7 @@ const (
 	StatusWaitDuration = 5 * time.Minute
 	WaitRetryInterval  = 5 * time.Second
 	DefaultSystem      = "cce-system"
+	DefaultChartName   = "install/bigcat"
 )
 
 const (

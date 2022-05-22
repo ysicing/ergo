@@ -1,26 +1,19 @@
 package native
 
 import (
+	"fmt"
+
+	"github.com/ergoapi/util/exnet"
 	"github.com/ysicing/ergo/internal/pkg/cluster"
 	"github.com/ysicing/ergo/internal/pkg/providers"
 	"github.com/ysicing/ergo/internal/pkg/types"
 	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ysicing/ergo/pkg/util/preflight"
+	utilsexec "k8s.io/utils/exec"
 )
 
 // providerName is the name of this provider.
 const providerName = "native"
-
-const createUsageExample = `
-	create default cluster:
-		ergo kube k3s init
-	create custom cluster
-		ergo kube k3s --podsubnet "10.42.0.0/16" \
- 			--svcsubnet "10.43.0.0/16" \
-			--plugins lb \
-			--plugins ingress \
-			--eip 1.1.1.1  \
-			--san kubeapi.k8s.io
-`
 
 type Native struct {
 	*cluster.Cluster
@@ -40,6 +33,19 @@ func newProvider() *Native {
 	}
 }
 
+const createUsageExample = `
+	create default cluster:
+		ergo kube init
+
+	create custom cluster
+		ergo kube init --podsubnet "10.42.0.0/16" \
+ 			--svcsubnet "10.43.0.0/16" \
+			--plugins lb \
+			--plugins ingress \
+			--eip 1.1.1.1  \
+			--san kubeapi.k8s.io
+`
+
 // GetUsageExample returns native usage example prompt.
 func (p *Native) GetUsageExample(action string) string {
 	switch action {
@@ -53,7 +59,7 @@ func (p *Native) GetUsageExample(action string) string {
 // GetCreateFlags returns native create flags.
 func (p *Native) GetCreateFlags() []types.Flag {
 	fs := p.GetCreateOptions()
-	fs = append(fs, p.GetCreateOptions()...)
+	fs = append(fs, p.GetCreateExtOptions()...)
 	return fs
 }
 
@@ -61,26 +67,66 @@ func (p *Native) GetProviderName() string {
 	return p.Provider
 }
 
-// InitCluster init cluster.
-func (p *Native) InitCluster() (err error) {
+// CreateCluster create cluster.
+func (p *Native) CreateCluster() (err error) {
 	log.Flog.Info("start init cluster")
-	return p.InitKubeCluster()
+	return p.InitCluster(p.GenerateManifest)
 }
 
-// JoinCluster join cluster.
-func (p *Native) JoinCluster() (err error) {
+// JoinNode join node.
+func (p *Native) JoinNode() (err error) {
 	return nil
 }
 
-func (p *Native) InitSystem() error {
+func (p *Native) InitBigCat() error {
+	return p.InstallBigCat()
+}
+
+func (p *Native) CreateCheck() error {
+	log.Flog.Info("start pre-flight checks")
+	if err := preflight.RunInitNodeChecks(utilsexec.New(), &p.Metadata, false); err != nil {
+		return err
+	}
+	log.Flog.Done("pre-flight checks passed")
+	return nil
+}
+
+func (p *Native) PreSystemInit() error {
 	log.Flog.Info("start system init")
 	if err := p.SystemInit(); err != nil {
 		return err
 	}
-	log.Flog.Donef("system init passed")
+	log.Flog.Done("system init passed")
 	return nil
 }
 
-func (p *Native) InitBigcat() error {
-	return p.InstallBigCat()
+// GenerateManifest generates manifest deploy command.
+func (p *Native) GenerateManifest() []string {
+	// no need to support.
+	return nil
+}
+
+// Show show cluster info.
+func (p *Native) Show() {
+	loginip := p.Metadata.EIP
+	if len(loginip) <= 0 {
+		loginip = exnet.LocalIPs()[0]
+	}
+	// cfg, _ := config.LoadConfig()
+	// if cfg != nil {
+	// 	cfg.DB = "sqlite"
+	// 	cfg.Token = kutil.GetNodeToken()
+	// 	cfg.Master = []config.Node{
+	// 		{
+	// 			Name: zos.GetHostname(),
+	// 			Host: loginip,
+	// 			Init: true,
+	// 		},
+	// 	}
+	// 	cfg.SaveConfig()
+	// }
+
+	log.Flog.Info("----------------------------")
+	log.Flog.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+	log.Flog.Donef("docs: %s", "https://github.com/ysicing/ergo")
 }

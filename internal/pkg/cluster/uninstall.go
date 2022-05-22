@@ -33,8 +33,10 @@ func (p *Cluster) Uninstall() error {
 	}
 	os.Remove(checkfile)
 
-	if mode == "incluster" {
-		// TODO native 删除默认配置文件
+	// 移除配置文件
+	if file.CheckFileExists(common.GetDefaultConfig()) && mode == "native" {
+		os.Remove(common.GetDefaultConfig())
+	} else if mode == "incluster" {
 		os.Remove(common.GetCustomConfig(common.InitModeCluster))
 	}
 	os.Remove(initfile)

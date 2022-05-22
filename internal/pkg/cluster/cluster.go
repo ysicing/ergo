@@ -1,29 +1,30 @@
 package cluster
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"os/exec"
-	"runtime"
 	"sync"
 	"time"
 
 	"github.com/ergoapi/util/excmd"
+	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
+	"github.com/imroc/req/v3"
 	"github.com/kardianos/service"
-
+	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/pkg/types"
 	"github.com/ysicing/ergo/pkg/util/initsystem"
 	"github.com/ysicing/ergo/pkg/util/log"
+	binfile "github.com/ysicing/ergo/pkg/util/util"
+	"github.com/ysicing/ergo/version"
+	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/syncmap"
-
-	"github.com/ysicing/ergo/common"
-
-	qcexec "github.com/ysicing/ergo/pkg/util/exec"
 )
 
 type Cluster struct {
 	types.Metadata `json:",inline"`
+	types.Status   `json:"status"`
 	M              *sync.Map
 }
 
@@ -80,7 +81,11 @@ func (p *Cluster) GetCreateOptions() []types.Flag {
 	}
 }
 
-func (p *Cluster) InitKubeCluster() error {
+func (p *Cluster) GetCreateExtOptions() []types.Flag {
+	return []types.Flag{}
+}
+
+func (p *Cluster) InitCluster(deployPlugins func() []string) error {
 	if err := p.InitK3sCluster(); err != nil {
 		return err
 	}
@@ -96,7 +101,8 @@ func (p *Cluster) InitKubeCluster() error {
 func (p *Cluster) InitK3sCluster() error {
 	log.Flog.Debug("executing init k3s cluster logic...")
 	// Download k3s.
-	k3sbin, err := p.loadLocalBin(common.K3sBinName)
+	getbin := binfile.Meta{}
+	k3sbin, err := getbin.LoadLocalBin(common.K3sBinName)
 	if err != nil {
 		return err
 	}
@@ -164,6 +170,7 @@ func (p *Cluster) InitK3sCluster() error {
 			break
 		}
 		time.Sleep(time.Second * 5)
+		log.Flog.Info(".")
 	}
 	log.Flog.StopWait()
 	t2 := time.Now()
@@ -172,25 +179,6 @@ func (p *Cluster) InitK3sCluster() error {
 	os.Symlink(common.K3sKubeConfig, d)
 	log.Flog.Donef("create kubeconfig soft link %v ---> %v/config", common.K3sKubeConfig, d)
 	return nil
-}
-
-// loadLocalBin load bin from local file system
-func (p *Cluster) loadLocalBin(binName string) (string, error) {
-	filebin, err := exec.LookPath(binName)
-	if err != nil {
-		sourcebin := fmt.Sprintf("%s/hack/bin/k3s-%s-%s", common.GetDefaultDataDir(), runtime.GOOS, runtime.GOARCH)
-		filebin = fmt.Sprintf("/usr/local/bin/%s", binName)
-		if file.CheckFileExists(sourcebin) {
-			if err := exec.Command("cp", sourcebin, filebin).Run(); err != nil {
-				return "", err
-			}
-		}
-	}
-	output, err := exec.Command(filebin, "--help").CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("seems like there are issues with your %s client: \n\n%s", binName, output)
-	}
-	return filebin, nil
 }
 
 func (p *Cluster) configCommonOptions() []string {
@@ -205,7 +193,9 @@ func (p *Cluster) configCommonOptions() []string {
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
-	)
+		"--system-default-registry=hub.BigCat.com/library",
+		// "--token=a1b2c3d4", // TODO 随机生成
+		"--pause-image=hub.BigCat.com/library/k3s-pause:3.6")
 
 	if p.Network != "flannel" {
 		args = append(args, "--flannel-backend=none")
@@ -234,11 +224,11 @@ func (p *Cluster) configServerOptions() []string {
 	args = append(args, "--disable-network-policy", "--disable-helm-controller", "--disable=servicelb,traefik")
 	var tlsSans string
 	for _, tlsSan := range p.TLSSans {
-		tlsSans += fmt.Sprintf(" --tls-san=%s", tlsSan)
+		tlsSans = tlsSans + fmt.Sprintf(" --tls-san=%s", tlsSan)
 	}
-	tlsSans += " --tls-san=kapi.ysicing.local"
+	tlsSans = tlsSans + " --tls-san=kapi.BigCat.local"
 	if len(p.EIP) != 0 {
-		tlsSans += fmt.Sprintf(" --tls-san=%s", p.EIP)
+		tlsSans = tlsSans + fmt.Sprintf(" --tls-san=%s", p.EIP)
 	}
 	if len(tlsSans) != 0 {
 		args = append(args, tlsSans)
@@ -246,14 +236,62 @@ func (p *Cluster) configServerOptions() []string {
 	args = append(args, "--service-node-port-range=30000-32767")
 	args = append(args, fmt.Sprintf("--cluster-cidr=%v", p.ClusterCidr))
 	args = append(args, fmt.Sprintf("--service-cidr=%v", p.ServiceCidr))
+	// args = append(args, fmt.Sprintf("--cluster-dns=%v", p.DnSSvcIP))
+	// if len(p.Token) != 0 {
+	// 	args = append(args, "--token="+p.Token)
+	// }
+	// args = append(args, p.Args...)
 	return args
 }
 
-func (p *Cluster) SystemInit() (err error) {
-	initShell := fmt.Sprintf("%s/hack/scripts/system-init.sh", common.GetDefaultDataDir())
-	log.Flog.Debugf("gen init shell: %v", initShell)
-	if err := qcexec.RunCmd("/bin/bash", initShell); err != nil {
-		return err
+// TODO support agent install
+// func (p *Cluster) configAgentOptions() []string {
+// agent
+/*
+	--token
+	--server
+	--docker
+	--pause-image
+	--node-external-ip
+	--kubelet-arg
+*/
+// var args []string
+// args = append(args, p.Args...)
+// 	return args
+// }
+
+// Ready 渠成Ready
+func (p *Cluster) Ready() {
+	clusterWaitGroup, ctx := errgroup.WithContext(context.Background())
+	clusterWaitGroup.Go(func() error {
+		return p.ready(ctx)
+	})
+	if err := clusterWaitGroup.Wait(); err != nil {
+		log.Flog.Error(err)
+	}
+}
+
+func (p *Cluster) ready(ctx context.Context) error {
+	t1 := time.Now()
+	client := req.C().SetUserAgent(version.GetUG()).SetTimeout(time.Second * 1)
+	log.Flog.StartWait("waiting for BigCat ready")
+	status := false
+	for {
+		t2 := time.Now()
+		if time.Duration(t2.Sub(t1).Seconds()) > time.Second*180 {
+			log.Flog.Warnf("waiting for BigCat ready 3min timeout: check your network or storage. after install you can run: q status")
+			break
+		}
+		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
+		if err == nil {
+			status = true
+			break
+		}
+		time.Sleep(time.Second * 10)
+	}
+	log.Flog.StopWait()
+	if status {
+		log.Flog.Donef("BigCat ready, cost: %v", time.Since(t1))
 	}
 	return nil
 }
