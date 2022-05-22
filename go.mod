@@ -10,7 +10,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/containerd/continuity v0.3.0
 	github.com/coreos/go-iptables v0.6.0
-	github.com/ergoapi/exgin v1.0.8
+	github.com/ergoapi/exgin v1.1.0
 	github.com/ergoapi/log v0.0.3
 	github.com/ergoapi/util v0.2.16
 	github.com/gin-gonic/gin v1.7.7
@@ -92,6 +92,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fvbommel/sortorder v1.0.1 // indirect
+	github.com/gin-contrib/pprof v1.3.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
