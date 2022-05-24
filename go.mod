@@ -18,7 +18,7 @@ require (
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/flock v0.8.1
-	github.com/google/go-github/v44 v44.0.0
+	github.com/google/go-github/v44 v44.1.0
 	github.com/gopasspw/gopass v1.14.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.11.3
@@ -36,7 +36,7 @@ require (
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.11.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.403
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.405
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.403
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.403
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.403
