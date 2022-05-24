@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1602
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1608
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.0.8
@@ -18,7 +18,7 @@ require (
 	github.com/go-ping/ping v0.0.0-20211130115550-779d1e919534
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/flock v0.8.1
-	github.com/google/go-github/v44 v44.0.0
+	github.com/google/go-github/v44 v44.1.0
 	github.com/gopasspw/gopass v1.14.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.11.3
