@@ -19,7 +19,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/flock v0.8.1
 	github.com/google/go-github/v44 v44.1.0
-	github.com/gopasspw/gopass v1.14.1
+	github.com/gopasspw/gopass v1.14.2
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.11.3
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
