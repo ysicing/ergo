@@ -2,7 +2,7 @@ package kube
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/internal/pkg/cluster"
+	"github.com/ysicing/ergo/internal/pkg/k3s/cluster"
 	"github.com/ysicing/ergo/pkg/util/log"
 )
 

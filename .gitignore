@@ -13,8 +13,7 @@ release.sh
 ergo.rb
 
 hack/deb/*.deb
-hack/bin/*-linux-amd64
-hack/bin/*-linux-arm64
-internal/staticbin/zz_generated*.go
-internal/staticsh/zz_generated*.go
-hack/bin/.upxdone
+manifests/bin/*-linux-amd64
+manifests/bin/*-linux-arm64
+internal/static/*/zz_generated*.go
+manifests/bin/.upxdone

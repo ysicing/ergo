@@ -6,9 +6,9 @@ import (
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/cluster"
-	"github.com/ysicing/ergo/internal/pkg/providers"
-	"github.com/ysicing/ergo/internal/pkg/types"
+	"github.com/ysicing/ergo/internal/pkg/k3s/cluster"
+	"github.com/ysicing/ergo/internal/pkg/k3s/providers"
+	"github.com/ysicing/ergo/internal/pkg/k3s/types"
 	"github.com/ysicing/ergo/pkg/util/log"
 )
 

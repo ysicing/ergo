@@ -8,8 +8,8 @@ import (
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/status"
-	"github.com/ysicing/ergo/internal/pkg/status/top"
+	"github.com/ysicing/ergo/internal/pkg/k3s/status"
+	"github.com/ysicing/ergo/internal/pkg/k3s/status/top"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"k8s.io/kubectl/pkg/util/templates"
 )

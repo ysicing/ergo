@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	elog "github.com/ergoapi/log"
+	"github.com/ergoapi/util/environ"
 
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/log"
@@ -58,4 +59,11 @@ func LookPath(filename string) (string, bool) {
 		return path, true
 	}
 	return "", false
+}
+
+func Trace(cmd *exec.Cmd) {
+	if environ.GetEnv("TRACE", "false") == "true" {
+		key := strings.Join(cmd.Args, " ")
+		log.Flog.Debugf("+ %s\n", key)
+	}
 }

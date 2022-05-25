@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/ysicing/ergo/internal/pkg/types"
+	"github.com/ysicing/ergo/internal/pkg/k3s/types"
 )
 
 // BashCompEnvVarFlag cobra flag's annotation used for bind env to flag.

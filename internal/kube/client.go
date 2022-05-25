@@ -21,6 +21,7 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	metrics "k8s.io/metrics/pkg/client/clientset/versioned"
 )
@@ -33,6 +34,26 @@ type Client struct {
 	RawConfig        clientcmdapi.Config
 	restClientGetter genericclioptions.RESTClientGetter
 	contextName      string
+}
+
+func NewSimpleClient() (*Client, error) {
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	kubeconfig := filepath.Join(dir, ".kube", "config")
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	if err != nil {
+		return nil, err
+	}
+	client, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	return &Client{
+		Clientset: client,
+		Config:    config,
+	}, nil
 }
 
 func NewClient(contextName, kubeconfig string) (*Client, error) {

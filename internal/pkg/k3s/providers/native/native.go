@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/ergoapi/util/exnet"
-	"github.com/ysicing/ergo/internal/pkg/cluster"
-	"github.com/ysicing/ergo/internal/pkg/providers"
-	"github.com/ysicing/ergo/internal/pkg/types"
+	"github.com/ysicing/ergo/internal/pkg/k3s/cluster"
+	"github.com/ysicing/ergo/internal/pkg/k3s/providers"
+	"github.com/ysicing/ergo/internal/pkg/k3s/types"
 	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/preflight"
 	utilsexec "k8s.io/utils/exec"
@@ -40,8 +40,6 @@ const createUsageExample = `
 	create custom cluster
 		ergo kube init --podsubnet "10.42.0.0/16" \
  			--svcsubnet "10.43.0.0/16" \
-			--plugins lb \
-			--plugins ingress \
 			--eip 1.1.1.1  \
 			--san kubeapi.k8s.io
 `

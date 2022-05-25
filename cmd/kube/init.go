@@ -11,14 +11,13 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/providers"
-	"github.com/ysicing/ergo/internal/staticbin"
-	"github.com/ysicing/ergo/internal/staticsh"
+	"github.com/ysicing/ergo/internal/pkg/k3s/providers"
+	"github.com/ysicing/ergo/internal/static"
 	"github.com/ysicing/ergo/pkg/util/log"
 
 	// default provider
-	_ "github.com/ysicing/ergo/internal/pkg/providers/incluster"
-	_ "github.com/ysicing/ergo/internal/pkg/providers/native"
+	_ "github.com/ysicing/ergo/internal/pkg/k3s/providers/incluster"
+	_ "github.com/ysicing/ergo/internal/pkg/k3s/providers/native"
 )
 
 var (
@@ -49,7 +48,7 @@ func InitCmd() *cobra.Command {
 		}
 	}
 	initCmd.Run = func(cmd *cobra.Command, args []string) {
-		if err := stageFiles(); err != nil {
+		if err := static.StageFiles(); err != nil {
 			log.Flog.Fatalf("failed to stage files: %s", err)
 			return
 		}
@@ -57,7 +56,7 @@ func InitCmd() *cobra.Command {
 			if err := cp.PreSystemInit(); err != nil {
 				log.Flog.Fatalf("presystem init err, reason: %s", err)
 			}
-			if err := cp.CreateCluster(); err != nil {
+			if err := cp.CreateCheck(); err != nil {
 				log.Flog.Fatalf("precheck err, reason: %v", err)
 			}
 		}
@@ -71,15 +70,4 @@ func InitCmd() *cobra.Command {
 		cp.Show()
 	}
 	return initCmd
-}
-
-func stageFiles() error {
-	dataDir := common.GetDefaultDataDir()
-	if err := staticbin.Stage(dataDir); err != nil {
-		return err
-	}
-	if err := staticsh.Stage(dataDir); err != nil {
-		return err
-	}
-	return nil
 }

@@ -1,6 +1,7 @@
-package staticbin
+package plugins
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -23,6 +24,25 @@ func Stage(dataDir string) error {
 			return errors.Wrapf(err, "failed to write to %s", name)
 		}
 	}
-	log.Flog.Done("writing static binfile: ", dataDir)
+	return nil
+}
+
+func StageFunc(dataDir string, templateVars map[string]string) error {
+	log.Flog.Debug("writing static binfile: ", dataDir)
+	for _, name := range AssetNames() {
+		content, err := Asset(name)
+		if err != nil {
+			return err
+		}
+		for k, v := range templateVars {
+			content = bytes.Replace(content, []byte(k), []byte(v), -1)
+		}
+		p := filepath.Join(dataDir, name)
+		os.MkdirAll(filepath.Dir(p), 0700)
+
+		if err := ioutil.WriteFile(p, content, 0600); err != nil {
+			return errors.Wrapf(err, "failed to write to %s", name)
+		}
+	}
 	return nil
 }

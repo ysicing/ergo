@@ -17,8 +17,7 @@ type Metadata struct {
 	WorkerExtraArgs string      `json:"worker-extra-args,omitempty" yaml:"worker-extra-args,omitempty"`
 	DataStore       string      `json:"datastore,omitempty" yaml:"datastore,omitempty"`
 	Network         string      `json:"network,omitempty" yaml:"network,omitempty"`
-	Plugins         StringArray `json:"plugins,omitempty" yaml:"plugins,omitempty"`
-	Mode            string      `json:"mode,omitempty" yaml:"mode,omitempty"`
+	DisableIngress  bool        `json:"disable-ingress,omitempty" yaml:"disable-ingress,omitempty"`
 }
 
 type Status struct {

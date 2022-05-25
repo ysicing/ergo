@@ -14,7 +14,7 @@ type Meta struct{}
 func (p *Meta) LoadLocalBin(binName string) (string, error) {
 	filebin, err := exec.LookPath(binName)
 	if err != nil {
-		sourcebin := fmt.Sprintf("%s/hack/bin/k3s-%s-%s", common.GetDefaultDataDir(), runtime.GOOS, runtime.GOARCH)
+		sourcebin := fmt.Sprintf("%s/manifests/bin/%s-%s-%s", common.GetDefaultDataDir(), binName, runtime.GOOS, runtime.GOARCH)
 		filebin = fmt.Sprintf("/usr/local/bin/%s", binName)
 		if file.CheckFileExists(sourcebin) {
 			if err := exec.Command("cp", "-a", sourcebin, filebin).Run(); err != nil {

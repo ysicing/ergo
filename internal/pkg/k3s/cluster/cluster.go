@@ -13,27 +13,32 @@ import (
 	"github.com/imroc/req/v3"
 	"github.com/kardianos/service"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/types"
+	"github.com/ysicing/ergo/internal/kube"
+	pluginapi "github.com/ysicing/ergo/internal/pkg/k3s/plugins"
+	"github.com/ysicing/ergo/internal/pkg/k3s/types"
 	"github.com/ysicing/ergo/pkg/util/initsystem"
 	"github.com/ysicing/ergo/pkg/util/log"
 	binfile "github.com/ysicing/ergo/pkg/util/util"
 	"github.com/ysicing/ergo/version"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/syncmap"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type Cluster struct {
 	types.Metadata `json:",inline"`
 	types.Status   `json:"status"`
 	M              *sync.Map
+	client         *kube.Client
 }
 
 func NewCluster() *Cluster {
 	return &Cluster{
 		Metadata: types.Metadata{
-			ClusterCidr: "10.42.0.0/16",
-			ServiceCidr: "10.43.0.0/16",
-			Network:     "flannel",
+			ClusterCidr:    "10.42.0.0/16",
+			ServiceCidr:    "10.43.0.0/16",
+			Network:        "cilium",
+			DisableIngress: false,
 		},
 		M: new(syncmap.Map),
 	}
@@ -42,11 +47,10 @@ func NewCluster() *Cluster {
 func (p *Cluster) GetCreateOptions() []types.Flag {
 	return []types.Flag{
 		{
-			Name:      "plugins",
-			P:         &p.Plugins,
-			V:         p.Plugins,
-			ShortHand: "p",
-			Usage:     "Deploy packaged components",
+			Name:  "disable-ingress",
+			P:     &p.DisableIngress,
+			V:     p.DisableIngress,
+			Usage: "disable nginx ingress plugins",
 		},
 		{
 			Name:  "podsubnet",
@@ -89,10 +93,16 @@ func (p *Cluster) InitCluster(deployPlugins func() []string) error {
 	if err := p.InitK3sCluster(); err != nil {
 		return err
 	}
-	if p.Metadata.Plugins != nil {
-		// install plugin to the current cluster.
-		for _, plugin := range p.Metadata.Plugins {
-			log.Flog.Donef("deployed plugins [%s] done", plugin)
+	if p.Metadata.DisableIngress {
+		log.Flog.Warn("disable ingress controller")
+	} else {
+		log.Flog.Debug("start deploy ingress plugins: nginx-ingress-controller")
+		localp, _ := pluginapi.GetMeta("ingress", "nginx-ingress-controller")
+		localp.Client = p.client
+		if err := localp.Install(); err != nil {
+			log.Flog.Warnf("deploy ingress plugins: nginx-ingress-controller failed, reason: %v", err)
+		} else {
+			log.Flog.Done("deployed ingress plugins: nginx-ingress-controller success")
 		}
 	}
 	return nil
@@ -145,20 +155,20 @@ func (p *Cluster) InitK3sCluster() error {
 	ds := new(initsystem.DaemonService)
 	s, err := service.New(ds, svcConfig)
 	if err != nil {
-		log.Flog.Error("create k3s service failed: %s", err)
+		log.Flog.Errorf("create k3s service failed: %s", err)
 		return err
 	}
 	if err := s.Install(); err != nil {
-		log.Flog.Error("install k3s service failed: %s", err)
+		log.Flog.Errorf("install k3s service failed: %s", err)
 		return err
 	}
-	log.Flog.Done("install k3s service successfully")
+	log.Flog.Done("install k3s service")
 	// Start k3s service.
 	if err := s.Start(); err != nil {
 		log.Flog.Errorf("start k3s service failed: %s", err)
 		return err
 	}
-	log.Flog.Done("start k3s service successfully")
+	log.Flog.Done("start k3s service done")
 	if !excmd.CheckBin("kubectl") {
 		os.Symlink(k3sbin, common.KubectlBinPath)
 		log.Flog.Donef("create kubectl soft link")
@@ -178,6 +188,14 @@ func (p *Cluster) InitK3sCluster() error {
 	d := common.GetDefaultKubeConfig()
 	os.Symlink(common.K3sKubeConfig, d)
 	log.Flog.Donef("create kubeconfig soft link %v ---> %v/config", common.K3sKubeConfig, d)
+	kclient, _ := kube.NewSimpleClient()
+	if kclient != nil {
+		_, err = kclient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
+		if err == nil {
+			log.Flog.Donef("create namespace %s", common.DefaultSystem)
+		}
+		p.client = kclient
+	}
 	return nil
 }
 

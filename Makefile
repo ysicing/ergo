@@ -27,7 +27,7 @@ golint: ## lint
 
 default: fmt golint ## fmt code
 
-build: clean getbin ## 构建二进制
+build: clean generate ## 构建二进制
 	@echo "build bin ${BUILD_VERSION} ${BUILD_DATE} ${GIT_COMMIT}"
 	# go install github.com/mitchellh/gox@latest
 	@gox -osarch="darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64" \
@@ -52,10 +52,6 @@ build: clean getbin ## 构建二进制
 upx: ## upx binary
 	@echo "upx binray"
 	@upx -9 dist/*
-
-getbin: ## getbin
-	@echo "get bin"
-	@./hack/scripts/getbin.sh
 
 generate: ## generate
 	go generate ./...
@@ -101,17 +97,21 @@ doc: ## gen docs
 	cp -a docs/ergo.md docs/index.md
 	cp -a README.md docs/readme.md
 
-cleanvm: ## clem lima vm
-	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
+# cleanvm: ## clem lima vm
+# 	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
 
-vm: cleanvm ## start lima vm
-	limactl start common/debian.yml
+# vm: cleanvm ## start lima vm
+# 	limactl start common/debian.yml
 
-shell: ## shell debian
-	limactl shell debian
+# shell: ## shell debian
+# 	limactl shell debian
 
-local-test: build ## 本地测试
-	limactl cp ./dist/ergo_linux_amd64 lima-ergo:/home/ysicing.linux/.ergo/bin/ergo-ergo
+# local-test: build ## 本地测试
+# 	limactl cp ./dist/ergo_linux_amd64 lima-ergo:/home/ysicing.linux/.ergo/bin/ergo-ergo
+
+local: build ## local test
+	upx -1 ./dist/ergo_linux_amd64
+	scp ./dist/ergo_linux_amd64 192.168.0.107:/root/
 
 .PHONY : build release clean install
 

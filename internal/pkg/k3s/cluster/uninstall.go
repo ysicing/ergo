@@ -26,7 +26,7 @@ func (p *Cluster) Uninstall() error {
 		uninstallName = "custom-uninstall.sh"
 	}
 
-	uninstallShell := fmt.Sprintf("%s/hack/scripts/%s", common.GetDefaultDataDir(), uninstallName)
+	uninstallShell := fmt.Sprintf("%s/manifests/scripts/%s", common.GetDefaultDataDir(), uninstallName)
 	log.Flog.Debugf("gen %s uninstall script: %v", mode, uninstallShell)
 	if err := qcexec.RunCmd("/bin/bash", uninstallShell); err != nil {
 		return err

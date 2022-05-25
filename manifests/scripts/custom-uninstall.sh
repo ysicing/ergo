@@ -120,6 +120,7 @@ if [ -f "/usr/local/bin/k3s" ]; then
 fi
 if [ -f "/usr/local/bin/helm" ]; then
 	helm repo list | grep install && helm repo remove install || true
+  rm -rf /usr/local/bin/helm
 fi
 
 # clean kube config
@@ -127,8 +128,8 @@ if [ -f "/root/.kube/config" ]; then
 	mv /root/.kube/config /root/.kube/config.bak
 fi
 
-if [ -d "$HOME/.ergo/data/hack" ]; then
-  rm -rf $HOME/.ergo/data/hack
+if [ -d "$HOME/.ergo/data/manifests" ]; then
+  rm -rf $HOME/.ergo/data/manifests
 fi
 
 exit 0

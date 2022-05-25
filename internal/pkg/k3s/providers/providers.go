@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/ysicing/ergo/internal/pkg/types"
+	"github.com/ysicing/ergo/internal/pkg/k3s/types"
 )
 
 // Factory is a function that returns a Provider.Interface.

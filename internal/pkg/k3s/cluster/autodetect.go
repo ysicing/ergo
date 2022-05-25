@@ -9,7 +9,7 @@ import (
 )
 
 func (p *Cluster) SystemInit() (err error) {
-	initShell := fmt.Sprintf("%s/hack/scripts/system-init.sh", common.GetDefaultDataDir())
+	initShell := fmt.Sprintf("%s/manifests/scripts/system-init.sh", common.GetDefaultDataDir())
 	log.Flog.Debugf("gen init shell: %v", initShell)
 	if err := qcexec.RunCmd("/bin/bash", initShell); err != nil {
 		return err

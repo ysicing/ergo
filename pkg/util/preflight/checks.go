@@ -32,7 +32,7 @@ import (
 	"github.com/ergoapi/util/zos"
 	"github.com/pkg/errors"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/types"
+	"github.com/ysicing/ergo/internal/pkg/k3s/types"
 	"github.com/ysicing/ergo/pkg/util/initsystem"
 	"github.com/ysicing/ergo/pkg/util/log"
 
