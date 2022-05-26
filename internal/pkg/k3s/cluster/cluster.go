@@ -4,18 +4,22 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/ztime"
 	"github.com/imroc/req/v3"
 	"github.com/kardianos/service"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/kube"
 	pluginapi "github.com/ysicing/ergo/internal/pkg/k3s/plugins"
 	"github.com/ysicing/ergo/internal/pkg/k3s/types"
+	qcexec "github.com/ysicing/ergo/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/initsystem"
 	"github.com/ysicing/ergo/pkg/util/log"
 	binfile "github.com/ysicing/ergo/pkg/util/util"
@@ -92,6 +96,22 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 func (p *Cluster) InitCluster(deployPlugins func() []string) error {
 	if err := p.InitK3sCluster(); err != nil {
 		return err
+	}
+	if strings.ToLower(p.Metadata.Network) == "cilium" {
+		log.Flog.Debug("start deploy cni: cilium")
+		getbin := binfile.Meta{}
+		cilium, err := getbin.LoadLocalBin(common.CiliumName)
+		if err != nil {
+			return err
+		}
+		// cilium install --ipv4-native-routing-cidr 10.42.0.0/16 --config cluster-pool-ipv4-cidr=10.42.0.0/16
+		ciliumCmd := exec.Command(cilium, "install", "--agent-image", "ccr.ccs.tencentyun.com/k7scn/cilium", "--operator-image", "ccr.ccs.tencentyun.com/k7scn/operator-generic", "--ipv4-native-routing-cidr", p.ClusterCidr, "--config", "cluster-pool-ipv4-cidr="+p.ClusterCidr)
+		qcexec.Trace(ciliumCmd)
+		if output, err := ciliumCmd.CombinedOutput(); err != nil {
+			log.Flog.Errorf("deploy cni cilium failed: %s", string(output))
+			return err
+		}
+		log.Flog.Done("deployed cni cilium success")
 	}
 	if p.Metadata.DisableIngress {
 		log.Flog.Warn("disable ingress controller")
@@ -211,9 +231,10 @@ func (p *Cluster) configCommonOptions() []string {
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
-		"--system-default-registry=hub.BigCat.com/library",
+		// "--system-default-registry=ccr.ccs.tencentyun.com/k7scn",
 		// "--token=a1b2c3d4", // TODO 随机生成
-		"--pause-image=hub.BigCat.com/library/k3s-pause:3.6")
+		// "--pause-image=ccr.ccs.tencentyun.com/k7scn/k3s-pause:3.6"
+	)
 
 	if p.Network != "flannel" {
 		args = append(args, "--flannel-backend=none")
@@ -290,14 +311,14 @@ func (p *Cluster) Ready() {
 }
 
 func (p *Cluster) ready(ctx context.Context) error {
-	t1 := time.Now()
+	t1 := ztime.NowUnix()
 	client := req.C().SetUserAgent(version.GetUG()).SetTimeout(time.Second * 1)
 	log.Flog.StartWait("waiting for BigCat ready")
 	status := false
 	for {
-		t2 := time.Now()
-		if time.Duration(t2.Sub(t1).Seconds()) > time.Second*180 {
-			log.Flog.Warnf("waiting for BigCat ready 3min timeout: check your network or storage. after install you can run: q status")
+		t2 := ztime.NowUnix() - t1
+		if t2 > 180 {
+			log.Flog.Warnf("waiting for BigCat ready 3min timeout: check your network or storage. after install you can run: %s kube status", os.Args[0])
 			break
 		}
 		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
@@ -309,7 +330,7 @@ func (p *Cluster) ready(ctx context.Context) error {
 	}
 	log.Flog.StopWait()
 	if status {
-		log.Flog.Donef("BigCat ready, cost: %v", time.Since(t1))
+		log.Flog.Donef("BigCat ready, cost: %v", time.Since(time.Unix(t1, 0)))
 	}
 	return nil
 }

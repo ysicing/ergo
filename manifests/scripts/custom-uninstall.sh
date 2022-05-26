@@ -14,6 +14,10 @@ for service in /etc/init.d/k3s*; do
     [ -x $service ] && $service stop
 done
 
+command_exists() {
+	command -v "$@" > /dev/null 2>&1
+}
+
 pschildren() {
     ps -e -o ppid= -o pid= | \
     sed -e 's/^\s*//g; s/\s\s*/\t/g;' | \
@@ -130,6 +134,17 @@ fi
 
 if [ -d "$HOME/.ergo/data/manifests" ]; then
   rm -rf $HOME/.ergo/data/manifests
+fi
+
+if command_exists docker && [ -e /var/run/docker.sock ]; then
+		(
+			rm_ctns=$(docker ps -a -q --filter 'name=k8s')
+			if [ -z "$rm_ctns" ];then
+    		echo "no containers need to delete"
+			else
+        docker rm -f $rm_ctns
+			fi
+		) || true
 fi
 
 exit 0

@@ -7,11 +7,12 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 
 	"github.com/ysicing/ergo/common"
+	qcexec "github.com/ysicing/ergo/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/log"
+	binfile "github.com/ysicing/ergo/pkg/util/util"
 	"github.com/ysicing/ergo/version"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -88,6 +89,10 @@ func GetMeta(args ...string) (Item, error) {
 
 func (p *Item) UnInstall() error {
 	pluginName := fmt.Sprintf("%s-%s", common.KubePluginPrefix, p.Type)
+	ns := p.Namespace
+	if len(ns) == 0 {
+		ns = common.DefaultSystem
+	}
 	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -98,10 +103,26 @@ func (p *Item) UnInstall() error {
 		return nil
 	}
 	// #nosec
-	output, err := exec.Command(os.Args[0], "kubectl", "delete", "-f", filepath.Join(common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem).CombinedOutput()
-	if err != nil {
-		log.Flog.Errorf("uninstall plugin %s failed: %s", p.Type, string(output))
-		return err
+	if p.Tool == "helm" {
+		getbin := binfile.Meta{}
+		helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
+		if err != nil {
+			return err
+		}
+		applycmd := exec.Command(helmbin, "delete", p.Type, "install/"+p.Name, "-n", ns)
+		qcexec.Trace(applycmd)
+		if output, err := applycmd.CombinedOutput(); err != nil {
+			log.Flog.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			return err
+		}
+	} else {
+		// #nosec
+		applycmd := exec.Command(os.Args[0], "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", ns)
+		qcexec.Trace(applycmd)
+		if output, err := applycmd.CombinedOutput(); err != nil {
+			log.Flog.Errorf("kubectl uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			return err
+		}
 	}
 	log.Flog.Donef("uninstall %s plugin done", p.Type)
 	p.Client.DeleteSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.DeleteOptions{})
@@ -110,6 +131,10 @@ func (p *Item) UnInstall() error {
 
 func (p *Item) Install() error {
 	pluginName := fmt.Sprintf("%s-%s", common.KubePluginPrefix, p.Type)
+	ns := p.Namespace
+	if len(ns) == 0 {
+		ns = common.DefaultSystem
+	}
 	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
 	if err == nil {
 		log.Flog.Warnf("plugin %s is already installed", p.Type)
@@ -120,13 +145,26 @@ func (p *Item) Install() error {
 		return fmt.Errorf("plugin %s install failed", p.Name)
 	}
 	// #nosec
-	applycmd := exec.Command(os.Args[0], "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
-	// qcexec.Trace(applycmd)
-	output, err := applycmd.CombinedOutput()
-
-	if err != nil {
-		log.Flog.Errorf("install %s plugin %s failed: %s", p.Type, p.Name, string(output))
-		return err
+	if p.Tool == "helm" {
+		getbin := binfile.Meta{}
+		helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
+		if err != nil {
+			return err
+		}
+		applycmd := exec.Command(helmbin, "upgrade", "-i", p.Type, "install/"+p.Name, "-n", ns)
+		qcexec.Trace(applycmd)
+		if output, err := applycmd.CombinedOutput(); err != nil {
+			log.Flog.Errorf("helm install %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			return err
+		}
+	} else {
+		// #nosec
+		applycmd := exec.Command(os.Args[0], "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", ns)
+		qcexec.Trace(applycmd)
+		if output, err := applycmd.CombinedOutput(); err != nil {
+			log.Flog.Errorf("kubectl install %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			return err
+		}
 	}
 	log.Flog.Donef("upgrade install %s plugin %s done", p.Type, p.Name)
 	plugindata := map[string]string{
@@ -134,6 +172,7 @@ func (p *Item) Install() error {
 		"name":       p.Name,
 		"version":    p.Version,
 		"cliversion": version.Version,
+		"deployns":   ns,
 	}
 	_, err = p.Client.CreateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{

@@ -17,6 +17,8 @@ type Item struct {
 	Appversion  string       `json:"appversion"`
 	Type        string       `json:"type"`
 	Path        string       `json:"path"`
+	Tool        string       `json:"tool"`
+	Namespace   string       `json:"namespace"`
 }
 
 type List []Meta

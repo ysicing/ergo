@@ -8,7 +8,6 @@ import (
 
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/kube"
 	"github.com/ysicing/ergo/pkg/util/log"
 	binfile "github.com/ysicing/ergo/pkg/util/util"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -18,15 +17,11 @@ import (
 func (p *Cluster) InstallBigCat() error {
 	log.Flog.Info("executing init BigCat logic...")
 	ctx := context.Background()
-	c, err := kube.NewClient("", "")
-	if err != nil {
-		return err
-	}
 	log.Flog.Debug("waiting for storage to be ready...")
 	waitsc := time.Now()
 	// wait.BackoffUntil TODO
 	for {
-		sc, _ := c.GetDefaultSC(ctx)
+		sc, _ := p.client.GetDefaultSC(ctx)
 		if sc != nil {
 			log.Flog.Donef("default storage %s is ready", sc.Name)
 			break
@@ -39,14 +34,13 @@ func (p *Cluster) InstallBigCat() error {
 		}
 	}
 
-	_, err = c.CreateNamespace(ctx, common.DefaultSystem, metav1.CreateOptions{})
+	_, err := p.client.CreateNamespace(ctx, common.DefaultSystem, metav1.CreateOptions{})
 	if err != nil {
 		if !errors.IsAlreadyExists(err) {
 			return err
 		}
-		log.Flog.Warnf("namespace %s already exists", common.DefaultSystem)
 	}
-	log.Flog.Donef("init BigCat done")
+	log.Flog.Done("start init BigCat")
 	getbin := binfile.Meta{}
 	helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
 	if err != nil {

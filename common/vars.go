@@ -109,5 +109,5 @@ var (
 
 const (
 	DefaultRepoURL   = "https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml"
-	DefaultChartRepo = "https://charts.bitnami.com/bitnami"
+	DefaultChartRepo = "https://helm.ysicing.me"
 )
