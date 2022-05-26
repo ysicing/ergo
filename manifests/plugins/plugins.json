@@ -6,12 +6,12 @@
       {
         "name": "nginx-ingress-controller",
         "description": "NGINX Ingress Controller is an Ingress controller that manages external access to HTTP services in a Kubernetes cluster using NGINX.",
-        "version": "1.2.0",
+        "version": "9.2.3",
         "home": "https://github.com/bitnami/charts/tree/master/bitnami/nginx-ingress-controller",
         "appversion": "1.2.0",
-        "path": "manifests/plugins/nginx-ingress-controller.yaml",
-        "tool": "kubectl",
-        "namespace": ""
+        "path": "install/nginx-ingress-controller",
+        "tool": "helm",
+        "namespace": "kube-system"
       }
     ]
   }

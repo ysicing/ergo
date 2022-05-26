@@ -3,7 +3,6 @@ package cluster
 import (
 	"context"
 	"os/exec"
-	"strings"
 	"time"
 
 	"github.com/ergoapi/util/file"
@@ -46,31 +45,12 @@ func (p *Cluster) InstallBigCat() error {
 	if err != nil {
 		return err
 	}
-	output, err := exec.Command(helmbin, "repo", "add", "install", common.DefaultChartRepo).CombinedOutput()
+	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
+	output, err := exec.Command(helmbin, "upgrade", "-i", "bigcat", common.DefaultChartName, "-n", common.DefaultSystem).CombinedOutput()
 	if err != nil {
-		errmsg := string(output)
-		if !strings.Contains(errmsg, "exists") {
-			log.Flog.Errorf("add BigCat install repo failed: %s", string(output))
-			return err
-		}
-		log.Flog.Warnf("BigCat install repo already exists")
-	} else {
-		log.Flog.Donef("add BigCat install repo done")
-	}
-
-	output, err = exec.Command(helmbin, "repo", "update").CombinedOutput()
-	if err != nil {
-		log.Flog.Errorf("update BigCat install repo failed: %s", string(output))
+		log.Flog.Errorf("upgrade install BigCat web failed: %s", string(output))
 		return err
 	}
-	log.Flog.Donef("update BigCat install repo done")
-	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
-	// output, err = exec.Command(helmbin, "upgrade", "-i", "bigcat", common.DefaultChartName, "-n", common.DefaultSystem).CombinedOutput()
-	// if err != nil {
-	// 	log.Flog.Errorf("upgrade install BigCat web failed: %s", string(output))
-	// 	return err
-	// }
-
 	log.Flog.Donef("install BigCat done")
 	p.Ready()
 	initfile := common.GetCustomConfig(common.InitFileName)

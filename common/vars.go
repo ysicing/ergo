@@ -75,7 +75,7 @@ const (
 	StatusWaitDuration = 5 * time.Minute
 	WaitRetryInterval  = 5 * time.Second
 	DefaultSystem      = "cce-system"
-	DefaultChartName   = "install/bigcat"
+	DefaultChartName   = "install/next"
 	KubePluginPrefix   = "ergo-kube-plugin"
 )
 

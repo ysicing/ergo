@@ -97,6 +97,29 @@ func (p *Cluster) InitCluster(deployPlugins func() []string) error {
 	if err := p.InitK3sCluster(); err != nil {
 		return err
 	}
+	getbin := binfile.Meta{}
+	helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
+	if err != nil {
+		return err
+	}
+	output, err := exec.Command(helmbin, "repo", "add", "install", common.DefaultChartRepo).CombinedOutput()
+	if err != nil {
+		errmsg := string(output)
+		if !strings.Contains(errmsg, "exists") {
+			log.Flog.Errorf("add install repo failed: %s", string(output))
+			return err
+		}
+		log.Flog.Warnf("install repo already exists")
+	} else {
+		log.Flog.Donef("add install repo done")
+	}
+
+	output, err = exec.Command(helmbin, "repo", "update").CombinedOutput()
+	if err != nil {
+		log.Flog.Errorf("update install repo failed: %s", string(output))
+		return err
+	}
+	log.Flog.Donef("update install repo done")
 	if strings.ToLower(p.Metadata.Network) == "cilium" {
 		log.Flog.Debug("start deploy cni: cilium")
 		getbin := binfile.Meta{}
