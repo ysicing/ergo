@@ -2,6 +2,11 @@
 
 [ $(id -u) -eq 0 ] || exec sudo $0 $@
 
+if command_exists cilium; then
+  cilium uninstall
+  rm -rf $(which cilium)
+fi
+
 for bin in /var/lib/rancher/k3s/data/**/bin/; do
     [ -d $bin ] && export PATH=$PATH:$bin:$bin/aux
 done
@@ -74,8 +79,12 @@ ip link delete cni0
 ip link delete flannel.1
 ip link delete flannel-v6.1
 rm -rf /var/lib/cni/
+rm -rf /etc/cni/net.d/
+rm -rf /opt/cni/bin/
 iptables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | iptables-restore
+iptables-save | grep -v CILIUM  | iptables-restore
 ip6tables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | ip6tables-restore
+ip6tables-save | grep -v CILIUM  | ip6tables-restore
 
 if command -v systemctl; then
 		if [ -f "/etc/systemd/system/k3s-server.service" ]; then
