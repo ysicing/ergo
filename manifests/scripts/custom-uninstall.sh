@@ -4,6 +4,11 @@
 
 if command_exists cilium; then
   cilium uninstall
+  ifconfig cilium_vxlan down
+  ifconfig cilium_net down
+  ifconfig cilium_host down
+  ip link delete cilium_vxlan
+  ip link delete cilium_net
   rm -rf $(which cilium)
 fi
 
