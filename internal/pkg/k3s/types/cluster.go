@@ -18,6 +18,8 @@ type Metadata struct {
 	DataStore       string      `json:"datastore,omitempty" yaml:"datastore,omitempty"`
 	Network         string      `json:"network,omitempty" yaml:"network,omitempty"`
 	DisableIngress  bool        `json:"disable-ingress,omitempty" yaml:"disable-ingress,omitempty"`
+	CoreAPI         string      `json:"core-api,omitempty" yaml:"core-api,omitempty"`
+	CoreToken       string      `json:"core-token,omitempty" yaml:"core-token,omitempty"`
 }
 
 type Status struct {

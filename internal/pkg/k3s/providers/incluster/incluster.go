@@ -48,10 +48,15 @@ func (p *InCluster) GetUsageExample(action string) string {
 	}
 }
 
-// GetCreateFlags returns native create flags.
+// GetCreateFlags returns cluster create flags.
 func (p *InCluster) GetCreateFlags() []types.Flag {
 	fs := p.GetCreateExtOptions()
 	return fs
+}
+
+// GetJoinFlags returns cluster join flags.
+func (p *InCluster) GetJoinFlags() []types.Flag {
+	return nil
 }
 
 func (p *InCluster) GetProviderName() string {

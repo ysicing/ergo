@@ -33,7 +33,8 @@ func newProvider() *Native {
 	}
 }
 
-const createUsageExample = `
+const (
+	createUsageExample = `
 	create default cluster:
 		ergo kube init
 
@@ -43,12 +44,21 @@ const createUsageExample = `
 			--eip 1.1.1.1  \
 			--san kubeapi.k8s.io
 `
+	joinUsageExample = `
+	join node to cluster:
+
+		# use k3s api & k3s nodetoken
+		ergo kube join --api <api address> --token <api token>
+`
+)
 
 // GetUsageExample returns native usage example prompt.
 func (p *Native) GetUsageExample(action string) string {
 	switch action {
 	case "create":
 		return createUsageExample
+	case "join":
+		return joinUsageExample
 	default:
 		return "not support"
 	}
@@ -61,6 +71,11 @@ func (p *Native) GetCreateFlags() []types.Flag {
 	return fs
 }
 
+// GetJoinFlags returns native join flags.
+func (p *Native) GetJoinFlags() []types.Flag {
+	return p.GetJoinOptions()
+}
+
 func (p *Native) GetProviderName() string {
 	return p.Provider
 }
@@ -68,12 +83,12 @@ func (p *Native) GetProviderName() string {
 // CreateCluster create cluster.
 func (p *Native) CreateCluster() (err error) {
 	log.Flog.Info("start init cluster")
-	return p.InitCluster(p.GenerateManifest)
+	return p.InitCluster()
 }
 
 // JoinNode join node.
 func (p *Native) JoinNode() (err error) {
-	return nil
+	return p.JoinCluster()
 }
 
 func (p *Native) InitBigCat() error {

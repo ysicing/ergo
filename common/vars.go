@@ -65,7 +65,7 @@ const (
 	K3sBinPath         = "/usr/local/bin/k3s"
 	K3sBinVersion      = "v1.23.4+k3s1"
 	K3sBinURL          = "https://github.com/k3s-io/k3s/releases/download"
-	K3sAgentEnv        = "/etc/systemd/system/k3s-agent.service.env"
+	K3sEnv             = "/etc/systemd/system/k3s.service.env"
 	K3sKubeConfig      = "/etc/rancher/k3s/k3s.yaml"
 	HelmBinName        = "helm"
 	CiliumName         = "cilium"

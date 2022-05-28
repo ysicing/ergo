@@ -23,6 +23,7 @@ type Provider interface {
 	JoinNode() error
 	InitBigCat() error
 	GetCreateFlags() []types.Flag
+	GetJoinFlags() []types.Flag
 	CreateCheck() error
 	PreSystemInit() error
 	Show()

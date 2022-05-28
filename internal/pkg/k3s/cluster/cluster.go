@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
@@ -89,11 +90,27 @@ func (p *Cluster) GetCreateOptions() []types.Flag {
 	}
 }
 
+func (p *Cluster) GetJoinOptions() []types.Flag {
+	return []types.Flag{
+		{
+			Name:  "server",
+			P:     &p.CoreAPI,
+			V:     p.CoreAPI,
+			Usage: "Server to connect to",
+		}, {
+			Name:  "token",
+			P:     &p.CoreToken,
+			V:     p.CoreToken,
+			Usage: "Token to use for authentication",
+		},
+	}
+}
+
 func (p *Cluster) GetCreateExtOptions() []types.Flag {
 	return []types.Flag{}
 }
 
-func (p *Cluster) InitCluster(deployPlugins func() []string) error {
+func (p *Cluster) InitCluster() error {
 	if err := p.InitK3sCluster(); err != nil {
 		return err
 	}
@@ -169,7 +186,7 @@ func (p *Cluster) InitK3sCluster() error {
 	k3sargs = append(k3sargs, p.configServerOptions()...)
 	// Create k3s service.
 	k3sCfg := &initsystem.Config{
-		Name: "k3s-server",
+		Name: "k3s",
 		Desc: "k3s server",
 		Exec: k3sbin,
 		Args: k3sargs,
@@ -177,6 +194,11 @@ func (p *Cluster) InitK3sCluster() error {
 	options := make(service.KeyValue)
 	options["Restart"] = "always"
 	options["LimitNOFILE"] = 1048576
+	options["LimitNPROC"] = "infinity"
+	options["LimitCORE"] = "infinity"
+	options["TasksMax"] = "infinity"
+	options["TimeoutStartSec"] = 0
+	options["RestartSec"] = "5s"
 	options["Type"] = "notify"
 	options["KillMode"] = "process"
 	options["Delegate"] = true
@@ -191,6 +213,7 @@ func (p *Cluster) InitK3sCluster() error {
 		Arguments:  k3sCfg.Args,
 		Option:     options,
 		ExecStartPres: []string{
+			"/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'",
 			"/sbin/modprobe br_netfilter",
 			"/sbin/modprobe overlay",
 		},
@@ -306,23 +329,106 @@ func (p *Cluster) configServerOptions() []string {
 	return args
 }
 
-// TODO support agent install
-// func (p *Cluster) configAgentOptions() []string {
-// agent
-/*
-	--token
-	--server
-	--docker
-	--pause-image
-	--node-external-ip
-	--kubelet-arg
-*/
-// var args []string
-// args = append(args, p.Args...)
-// 	return args
-// }
+func (p *Cluster) JoinCluster() error {
+	log.Flog.Debug("executing init k3s cluster logic...")
+	// Download k3s.
+	getbin := binfile.Meta{}
+	k3sbin, err := getbin.LoadLocalBin(common.K3sBinName)
+	if err != nil {
+		return err
+	}
+	// k3s args
+	k3sargs := []string{
+		"agent",
+	}
+	// common args
+	k3sargs = append(k3sargs, p.configCommonOptions()...)
+	// k3s agent config
+	k3sargs = append(k3sargs, p.configAgentOptions()...)
+	// Create k3s service.
+	k3sCfg := &initsystem.Config{
+		Name: "k3s",
+		Desc: "k3s agent",
+		Exec: k3sbin,
+		Args: k3sargs,
+	}
+	options := make(service.KeyValue)
+	options["Restart"] = "always"
+	options["LimitNOFILE"] = 1048576
+	options["LimitNPROC"] = "infinity"
+	options["LimitCORE"] = "infinity"
+	options["TasksMax"] = "infinity"
+	options["TimeoutStartSec"] = 0
+	options["RestartSec"] = "5s"
+	options["Type"] = "exec"
+	options["KillMode"] = "process"
+	options["Delegate"] = true
+	svcConfig := &service.Config{
+		Name:        k3sCfg.Name,
+		DisplayName: k3sCfg.Name,
+		Description: k3sCfg.Desc,
+		Dependencies: []string{
+			"After=network-online.target",
+		},
+		Executable: k3sCfg.Exec,
+		Arguments:  k3sCfg.Args,
+		Option:     options,
+		ExecStartPres: []string{
+			"/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'",
+			"/sbin/modprobe br_netfilter",
+			"/sbin/modprobe overlay",
+		},
+	}
+	ds := new(initsystem.DaemonService)
+	s, err := service.New(ds, svcConfig)
+	if err != nil {
+		log.Flog.Errorf("create k3s agent failed: %s", err)
+		return err
+	}
+	if err := s.Install(); err != nil {
+		log.Flog.Errorf("install k3s agent failed: %s", err)
+		return err
+	}
+	log.Flog.Done("installed k3s agent successfully")
+	// Start k3s service.
+	if err := s.Start(); err != nil {
+		log.Flog.Errorf("start k3s agent failed: %s", err)
+		return err
+	}
+	log.Flog.Done("started k3s agent successfully")
+	return nil
+}
 
-// Ready 渠成Ready
+func (p *Cluster) configAgentOptions() []string {
+	// agent
+	/*
+		--token
+		--server
+		--docker
+		--pause-image
+		--node-external-ip
+		--kubelet-arg
+	*/
+	var args []string
+	sever := p.getEnv(p.CoreAPI, "NEXT_API", "")
+	if len(sever) > 0 {
+		args = append(args, "--server="+sever)
+	}
+	token := p.getEnv(p.CoreToken, "NEXT_TOKEN", "")
+	if len(token) > 0 {
+		args = append(args, "--token="+token)
+	}
+	return args
+}
+
+func (p *Cluster) getEnv(key, envkey, defaultvalue string) string {
+	if len(key) > 0 {
+		return key
+	}
+	return environ.GetEnv(envkey, defaultvalue)
+}
+
+// Ready Next Ready
 func (p *Cluster) Ready() {
 	clusterWaitGroup, ctx := errgroup.WithContext(context.Background())
 	clusterWaitGroup.Go(func() error {

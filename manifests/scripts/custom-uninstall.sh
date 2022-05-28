@@ -92,17 +92,17 @@ ip6tables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | ip6tables-rest
 ip6tables-save | grep -v CILIUM  | ip6tables-restore
 
 if command -v systemctl; then
-		if [ -f "/etc/systemd/system/k3s-server.service" ]; then
-				systemctl disable k3s-server.service
-    		systemctl reset-failed k3s-server
-				rm -f /etc/systemd/system/k3s-server.service
+		if [ -f "/etc/systemd/system/k3s.service" ]; then
+				systemctl disable k3s.service
+    		systemctl reset-failed k3s
+				rm -f /etc/systemd/system/k3s.service
 		fi
-		[ -f "/etc/systemd/system/k3s-server.service.env" ] && rm -f /etc/systemd/system/k3s-server.service.env
+		[ -f "/etc/systemd/system/k3s.service.env" ] && rm -f /etc/systemd/system/k3s.service.env
     systemctl daemon-reload
 fi
 
 if command -v rc-update; then
-    rc-update delete k3s-server default
+    rc-update delete k3s default
 fi
 
 # remove_uninstall() {
