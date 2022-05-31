@@ -23,14 +23,14 @@ chmod +x ./manifests/bin/k3s-linux-amd64 ./manifests/bin/k3s-linux-arm64
 )
 
 
-echo "fetch cilium v0.10.5"
+echo "fetch cilium v0.10.6"
 [ ! -f "./manifests/bin/cilium-linux-amd64" ] && (
 [ -f "/tmp/cilium-linux-amd64.tar.gz" ] && rm -rf /tmp/cilium-linux-amd64.tar.gz
 [ -f "/tmp/cilium-linux-arm64.tar.gz" ] && rm -rf /tmp/cilium-linux-arm64.tar.gz
-wget -q -O /tmp/cilium-linux-amd64.tar.gz https://github.com/cilium/cilium-cli/releases/download/v0.10.5/cilium-linux-amd64.tar.gz
+wget -q -O /tmp/cilium-linux-amd64.tar.gz https://github.com/cilium/cilium-cli/releases/download/v0.10.6/cilium-linux-amd64.tar.gz
 tar xzvfC /tmp/cilium-linux-amd64.tar.gz /tmp
 mv /tmp/cilium ./manifests/bin/cilium-linux-amd64
-wget -q -O /tmp/cilium-linux-arm64.tar.gz https://github.com/cilium/cilium-cli/releases/download/v0.10.5/cilium-linux-arm64.tar.gz
+wget -q -O /tmp/cilium-linux-arm64.tar.gz https://github.com/cilium/cilium-cli/releases/download/v0.10.6/cilium-linux-arm64.tar.gz
 tar xzvfC /tmp/cilium-linux-arm64.tar.gz /tmp
 mv /tmp/cilium ./manifests/bin/cilium-linux-arm64
 )
