@@ -411,7 +411,7 @@ func (p *Cluster) configAgentOptions() []string {
 	var args []string
 	sever := p.getEnv(p.CoreAPI, "NEXT_API", "")
 	if len(sever) > 0 {
-		args = append(args, fmt.Sprintf("--server=https://%s:6443"+sever))
+		args = append(args, fmt.Sprintf("--server=https://%s:6443", sever))
 	}
 	token := p.getEnv(p.CoreToken, "NEXT_TOKEN", "")
 	if len(token) > 0 {
