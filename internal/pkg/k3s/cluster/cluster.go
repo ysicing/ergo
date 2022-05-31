@@ -281,10 +281,6 @@ func (p *Cluster) configCommonOptions() []string {
 		// "--token=a1b2c3d4", // TODO 随机生成
 		// "--pause-image=ccr.ccs.tencentyun.com/k7scn/k3s-pause:3.6"
 	)
-
-	if p.Network != "flannel" {
-		args = append(args, "--flannel-backend=none")
-	}
 	return args
 }
 
@@ -317,6 +313,9 @@ func (p *Cluster) configServerOptions() []string {
 	}
 	if len(tlsSans) != 0 {
 		args = append(args, tlsSans)
+	}
+	if p.Network != "flannel" {
+		args = append(args, "--flannel-backend=none")
 	}
 	args = append(args, "--service-node-port-range=30000-32767")
 	args = append(args, fmt.Sprintf("--cluster-cidr=%v", p.ClusterCidr))
@@ -412,7 +411,7 @@ func (p *Cluster) configAgentOptions() []string {
 	var args []string
 	sever := p.getEnv(p.CoreAPI, "NEXT_API", "")
 	if len(sever) > 0 {
-		args = append(args, "--server="+sever)
+		args = append(args, fmt.Sprintf("--server=https://%s:6443"+sever))
 	}
 	token := p.getEnv(p.CoreToken, "NEXT_TOKEN", "")
 	if len(token) > 0 {
