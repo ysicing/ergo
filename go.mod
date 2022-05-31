@@ -19,7 +19,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/flock v0.8.1
 	github.com/google/go-github/v44 v44.1.0
-	github.com/gopasspw/gopass v1.14.1
+	github.com/gopasspw/gopass v1.14.3
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.11.3
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
@@ -43,8 +43,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.403
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.403
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
-	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88
-	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
+	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898
+	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a
 	gotest.tools v2.2.0+incompatible
@@ -67,7 +67,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/ProtonMail/go-crypto v0.0.0-20220407094043-a94812496cf5 // indirect
+	github.com/ProtonMail/go-crypto v0.0.0-20220517143526-88bb52951d5b // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
@@ -187,7 +187,7 @@ require (
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
+	golang.org/x/net v0.0.0-20220524220425-1d687d428aca // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65 // indirect
@@ -200,7 +200,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/component-helpers v0.24.0 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
