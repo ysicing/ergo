@@ -1,0 +1,77 @@
+{
+	"name": "ergo",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"NODE_VERSION": "none"
+		}
+	},
+	"features": {
+		"docker-in-docker": "20.10",
+		"kubectl-helm-minikube": "1.23",
+		"git": "os-provided",
+		"sshd": "latest"
+	},
+	"settings": {
+		"go.toolsManagement.checkForUpdates": "local",
+		"go.useLanguageServer": true,
+		"go.gopath": "/go",
+		"files.eol": "\n",
+		"[go]": {
+        "editor.codeActionsOnSave": {
+              "source.organizeImports": true
+            },
+    },
+        "[go.mod]": {
+            "editor.codeActionsOnSave": {
+                "source.organizeImports": true
+            }
+        },
+        "gopls": {
+            "build.buildFlags": [
+                "-tags",
+                ""
+            ],
+            "usePlaceholders": false,
+            "staticcheck": true,
+        },
+        "go.lintTool": "golangci-lint",
+        "go.lintOnSave": "package",
+        "editor.formatOnSave": true,
+        "go.toolsEnvVars": {
+            "CGO_ENABLED": 0
+        },
+        "go.testEnvVars": {
+            "": "",
+        },
+        "go.testFlags": [
+            "-v",
+            "-race"
+        ],
+        "go.testTimeout": "10s",
+        "go.coverOnSingleTest": true,
+        "go.coverOnSingleTestFile": true,
+        "go.coverOnTestPackage": true
+	},
+	"extensions": [
+		"golang.Go",
+		"eamodio.gitlens", // IDE Git information
+		"davidanson.vscode-markdownlint", // Markdown linting
+		"ms-azuretools.vscode-docker", // Docker integration and linting
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"shardulm94.trailing-spaces", // Show trailing spaces
+		"Gruntfuggly.todo-tree", // Highlights TODO comments
+		"bierner.emojisense", // Emoji sense for markdown
+		"stkb.rewrap", // rewrap comments after n characters on one line
+		"vscode-icons-team.vscode-icons", // Better file extension icons
+		"redhat.vscode-yaml", // Kubernetes, Drone syntax highlighting
+		"mohsen1.prettify-json", // Prettify JSON data
+	],
+	"runArgs": [
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined"
+	],
+	"remoteUser": "vscode"
+
+}

@@ -97,6 +97,9 @@ doc: ## gen docs
 	cp -a docs/ergo.md docs/index.md
 	cp -a README.md docs/readme.md
 
+snapshot: ## local test goreleaser
+	goreleaser release --snapshot --rm-dist --skip-publish
+
 # cleanvm: ## clem lima vm
 # 	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
 

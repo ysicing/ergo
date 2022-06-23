@@ -11,6 +11,8 @@ import (
 	"strings"
 	"syscall"
 
+	mcobra "github.com/muesli/mango-cobra"
+	"github.com/muesli/roff"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
@@ -68,6 +70,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newDebugCmd())
 	// Add plugin commands
 	rootCmd.AddCommand(KubectlCommand())
+	rootCmd.AddCommand(newManCmd())
 
 	args := os.Args
 	if len(args) > 1 {
@@ -94,6 +97,28 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	}
 
 	return rootCmd
+}
+
+func newManCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                   "man",
+		Short:                 "Generates q's command line manpages",
+		SilenceUsage:          true,
+		DisableFlagsInUseLine: true,
+		Hidden:                true,
+		Args:                  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			manPage, err := mcobra.NewManPage(1, cmd.Root())
+			if err != nil {
+				return err
+			}
+
+			_, err = fmt.Fprint(os.Stdout, manPage.Build(roff.NewDocument()))
+			return err
+		},
+	}
+
+	return cmd
 }
 
 type PluginHandler interface {

@@ -17,3 +17,6 @@ manifests/bin/*-linux-amd64
 manifests/bin/*-linux-arm64
 internal/static/*/zz_generated*.go
 manifests/bin/.upxdone
+completions
+manpages
+

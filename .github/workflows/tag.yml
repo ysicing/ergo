@@ -34,25 +34,47 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - name: build ergo
-        run: |
-          export TZ='Asia/Shanghai'
-          export PATH=$PATH:$(go env GOPATH)/bin
-          make getbin
-          make build
-          make upx
-          make dpush
+      # - name: build ergo
+      #   run: |
+      #     export TZ='Asia/Shanghai'
+      #     export PATH=$PATH:$(go env GOPATH)/bin
+      #     make getbin
+      #     make build
+      #     make upx
+      #     make dpush
 
-          pushd dist
-          sha256sum ergo_darwin_amd64 > ergo_darwin_amd64.sha256sum
-          sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
-          sha256sum ergo_windows_amd64.exe > ergo_windows_amd64.sha256sum
-          sha256sum ergo_darwin_arm64 > ergo_darwin_arm64.sha256sum
-          sha256sum ergo_linux_arm64 > ergo_linux_arm64.sha256sum
-          popd
-          ./gen.sh
-          cat version.txt | grep -E '(beta|rc)' && (pre-release) || (make release)
-          make deb
+      #     pushd dist
+      #     sha256sum ergo_darwin_amd64 > ergo_darwin_amd64.sha256sum
+      #     sha256sum ergo_linux_amd64 > ergo_linux_amd64.sha256sum
+      #     sha256sum ergo_windows_amd64.exe > ergo_windows_amd64.sha256sum
+      #     sha256sum ergo_darwin_arm64 > ergo_darwin_arm64.sha256sum
+      #     sha256sum ergo_linux_arm64 > ergo_linux_arm64.sha256sum
+      #     popd
+      #     ./gen.sh
+      #     cat version.txt | grep -E '(beta|rc)' && (pre-release) || (make release)
+      #     make deb
+      #   env:
+      #     GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      #     DEBTOKEN: ${{ secrets.APT }}
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v3
+        with:
+          version: latest
+          args: release --rm-dist
         env:
-          GITHUB_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          DEBTOKEN: ${{ secrets.APT }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      - name: Publish .deb & .rpm to Gemfury
+        env:
+          FURY_TOKEN: ${{ secrets.APT }}
+        run: |
+          for filename in dist/*.deb; do
+            echo "Pushing $filename to apt repository"
+            curl -F package=@$filename https://${FURY_TOKEN}@push.fury.io/ysicing/
+          done
+          for filename in dist/*.rpm; do
+            echo "Pushing $filename to rpm repository"
+            curl -F package=@$filename https://${FURY_TOKEN}@push.fury.io/ysicing/
+          done
+      - name: Publish Tap
+        run: |
+          ./gen.sh

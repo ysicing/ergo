@@ -1,10 +1,10 @@
 #!/bin/bash
 
 version=$(cat version.txt)
-macosamd64sha=$(cat dist/ergo_darwin_amd64.sha256sum | awk '{print $1}')
-macosarm64sha=$(cat dist/ergo_darwin_arm64.sha256sum | awk '{print $1}')
-linuxamd64sha=$(cat dist/ergo_linux_amd64.sha256sum | awk '{print $1}')
-linuxarm64sha=$(cat dist/ergo_linux_arm64.sha256sum | awk '{print $1}')
+macosamd64sha=$(cat dist/checksums.txt | grep ergo_darwin_amd64 | awk '{print $1}')
+macosarm64sha=$(cat dist/checksums.txt | grep ergo_darwin_arm64| awk '{print $1}')
+linuxamd64sha=$(cat dist/checksums.txt | grep ergo_linux_amd64 | awk '{print $1}')
+linuxarm64sha=$(cat dist/checksums.txt | grep ergo_linux_arm64 | awk '{print $1}')
 
 
 cat > ergo.rb <<EOF
@@ -20,7 +20,7 @@ class Ergo < Formula
       else
         url "https://github.com/ysicing/ergo/releases/download/#{version}/ergo_darwin_amd64"
         sha256 "${macosamd64sha}"
-      end  
+      end
     elsif OS.linux?
       if Hardware::CPU.intel?
         url "https://github.com/ysicing/ergo/releases/download/#{version}/ergo_linux_amd64"
@@ -38,13 +38,13 @@ class Ergo < Formula
           bin.install "ergo_darwin_amd64" => "ergo"
         else
           bin.install "ergo_darwin_arm64" => "ergo"
-        end 
+        end
       elsif OS.linux?
         if Hardware::CPU.intel?
           bin.install "ergo_linux_amd64" => "ergo"
         else
           bin.install "ergo_linux_arm64" => "ergo"
-        end 
+        end
       end
     end
 

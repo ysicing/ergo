@@ -26,6 +26,10 @@ jobs:
       run: |
           echo "install ghr"
           go install github.com/tcnksm/ghr@latest
+    - name: install goreleaser
+      run: |
+          echo "install goreleaser"
+          go install github.com/goreleaser/goreleaser@latest
     - name: install upx
       run: |
           echo "install upx"
@@ -38,11 +42,8 @@ jobs:
       run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
-          make getbin
-          make generate
-          make build
-          make upx
-          ./dist/ergo_linux_amd64 version
+          make snapshot
+          ./dist/ergo_linux_amd64_v1/ergo version
           make doc
     - name: docs
       uses: peaceiris/actions-gh-pages@v3

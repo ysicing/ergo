@@ -1,0 +1,166 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+env:
+  - GO111MODULE=on
+
+# gomod:
+#   proxy: true
+
+before:
+  hooks:
+    - make generate
+    - ./hack/build/gencompletions.sh
+    - ./hack/build/genmanpages.sh
+    # - make default
+builds:
+  - ldflags:
+      - -w -s -X github.com/ysicing/ergo/version.Version={{.Summary}}
+      - -X github.com/ysicing/ergo/version.BuildDate={{.CommitDate}}
+      - -X github.com/ysicing/ergo/version.GitCommitHash={{.ShortCommit}}
+      - -X k8s.io/client-go/pkg/version.gitVersion={{.Summary}}
+      - -X k8s.io/client-go/pkg/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/client-go/pkg/version.gitTreeState=dirty
+      - -X k8s.io/client-go/pkg/version.buildDate={{.CommitDate}}
+      - -X k8s.io/client-go/pkg/version.gitMajor=1
+      - -X k8s.io/client-go/pkg/version.gitMinor=23
+      - -X k8s.io/component-base/version.gitVersion={{.Summary}}
+      - -X k8s.io/component-base/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/component-base/version.gitTreeState=dirty
+      - -X k8s.io/component-base/version.gitMajor=1
+      - -X k8s.io/component-base/version.gitMinor=23
+      - -X k8s.io/component-base/version.buildDate={{.CommitDate}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+      # - mips
+      # - mipsle
+      # - s390x
+      # - riscv64
+    # gomips:
+    #   - softfloat
+    hooks:
+      post:
+        - upx -9 -f -q "{{ .Path }}"
+    main: ergo.go
+    binary: ergo
+  - id: macos-build
+    ldflags:
+      - -w -s -X github.com/ysicing/ergo/version.Version={{.Summary}}
+      - -X github.com/ysicing/ergo/version.BuildDate={{.CommitDate}}
+      - -X github.com/ysicing/ergo/version.GitCommitHash={{.ShortCommit}}
+      - -X k8s.io/client-go/pkg/version.gitVersion={{.Summary}}
+      - -X k8s.io/client-go/pkg/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/client-go/pkg/version.gitTreeState=dirty
+      - -X k8s.io/client-go/pkg/version.buildDate={{.Date}}
+      - -X k8s.io/client-go/pkg/version.gitMajor=1
+      - -X k8s.io/client-go/pkg/version.gitMinor=23
+      - -X k8s.io/component-base/version.gitVersion={{.Summary}}
+      - -X k8s.io/component-base/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/component-base/version.gitTreeState=dirty
+      - -X k8s.io/component-base/version.gitMajor=1
+      - -X k8s.io/component-base/version.gitMinor=23
+      - -X k8s.io/component-base/version.buildDate={{.Date}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      # - mips
+      # - mipsle
+      # - s390x
+      # - riscv64
+    # gomips:
+    #   - softfloat
+    # ignore:
+    #   - goos: darwin
+    #     goarch: mips
+    #   - goos: darwin
+    #     goarch: mipsle
+    #   - goos: darwin
+    #     goarch: s390x
+    #   - goos: darwin
+    #     goarch: riscv64
+    main: ergo.go
+    binary: ergo
+archives:
+  - format: binary
+    name_template: "ergo_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Version }}-snapshot-{{.ShortCommit}}"
+
+nfpms:
+- file_name_template: 'ergo_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+  homepage: https://github.com/ysicing/ergo
+  version_metadata: git
+  description: |-
+   运维效能工具devops tools
+  maintainer: ysicing
+  license: MIT
+  vendor: https://github.com/ysicing
+  formats:
+  # - apk
+  - deb
+  - rpm
+  bindir: /usr/bin
+  section: utils
+  contents:
+    - src: ./completions/ergo.bash
+      dst: /usr/share/bash-completion/completions/ergo
+      file_info:
+        mode: 0644
+        owner: notRoot
+        group: notRoot
+    - src: ./completions/ergo.fish
+      dst: /usr/share/fish/completions/ergo.fish
+      file_info:
+        mode: 0644
+        owner: notRoot
+        group: notRoot
+    - src: ./completions/ergo.zsh
+      dst:  /usr/share/zsh/vendor-completions/_ergo
+      file_info:
+        mode: 0644
+        owner: notRoot
+        group: notRoot
+    - src: ./manpages/ergo.1.gz
+      dst: /usr/share/man/man1/ergo.1.gz
+      file_info:
+        mode: 0644
+        owner: notRoot
+        group: notRoot
+    - src: ./LICENSE
+      dst: /usr/share/doc/ergo/copyright
+      file_info:
+        mode: 0644
+        owner: notRoot
+        group: notRoot
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^feat(update):'
+      - '^feat(ci):'
+      - '^chore(ci):'
+      - '^chore(action):'
+      - Merge pull request
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 10
+    - title: Other work
+      order: 999
