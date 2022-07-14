@@ -52,7 +52,7 @@ require (
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.9.0
 	k8s.io/api v0.24.0
-	k8s.io/apimachinery v0.24.0
+	k8s.io/apimachinery v0.24.3
 	k8s.io/cli-runtime v0.24.0
 	k8s.io/client-go v0.24.0
 	k8s.io/component-base v0.24.0
