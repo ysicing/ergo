@@ -97,7 +97,7 @@ snapshot:
   name_template: "{{ .Version }}-snapshot-{{.ShortCommit}}"
 
 nfpms:
-- file_name_template: 'ergo_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+- file_name_template: 'opsergo_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
   homepage: https://github.com/ysicing/ergo
   version_metadata: git
   description: |-
