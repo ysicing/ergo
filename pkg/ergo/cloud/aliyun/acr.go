@@ -14,7 +14,6 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 func NewACR(opts ...Option) (cloud.CrCloud, error) {
@@ -139,7 +138,6 @@ func (p *provider) NewACRClient() *acrclient {
 	request.Domain = domain
 	request.Version = "2016-06-07"
 	request.Headers["Content-Type"] = "application/json"
-	log.Flog.Debugf("api domain: %v", domain)
 	return &acrclient{
 		client:  client,
 		request: request,

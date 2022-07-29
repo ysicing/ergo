@@ -1,8 +1,8 @@
 # Ergo CHANGELOG
 
 - v4.0.0
-  - [x] 默认仅macOS支持lima子命令
-  - [x] 优化kube命令
+  - [x] 移除limactl的支持
+  - [x] 移除安装k3s功能, 有需要可以使用[qcadmin](https://github.com/easysoft/quickon_cli)
 
 - v3.5.0
   - [ ] k3s安装架构调整，参考autok3s

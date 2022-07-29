@@ -7,6 +7,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/ergoapi/log"
+
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
@@ -14,11 +16,11 @@ import (
 	"github.com/ysicing/ergo/pkg/ergo/cloud"
 	"github.com/ysicing/ergo/pkg/ergo/cloud/qcloud"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type CvmOption struct {
 	action string
+	log    log.Logger
 }
 
 // CvmCmd ergo cvm
@@ -46,7 +48,7 @@ func (c *CvmOption) Run() error {
 
 	if len(ergocfg.Cloud) == 0 {
 		// 不存在
-		log.Flog.Debug("not found cloud provider, will gen one")
+		c.log.Debug("not found cloud provider, will gen one")
 		newprovider := addProvider()
 		ergocfg.Cloud = append(ergocfg.Cloud, newprovider)
 		ergocfg.Dump()
@@ -61,7 +63,7 @@ func (c *CvmOption) Run() error {
 		selectitem := append(ergocfg.Cloud, config.Provider{
 			Provider: "new",
 		})
-		log.Flog.Debugf("加载配置成功: %v", selectitem)
+		c.log.Debugf("加载配置成功: %v", selectitem)
 		ps := promptui.Select{
 			Label: "选择凭证",
 			Items: selectitem,

@@ -6,17 +6,18 @@ package debian
 import (
 	"sync"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/debian"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 type Option struct {
 	*flags.GlobalFlags
+	log    log.Logger
 	SSHCfg sshutil.SSH
 	IPs    []string
 }
@@ -34,10 +35,10 @@ func (cmd *Option) Init(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			debian.RunLocalShell("init")
+			debian.RunLocalShell("init", cmd.log)
 		} else {
 			wg.Add(1)
-			go debian.RunInit(cmd.SSHCfg, ip, &wg)
+			go debian.RunInit(cmd.SSHCfg, ip, cmd.log, &wg)
 		}
 	}
 	wg.Wait()
@@ -49,10 +50,10 @@ func (cmd *Option) UpCore(f factory.Factory) error {
 	var wg sync.WaitGroup
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			debian.RunLocalShell("upcore")
+			debian.RunLocalShell("upcore", cmd.log)
 		} else {
 			wg.Add(1)
-			go debian.RunUpgradeCore(cmd.SSHCfg, ip, &wg)
+			go debian.RunUpgradeCore(cmd.SSHCfg, ip, cmd.log, &wg)
 		}
 	}
 	wg.Wait()
@@ -65,12 +66,12 @@ func (cmd *Option) Apt(f factory.Factory) error {
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
 			if file.CheckFileExists("/etc/apt/sources.list") {
-				debian.RunLocalShell("apt")
+				debian.RunLocalShell("apt", cmd.log)
 			}
-			log.Flog.Warn("仅支持Debian系")
+			cmd.log.Warn("仅支持Debian系")
 		} else {
 			wg.Add(1)
-			go debian.RunAddDebSource(cmd.SSHCfg, ip, &wg)
+			go debian.RunAddDebSource(cmd.SSHCfg, ip, cmd.log, &wg)
 		}
 	}
 	wg.Wait()
@@ -83,13 +84,13 @@ func (cmd *Option) Swap(f factory.Factory) error {
 	for _, ip := range cmd.IPs {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
 			if file.CheckFileExists("/etc/apt/sources.list") {
-				debian.RunLocalShell("swap")
+				debian.RunLocalShell("swap", cmd.log)
 			} else {
-				log.Flog.Warn("仅支持Debian系")
+				cmd.log.Warn("仅支持Debian系")
 			}
 		} else {
 			wg.Add(1)
-			go debian.RunAddDebSwap(cmd.SSHCfg, ip, &wg)
+			go debian.RunAddDebSwap(cmd.SSHCfg, ip, cmd.log, &wg)
 		}
 	}
 	wg.Wait()

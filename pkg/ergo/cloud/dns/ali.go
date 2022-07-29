@@ -25,7 +25,6 @@ func NewAliDNS(region, akey, asecret string) *AliDNS {
 	}
 	client, err := alidns.NewClientWithAccessKey(region, akey, asecret)
 	if err != nil {
-		log.Fatal(err)
 		return nil
 	}
 	return &AliDNS{client: client}

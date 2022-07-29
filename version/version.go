@@ -12,12 +12,12 @@ import (
 	"github.com/ysicing/ergo/common"
 
 	"github.com/blang/semver"
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/zos"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
 	"github.com/ysicing/ergo/pkg/util/exec"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/logo"
 )
 
@@ -63,6 +63,7 @@ func PreCheckVersion() (string, error) {
 }
 
 func ShowVersion() {
+	log := log.GetInstance()
 	logo.PrintLogo()
 	if Version == "" {
 		Version = defaultVersion
@@ -75,34 +76,35 @@ func ShowVersion() {
 	}
 	osarch := fmt.Sprintf("%v/%v", runtime.GOOS, runtime.GOARCH)
 	fmt.Printf(versionTpl, Version, runtime.Version(), GitCommitHash, BuildDate, osarch, Version)
-	log.Flog.StartWait("从github获取最新版本 ...")
+	log.StartWait("从github获取最新版本 ...")
 	lastversion, err := PreCheckVersion()
-	log.Flog.StopWait()
+	log.StopWait()
 	if err != nil {
-		log.Flog.Errorf("从github获取版本失败: %v", err)
+		log.Errorf("从github获取版本失败: %v", err)
 		return
 	}
 	if lastversion != "" && !strings.Contains(lastversion, defaultVersion) {
 		nowversion := semver.MustParse(lastversion)
 		needupgrade := nowversion.LT(semver.MustParse(lastversion))
 		if needupgrade {
-			log.Flog.Infof("当前最新版本 %v, 可以使用 %v 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
+			log.Infof("当前最新版本 %v, 可以使用 %v 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
 			return
 		}
 	}
-	log.Flog.Infof("当前已经是最新版本")
+	log.Infof("当前已经是最新版本")
 }
 
 func Upgrade() {
-	log.Flog.StartWait("从github获取最新版本 ...")
+	log := log.GetInstance()
+	log.StartWait("从github获取最新版本 ...")
 	lastversion, err := PreCheckVersion()
-	log.Flog.StopWait()
+	log.StopWait()
 	if err != nil {
-		log.Flog.Errorf("从github获取版本失败: %v", err)
+		log.Errorf("从github获取版本失败: %v", err)
 		return
 	}
 	if lastversion == "" {
-		log.Flog.Infof("当前已经是最新版本了: %v", Version)
+		log.Infof("当前已经是最新版本了: %v", Version)
 		return
 	}
 	// TODO linux brew
@@ -113,33 +115,33 @@ func Upgrade() {
 	} else {
 		release, found, err := selfupdate.DetectVersion("ysicing/ergo", lastversion)
 		if err != nil {
-			log.Flog.Errorf("从github获取版本: %v错误: %v", lastversion, err)
+			log.Errorf("从github获取版本: %v错误: %v", lastversion, err)
 			return
 		} else if !found {
-			log.Flog.Errorf("ergo 不存在版本:%s", lastversion)
+			log.Errorf("ergo 不存在版本:%s", lastversion)
 			return
 		}
 		cmdPath, err := os.Executable()
 		if err != nil {
-			log.Flog.Errorf("ergo executable err:%v", err)
+			log.Errorf("ergo executable err:%v", err)
 			return
 		}
-		log.Flog.StartWait(fmt.Sprintf("Downloading version %s...", lastversion))
+		log.StartWait(fmt.Sprintf("Downloading version %s...", lastversion))
 		err = selfupdate.DefaultUpdater().UpdateTo(release, cmdPath)
-		log.Flog.StopWait()
+		log.StopWait()
 		if err != nil {
-			log.Flog.Errorf("升级失败: %v", err)
+			log.Errorf("升级失败: %v", err)
 			return
 		}
 	}
 	latest, err := selfupdate.UpdateSelf(semver.MustParse(lastversion), "ysicing/ergo")
-	log.Flog.StopWait()
+	log.StopWait()
 	if err != nil {
-		log.Flog.Donef("Successfully updated ergo to version %s", lastversion)
+		log.Donef("Successfully updated ergo to version %s", lastversion)
 		return
 	}
-	log.Flog.Donef("Successfully updated ergo to version %s", latest.Version)
-	log.Flog.Infof("Release note: \n\t%s", latest.ReleaseNotes)
+	log.Donef("Successfully updated ergo to version %s", latest.Version)
+	log.Infof("Release note: \n\t%s", latest.ReleaseNotes)
 }
 
 func GetUG() string {

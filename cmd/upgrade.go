@@ -6,14 +6,16 @@ package cmd
 import (
 	"os"
 
+	"github.com/ergoapi/log"
+
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/version"
 )
 
 type UpgradeCmd struct {
 	proxy bool
+	log   log.Logger
 }
 
 // newUpgradeCmd upgrade of ergo
@@ -34,7 +36,7 @@ func newUpgradeCmd() *cobra.Command {
 
 func (cmd *UpgradeCmd) Run() error {
 	if cmd.proxy {
-		log.Flog.Debug("load proxy")
+		cmd.log.Debug("load proxy")
 		os.Setenv("CNPROXY", common.PluginGithubJiasu)
 		defer func() {
 			os.Unsetenv("CNPROXY")

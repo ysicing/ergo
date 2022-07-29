@@ -6,32 +6,33 @@ package addons
 import (
 	"fmt"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/util/lock"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type UnInstallOption struct {
 	Name string
 	Repo string
+	log  log.Logger
 }
 
 func (o *UnInstallOption) Run() error {
-	log.Flog.Debugf("检查lockfile: %v", common.GetLockfile())
+	o.log.Debugf("检查lockfile: %v", common.GetLockfile())
 	if !file.CheckFileExists(common.GetLockfile()) {
-		log.Flog.Warnf("没安装相关Add-one")
+		o.log.Warnf("没安装相关Add-one")
 		return fmt.Errorf("没安装相关Add-one")
 	}
 	r, err := lock.LoadFile(common.GetLockfile())
 	if err != nil || len(r.Installeds) == 0 {
 		// TODO: 没安装相关Add-one
-		log.Flog.Warn("no found addons")
+		o.log.Warn("no found addons")
 		return fmt.Errorf("no found addons")
 	}
 	check := r.Get(o.Name, o.Repo)
 	if check == nil {
-		log.Flog.Warnf("没安装 %s %s", o.Repo, o.Name)
+		o.log.Warnf("没安装 %s %s", o.Repo, o.Name)
 		return nil
 	}
 	switch check.Type {
@@ -59,11 +60,11 @@ func (o *UnInstallOption) Run() error {
 		return fmt.Errorf("no support uninstall %s", check.Type)
 	}
 	if r.Remove(o.Name) {
-		log.Flog.Donef("%s 卸载成功", o.Name)
+		o.log.Donef("%s 卸载成功", o.Name)
 		r.WriteFile(common.GetLockfile())
 		return nil
 	}
-	log.Flog.Errorf("%s 卸载失败", o.Name)
+	o.log.Errorf("%s 卸载失败", o.Name)
 	return nil
 }
 

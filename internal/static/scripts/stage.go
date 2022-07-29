@@ -5,13 +5,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ergoapi/log"
 	"github.com/pkg/errors"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 func Stage(dataDir string) error {
-	log.Flog.Debug("writing static scriptfile: ", dataDir)
+	log := log.GetInstance()
+	log.Debug("writing static scriptfile: ", dataDir)
 	for _, name := range AssetNames() {
 		content, err := Asset(name)
 		if err != nil {

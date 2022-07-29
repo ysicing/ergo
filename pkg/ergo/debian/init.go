@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/ysicing/ergo/pkg/util/log"
+	"github.com/ergoapi/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
@@ -193,14 +193,14 @@ touch /.initdone
 exit 0
 `
 
-func RunInit(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
+func RunInit(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
 	defer func() {
-		log.Flog.StopWait()
+		log.StopWait()
 		wg.Done()
 	}()
-	log.Flog.StartWait(fmt.Sprintf("start init %v", ip))
+	log.StartWait(fmt.Sprintf("start init %v", ip))
 	if err := ssh.CmdAsync(ip, InitSH); err != nil {
-		log.Flog.Errorf("ip %v, err: %v", ip, err)
+		log.Errorf("ip %v, err: %v", ip, err)
 		return
 	}
 }

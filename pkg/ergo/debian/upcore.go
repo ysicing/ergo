@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/ysicing/ergo/pkg/util/exec"
-	"github.com/ysicing/ergo/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
@@ -52,54 +52,54 @@ reboot
 `
 
 // RunUpgradeCore 升级内核
-func RunUpgradeCore(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
+func RunUpgradeCore(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
 	defer func() {
-		log.Flog.StopWait()
+		log.StopWait()
 		wg.Done()
 	}()
-	log.Flog.StartWait(fmt.Sprintf("%s start upcore", ip))
+	log.StartWait(fmt.Sprintf("%s start upcore", ip))
 	err := ssh.CmdAsync(ip, UpgradeCore)
 	if err != nil {
-		log.Flog.Fatal(ip, err.Error())
+		log.Fatal(ip, err.Error())
 		return
 	}
 	for i := 0; i <= 10; i++ {
-		if RunWait(ssh, ip) {
+		if RunWait(ssh, ip, log) {
 			break
 		}
 	}
 }
 
 // RunAddDebSource 添加ergo deb源
-func RunAddDebSource(ssh sshutil.SSH, ip string, wg *sync.WaitGroup) {
+func RunAddDebSource(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
 	defer func() {
-		log.Flog.StopWait()
+		log.StopWait()
 		wg.Done()
 	}()
-	log.Flog.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
+	log.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
 	err := ssh.CmdAsync(ip, AddDebSource)
 	if err != nil {
-		log.Flog.Fatal(ip, err.Error())
+		log.Fatal(ip, err.Error())
 		return
 	}
 	for i := 0; i <= 10; i++ {
-		if RunWait(ssh, ip) {
+		if RunWait(ssh, ip, log) {
 			break
 		}
 	}
 }
 
-func RunWait(ssh sshutil.SSH, ip string) bool {
+func RunWait(ssh sshutil.SSH, ip string, log log.Logger) bool {
 	err := ssh.CmdAsync(ip, "uname -a")
 	if err != nil {
-		log.Flog.Debugf("%v waiting for reboot", ip)
+		log.Debugf("%v waiting for reboot", ip)
 		time.Sleep(10 * time.Second)
 		return false
 	}
 	return true
 }
 
-func RunLocalShell(runtype string) {
+func RunLocalShell(runtype string, log log.Logger) {
 	var shelldata string
 	switch runtype {
 	case "init":
@@ -116,11 +116,11 @@ func RunLocalShell(runtype string) {
 	tempfile := fmt.Sprintf("/tmp/%v.%v.tmp.sh", runtype, ztime.NowUnix())
 	err := file.Writefile(tempfile, shelldata)
 	if err != nil {
-		log.Flog.Errorf("write file %v, err: %v", tempfile, err)
+		log.Errorf("write file %v, err: %v", tempfile, err)
 		return
 	}
 	if err := exec.RunCmd("/bin/bash", tempfile); err != nil {
-		log.Flog.Errorf("run shell err: %v", err.Error())
+		log.Errorf("run shell err: %v", err.Error())
 		return
 	}
 }

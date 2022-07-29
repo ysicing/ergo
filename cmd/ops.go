@@ -6,10 +6,11 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/op"
+	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 // newOPCmd ergo ops
-func newOPCmd() *cobra.Command {
+func newOPCmd(f factory.Factory) *cobra.Command {
 	ops := &cobra.Command{
 		Use:     "op [flags]",
 		Short:   "sre tools",
@@ -22,7 +23,7 @@ func newOPCmd() *cobra.Command {
 	ops.AddCommand(op.NCCmd())
 	ops.AddCommand(op.ExecCmd())
 	ops.AddCommand(op.PingCmd())
-	ops.AddCommand(op.WgetCmd())
+	ops.AddCommand(op.WgetCmd(f))
 	ops.AddCommand(op.MysqlCmd())
 	return ops
 }

@@ -8,12 +8,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/gosuri/uitable"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
 	"github.com/ysicing/ergo/pkg/util/exec"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 
@@ -22,13 +22,14 @@ type SearchOption struct {
 	DefaultArgs string
 	Prefix      bool
 	Simple      bool
+	log         log.Logger
 }
 
 func (o *SearchOption) Run() error {
 	// index
 	r, err := repo.LoadFile(common.GetDefaultRepoCfg())
 	if err != nil || len(r.Repos) == 0 {
-		log.Flog.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
+		o.log.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
 		return nil
 	}
 	// 更新依赖
@@ -39,12 +40,12 @@ func (o *SearchOption) Run() error {
 	for _, i := range r.Repos {
 		index := common.GetRepoIndexFileByName(i.Name)
 		if !file.CheckFileExists(index) {
-			log.Flog.Debugf("not found %s index", i.Name)
+			o.log.Debugf("not found %s index", i.Name)
 			continue
 		}
 		pf, err := LoadIndexFile(index)
 		if err != nil {
-			log.Flog.Errorf("load plugin index file %v err: %v", index, err)
+			o.log.Errorf("load plugin index file %v err: %v", index, err)
 			continue
 		}
 		// res = append(res, pf.Plugins...)
@@ -67,7 +68,7 @@ func (o *SearchOption) Run() error {
 		}
 	}
 	if len(res) == 0 {
-		log.Flog.Warnf("没有搜索到相关插件")
+		o.log.Warnf("没有搜索到相关插件")
 		return nil
 	}
 	table := uitable.New()
@@ -82,7 +83,7 @@ func (o *SearchOption) Run() error {
 		} else {
 			p, err := LoadPlugin(re.Name, re.Repo, re.Path)
 			if err != nil {
-				log.Flog.Errorf("load plugin %v err: %v", re.Name, err)
+				o.log.Errorf("load plugin %v err: %v", re.Name, err)
 				continue
 			}
 			table.AddRow(re.Repo, re.Name, p.Spec.Version)

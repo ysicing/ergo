@@ -13,22 +13,9 @@ import (
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/pkg/config"
 	"github.com/ysicing/ergo/pkg/ergo/experimental"
-	"github.com/ysicing/ergo/pkg/ergo/experimental/codegen"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
-
-func newCodeGenCmd(f factory.Factory) *cobra.Command {
-	c := &codegen.CodeOptions{}
-	cmd := &cobra.Command{
-		Use:   "code [flags]",
-		Short: "初始化项目",
-		Run: func(cobraCmd *cobra.Command, args []string) {
-			c.Init()
-		},
-	}
-	return cmd
-}
 
 func newConfigCmd() *cobra.Command {
 	var configCommand = &cobra.Command{
@@ -117,6 +104,5 @@ func newExperimentalCmd(f factory.Factory) *cobra.Command {
 	cmd.AddCommand(install)
 	cmd.AddCommand(simplefile)
 	cmd.AddCommand(newConfigCmd())
-	cmd.AddCommand(newCodeGenCmd(f))
 	return cmd
 }

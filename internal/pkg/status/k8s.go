@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/kube"
-	"github.com/ysicing/ergo/pkg/util/log"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -24,6 +24,7 @@ type K8sStatusOption struct {
 }
 
 type K8sStatusCollector struct {
+	log    log.Logger
 	client *kube.Client
 	option K8sStatusOption
 }
@@ -75,16 +76,16 @@ func (k *K8sStatusCollector) statusIsReady(s *Status) bool {
 func (k *K8sStatusCollector) status(ctx context.Context) *Status {
 	status := newStatus(k.option.ListOutput)
 	if err := k.nodesStatus(ctx, status); err != nil {
-		log.Flog.Errorf("failed to get nodes status: %v", err)
+		k.log.Errorf("failed to get nodes status: %v", err)
 	}
 	if err := k.bigcatStatus(ctx, status); err != nil {
-		log.Flog.Errorf("failed to get bigcat status: %v", err)
+		k.log.Errorf("failed to get bigcat status: %v", err)
 	}
 	return status
 }
 
 func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t string, status *Status) (bool, error) {
-	log.Flog.Debugf("check cm %s status", name)
+	k.log.Debugf("check cm %s status", name)
 	stateCount := PodStateCount{Type: "Deployment"}
 	d, err := k.client.GetDeployment(ctx, ns, name, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
@@ -122,10 +123,10 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 	}
 	notReady := stateCount.Desired - stateCount.Ready
 	if notReady > 0 {
-		log.Flog.Warnf("%d pods of Deployment %s are not ready", notReady, name)
+		k.log.Warnf("%d pods of Deployment %s are not ready", notReady, name)
 	}
 	if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
-		log.Flog.Warnf("%d pods of Deployment %s are not available", unavailable, name)
+		k.log.Warnf("%d pods of Deployment %s are not available", unavailable, name)
 	}
 	return false, nil
 }

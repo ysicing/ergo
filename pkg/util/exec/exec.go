@@ -10,19 +10,18 @@ import (
 	"os/exec"
 	"strings"
 
-	elog "github.com/ergoapi/log"
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
 
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 type LogWriter struct {
-	logger elog.Logger
+	logger log.Logger
 	t      string
 }
 
-func NewLogWrite(logger elog.Logger, t string) *LogWriter {
+func NewLogWrite(logger log.Logger, t string) *LogWriter {
 	lw := &LogWriter{}
 	lw.logger = logger
 	return lw
@@ -38,10 +37,11 @@ func (lw *LogWriter) Write(p []byte) (n int, err error) {
 }
 
 func RunCmd(name string, arg ...string) error {
+	log := log.GetInstance()
 	cmd := exec.Command(name, arg...) // #nosec
 	cmd.Stdin = os.Stdin
-	cmd.Stderr = NewLogWrite(log.Flog, "err")
-	cmd.Stdout = NewLogWrite(log.Flog, "")
+	cmd.Stderr = NewLogWrite(log, "err")
+	cmd.Stdout = NewLogWrite(log, "")
 	return cmd.Run()
 }
 
@@ -62,8 +62,9 @@ func LookPath(filename string) (string, bool) {
 }
 
 func Trace(cmd *exec.Cmd) {
+	log := log.GetInstance()
 	if environ.GetEnv("TRACE", "false") == "true" {
 		key := strings.Join(cmd.Args, " ")
-		log.Flog.Debugf("+ %s\n", key)
+		log.Debugf("+ %s\n", key)
 	}
 }

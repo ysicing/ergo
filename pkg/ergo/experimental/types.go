@@ -4,7 +4,10 @@
 
 package experimental
 
+import "github.com/ergoapi/log"
+
 type Options struct {
+	log           log.Logger
 	SimpleFileCfg SimpleFile
 }
 

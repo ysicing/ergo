@@ -13,7 +13,6 @@ import (
 
 	"github.com/ergoapi/exgin"
 	"github.com/gin-gonic/gin"
-	"github.com/ysicing/ergo/pkg/util/log"
 )
 
 var (
@@ -72,7 +71,7 @@ func (exp *Options) SimpleFile() {
 		authGroup = g.Group("/")
 	}
 	getGroup := authGroup.Group("/", writeHead)
-	log.Flog.Debug("dir: ", exp.SimpleFileCfg.Dir)
+	exp.log.Debug("dir: ", exp.SimpleFileCfg.Dir)
 	getGroup.StaticFS("/", gin.Dir(exp.SimpleFileCfg.Dir, true))
 	authGroup.POST("/", exp.uploadFile)
 	authGroup.POST("/del/", exp.delFile)
