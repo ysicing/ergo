@@ -7,7 +7,7 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1670
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/cheggaaa/pb/v3 v3.0.8
+	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/containerd/continuity v0.3.0
 	github.com/coreos/go-iptables v0.6.0
 	github.com/ergoapi/exgin v1.0.8
