@@ -114,7 +114,7 @@ snapshot: ## local test goreleaser
 
 local: build ## local test
 	upx -1 ./dist/ergo_linux_amd64
-	scp ./dist/ergo_linux_amd64 192.168.0.107:/root/
+	scp ./dist/ergo_linux_amd64 192.168.0.104:/root/
 
 .PHONY : build release clean install
 

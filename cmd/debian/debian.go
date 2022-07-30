@@ -23,6 +23,7 @@ type Option struct {
 }
 
 func (cmd *Option) prepare(f factory.Factory) {
+	cmd.log = f.GetLog()
 	address, _ := exnet.IsLocalHostAddrs()
 	cmd.SSHCfg.LocalAddress = address
 	if len(cmd.IPs) == 0 {
@@ -67,8 +68,9 @@ func (cmd *Option) Apt(f factory.Factory) error {
 		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
 			if file.CheckFileExists("/etc/apt/sources.list") {
 				debian.RunLocalShell("apt", cmd.log)
+			} else {
+				cmd.log.Warn("仅支持Debian系")
 			}
-			cmd.log.Warn("仅支持Debian系")
 		} else {
 			wg.Add(1)
 			go debian.RunAddDebSource(cmd.SSHCfg, ip, cmd.log, &wg)
