@@ -29,7 +29,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.4
 	github.com/rhysd/go-github-selfupdate v1.2.3
-	github.com/shirou/gopsutil/v3 v3.22.4
+	github.com/shirou/gopsutil/v3 v3.22.6
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
@@ -144,7 +144,7 @@ require (
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/stretchr/testify v1.7.2 // indirect
+	github.com/stretchr/testify v1.7.5 // indirect
 	github.com/subosito/gotenv v1.4.0 // indirect
 	github.com/tcnksm/go-gitconfig v0.1.2 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect

@@ -36,8 +36,6 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y upx
     - uses: actions/checkout@v3
-      with:
-        fetch-depth: 1
     - name: build ergo
       run: |
           export TZ='Asia/Shanghai'
