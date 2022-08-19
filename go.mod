@@ -29,17 +29,17 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.5
 	github.com/rhysd/go-github-selfupdate v1.2.3
-	github.com/shirou/gopsutil/v3 v3.22.6
+	github.com/shirou/gopsutil/v3 v3.22.7
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.451
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.479
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.451
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.451
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.451
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.451
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.451
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.479
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401
@@ -144,7 +144,7 @@ require (
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/stretchr/testify v1.7.5 // indirect
+	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/subosito/gotenv v1.4.0 // indirect
 	github.com/tcnksm/go-gitconfig v0.1.2 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
