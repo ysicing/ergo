@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1704
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1754
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.1.0
