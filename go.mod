@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1704
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1759
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.1.0
@@ -34,11 +34,11 @@ require (
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.451
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.490
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.451
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.451
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.451
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.451
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.490
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.451
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
