@@ -59,13 +59,10 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newVersionCmd())
 	rootCmd.AddCommand(newUpgradeCmd())
 	rootCmd.AddCommand(newDebianCmd(f))
-	rootCmd.AddCommand(newOPCmd(f))
-	rootCmd.AddCommand(newQCloudCommand(f))
 	rootCmd.AddCommand(newRepoCmd(f))
 	rootCmd.AddCommand(newAddOnsCmd(f))
 	// rootCmd.AddCommand(newSecCmd(f))
 	rootCmd.AddCommand(newExtCmd(f))
-	rootCmd.AddCommand(newExperimentalCmd(f))
 	// Add plugin commands
 	rootCmd.AddCommand(KubectlCommand())
 	rootCmd.AddCommand(newManCmd())
@@ -100,7 +97,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 func newManCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "man",
-		Short:                 "Generates q's command line manpages",
+		Short:                 "Generates ergo's command line manpages",
 		SilenceUsage:          true,
 		DisableFlagsInUseLine: true,
 		Hidden:                true,

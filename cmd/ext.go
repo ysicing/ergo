@@ -16,6 +16,7 @@ import (
 	"github.com/gosuri/uitable"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	"github.com/ysicing/ergo/cmd/op"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/output"
@@ -33,6 +34,7 @@ func newExtCmd(f factory.Factory) *cobra.Command {
 	}
 	cmd.AddCommand(ghClean(f))
 	cmd.AddCommand(syncImage(f))
+	cmd.AddCommand(op.WgetCmd(f))
 	return cmd
 }
 
