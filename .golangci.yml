@@ -1,5 +1,7 @@
 run:
   timeout: 10m
+  issue-exit-code: 1
+  tests: true
   skip-dirs:
     - docs
     - hack
@@ -8,7 +10,12 @@ run:
 output:
   # colored-line-number|line-number|json|tab|checkstyle|code-climate|junit-xml|github-actions
   # default is "colored-line-number"
-  format: colored-line-number
+  format: tab
+  # print lines of code with issue, default is true
+  print-issued-lines: true
+
+  # print linter name in the end of issue text, default is true
+  print-linter-name: true
 
 linters:
   # TODO: fix errors so that all of the linters below pass.
@@ -21,14 +28,12 @@ linters:
     - dogsled
     - dupl
     - depguard
-    # - deadcode
-    # - errcheck
+    - errcheck
     - exhaustive
     - exportloopref
     - gofmt
-    # - gosimple
+    - gosimple
     - goimports
-    - golint
     - govet
     # - gosec
     # - gofumpt
@@ -42,20 +47,19 @@ linters:
     # - prealloc
     - predeclared
     - revive
-    # - staticcheck
+    - staticcheck
     - stylecheck
-    - structcheck
     - thelper
     - tparallel
     - typecheck
-    # - unused
+    - unused
     - unconvert
-    # - unparam
-    - varcheck
+    - unparam
     - whitespace
     # - wsl
 
 issues:
+  max-same-issues: 20
   exclude-rules:
     - linters:
         - dogsled
@@ -64,15 +68,73 @@ issues:
     - linters:
         - dupl
       path: _test\.go
+    - linters:
+        - golint
+      text: "should not use dot imports|don't use an underscore in package name"
 
 linters-settings:
   gofmt:
     simplify: true
+  gocyclo:
+    min-complexity: 10
+  maligned:
+    # print struct with more effective memory layout or not, false by default
+    suggest-new: true
   dupl:
     # tokens count to trigger issue, 150 by default
-    threshold: 400
+    threshold: 100
+  goconst:
+    # minimal length of string constant, 3 by default
+    min-len: 3
+    # minimal occurrences count to trigger, 3 by default
+    min-occurrences: 3
   errcheck:
     check-blank: false
+    check-type-assertions: false
   gofumpt:
     extra-rules: false
-    lang-version: "1.18"
+    lang-version: "1.19"
+  govet:
+    check-shadowing: false
+    use-installed-packages: false
+  revive:
+    confidence: 0.8
+    severity: warning
+    errorCode: 0
+    warningCode: 0
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+  lll:
+    # max line length, lines longer will be reported. Default is 120.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
+    line-length: 120
+    # tab width in spaces. Default to 1.
+    tab-width: 1
+  nakedret:
+    # make an issue if func has more lines of code than this setting and it has naked returns; default is 30
+    max-func-lines: 30
+  unused:
+    # treat code as a program (not a library) and report unused exported identifiers; default is false.
+    # XXX: if you enable this setting, unused will report a lot of false-positives in text editors:
+    # if it's called for subdir of a project it can't find funcs usages. All text editor integrations
+    # with golangci-lint call it on a directory with the changed file.
+    check-exported: false
+  unparam:
+    check-exported: false

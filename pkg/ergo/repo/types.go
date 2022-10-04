@@ -5,7 +5,6 @@ package repo
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -31,7 +30,7 @@ func LoadFile(path string) (*File, error) {
 	f := log.GetInstance()
 	f.Debugf("path: %v", path)
 	r := new(File)
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		f.Debugf("couldn't load repositories file (%s), err: %v", path, err)
 		return r, fmt.Errorf("couldn't load repositories file (%s)", path)
@@ -108,7 +107,7 @@ func (r *File) WriteFile(path string, perm os.FileMode) error {
 	if err := os.MkdirAll(filepath.Dir(path), common.FileMode0755); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path, data, perm)
+	return os.WriteFile(path, data, perm)
 }
 
 type Repo struct {

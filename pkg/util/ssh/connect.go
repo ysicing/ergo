@@ -5,8 +5,8 @@ package ssh
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -34,7 +34,7 @@ func (ss *SSH) sshAuthMethod(passwd, pkFile, pkPasswd string) (auth []ssh.AuthMe
 
 // 使用 pk认证， pk路径为 "/root/.ssh/id_rsa", pk有密码和无密码在这里面验证
 func (ss *SSH) sshPrivateKeyMethod(pkFile, pkPassword string) (am ssh.AuthMethod, err error) {
-	pkData, err := ioutil.ReadFile(filepath.Clean(pkFile))
+	pkData, err := os.ReadFile(filepath.Clean(pkFile))
 	if err != nil {
 		return nil, err
 	}

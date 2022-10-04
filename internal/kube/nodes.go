@@ -66,7 +66,7 @@ func (c *Client) GetNodeMetricsFromMetricsAPI(resourceName string, selector labe
 	return metrics, nil
 }
 
-//GetActivePodByNodename
+// GetActivePodByNodename
 func (c *Client) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, error) {
 	fieldSelector, err := fields.ParseSelector("spec.nodeName=" + node.Name +
 		",status.phase!=" + string(corev1.PodSucceeded) +
@@ -82,7 +82,7 @@ func (c *Client) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, erro
 	return activePods, err
 }
 
-//GetNodes
+// GetNodes
 func (c *Client) GetNodes(resourceName string, selector labels.Selector) (map[string]corev1.Node, error) {
 	nodes := make(map[string]corev1.Node)
 	if len(resourceName) > 0 {
@@ -105,7 +105,7 @@ func (c *Client) GetNodes(resourceName string, selector labels.Selector) (map[st
 	return nodes, nil
 }
 
-//NodeResources
+// NodeResources
 func (c *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]NodeResources, error) {
 	var resources []NodeResources
 	var nodenames []string

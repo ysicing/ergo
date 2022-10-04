@@ -5,7 +5,7 @@ package addons
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
@@ -64,7 +64,7 @@ func LoadIndexFile(path string) (*PluginLists, error) {
 	f := log.GetInstance()
 	f.Debugf("path: %v", path)
 	r := new(PluginLists)
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		f.Debugf("couldn't load index file (%s), err: %v", path, err)
 		return r, fmt.Errorf("couldn't load index file (%s)", path)
@@ -91,7 +91,7 @@ func LoadPlugin(name, repo, path string) (*Plugins, error) {
 		return nil, err
 	}
 	r := new(Plugins)
-	b, err := ioutil.ReadFile(local)
+	b, err := os.ReadFile(local)
 	if err != nil {
 		f.Debugf("couldn't load index file (%s), err: %v", repo, name, err)
 		return r, fmt.Errorf("couldn't load index file (%s)", repo)

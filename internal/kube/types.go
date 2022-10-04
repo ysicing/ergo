@@ -23,7 +23,7 @@ func NewGpuResource(name v1.ResourceName, rl *v1.ResourceList) *resource.Quantit
 	return rl.Name(name, resource.DecimalSI)
 }
 
-//calcPercentage
+// calcPercentage
 func calcPercentage(dividend, divisor int64) float64 {
 	if divisor > 0 {
 		value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", float64(dividend)/float64(divisor)*100), 64)
@@ -36,12 +36,12 @@ type MemoryResource struct {
 	*resource.Quantity
 }
 
-//NewMemoryResource
+// NewMemoryResource
 func NewMemoryResource(value int64) *MemoryResource {
 	return &MemoryResource{resource.NewQuantity(value, resource.BinarySI)}
 }
 
-//calcPercentage
+// calcPercentage
 func (r *MemoryResource) calcPercentage(divisor *resource.Quantity) float64 {
 	return calcPercentage(r.Value(), divisor.Value())
 }
@@ -51,7 +51,7 @@ func (r *MemoryResource) String() string {
 	return fmt.Sprintf("%vMi", r.Value()/(1024*1024))
 }
 
-//ToQuantity
+// ToQuantity
 func (r *MemoryResource) ToQuantity() *resource.Quantity {
 	return resource.NewQuantity(r.Value(), resource.BinarySI)
 }
@@ -60,41 +60,41 @@ type CPUResource struct {
 	*resource.Quantity
 }
 
-//NewCPUResource
+// NewCPUResource
 func NewCPUResource(value int64) *CPUResource {
 	r := resource.NewMilliQuantity(value, resource.DecimalSI)
 	return &CPUResource{r}
 }
 
-//String
+// String
 func (r *CPUResource) String() string {
 	// XXX: Support more units
 	return fmt.Sprintf("%vm", r.MilliValue())
 }
 
-//float64ToString float64转string
+// float64ToString float64转string
 func float64ToString(s float64) string {
 	//return strconv.FormatFloat(s, 'G', -1, 32)
 	return fmt.Sprintf("%v%%", strconv.FormatFloat(s, 'G', -1, 64))
 }
 
-//StringTofloat64
+// StringTofloat64
 func stringTofloat64(a string) float64 {
 	value, _ := strconv.ParseFloat(a, 64)
 	return value
 }
 
-//calcPercentage
+// calcPercentage
 func (r *CPUResource) calcPercentage(divisor *resource.Quantity) float64 {
 	return calcPercentage(r.MilliValue(), divisor.MilliValue())
 }
 
-//ToQuantity
+// ToQuantity
 func (r *CPUResource) ToQuantity() *resource.Quantity {
 	return resource.NewMilliQuantity(r.MilliValue(), resource.DecimalSI)
 }
 
-//FieldString
+// FieldString
 func FieldString(str string) float64 {
 	switch {
 	case strings.Contains(str, "%"):
@@ -114,7 +114,7 @@ func FieldString(str string) float64 {
 	}
 }
 
-//Compare
+// Compare
 func ExceedsCompare(a string) string {
 	if FieldString(a) > float64(criticalThreshold) {
 		return redColor(a)

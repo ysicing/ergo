@@ -5,7 +5,6 @@ package addons
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"runtime"
 	"time"
@@ -78,7 +77,7 @@ func (o *InstallOption) Run() error {
 }
 
 func (o *InstallOption) shell(p Spec) error {
-	temp, _ := ioutil.TempFile(common.GetDefaultCacheDir(), "ergo-shell-")
+	temp, _ := os.CreateTemp(common.GetDefaultCacheDir(), "ergo-shell-")
 	o.log.Debugf("temp path: %v", temp.Name())
 	temp.WriteString(p.Shell)
 	if err := exec.RunCmd("/bin/bash", temp.Name()); err != nil {
@@ -89,7 +88,7 @@ func (o *InstallOption) shell(p Spec) error {
 }
 
 func (o *InstallOption) curl(p Spec) error {
-	temp, _ := ioutil.TempFile(common.GetDefaultCacheDir(), "ergo-curl-")
+	temp, _ := os.CreateTemp(common.GetDefaultCacheDir(), "ergo-curl-")
 	o.log.Debugf("temp path: %v", temp.Name())
 	_, err := downloader.Download(fmt.Sprintf("%s/%s", o.indexpath, p.URL), temp.Name())
 	if err != nil {
@@ -113,7 +112,7 @@ func (o *InstallOption) compose(p Spec) error {
 }
 
 func (o *InstallOption) kube(p Spec) error {
-	temp, _ := ioutil.TempFile(os.TempDir(), "ergo-kube-")
+	temp, _ := os.CreateTemp(os.TempDir(), "ergo-kube-")
 	o.log.Debugf("temp path: %v", temp.Name())
 	temp.WriteString(p.Kube)
 	if err := exec.RunCmd("/bin/bash", "-x", temp.Name()); err != nil {

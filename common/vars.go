@@ -12,4 +12,3 @@ var (
 	PluginRunTypeKube    = "kube"
 	PluginRunTypeBin     = "bin"
 )
-

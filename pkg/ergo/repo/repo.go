@@ -6,7 +6,6 @@ package repo
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -57,7 +56,7 @@ func (o *AddOption) Run() error {
 		o.log.Warnf("其他进程正在更新")
 		return err
 	}
-	b, err := ioutil.ReadFile(o.RepoCfg)
+	b, err := os.ReadFile(o.RepoCfg)
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	}

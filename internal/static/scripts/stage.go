@@ -1,7 +1,6 @@
 package scripts
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -20,7 +19,7 @@ func Stage(dataDir string) error {
 		}
 		p := filepath.Join(dataDir, name)
 		os.MkdirAll(filepath.Dir(p), common.FileMode0755)
-		if err := ioutil.WriteFile(p, content, common.FileMode0755); err != nil {
+		if err := os.WriteFile(p, content, common.FileMode0755); err != nil {
 			return errors.Wrapf(err, "failed to write to %s", name)
 		}
 	}

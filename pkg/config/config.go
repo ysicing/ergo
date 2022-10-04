@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -48,7 +47,7 @@ func (c *ErGoConfig) Dump(path ...string) {
 		log.Warnf("create default ergo config dir failed, please create it by your self %v", path)
 		return
 	}
-	if err = ioutil.WriteFile(cfgpath, y, common.FileMode0644); err != nil {
+	if err = os.WriteFile(cfgpath, y, common.FileMode0644); err != nil {
 		log.Warnf("write to file %s failed: %s", path, err)
 	}
 }
@@ -57,7 +56,7 @@ func (c *ErGoConfig) Load(path string) error {
 	if path == "" {
 		path = common.GetDefaultErgoCfg()
 	}
-	y, err := ioutil.ReadFile(path)
+	y, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("read config file %s failed %v", path, err)
 	}
@@ -80,7 +79,7 @@ func Dump(path string, content interface{}) error {
 		log.Warn("create default ergo config dir failed, please create it by your self %v", path)
 		return err
 	}
-	if err = ioutil.WriteFile(path, y, common.FileMode0644); err != nil {
+	if err = os.WriteFile(path, y, common.FileMode0644); err != nil {
 		log.Warn("write to file %s failed: %s", path, err)
 	}
 	return nil
@@ -88,7 +87,7 @@ func Dump(path string, content interface{}) error {
 
 func Load(path string, content interface{}) error {
 	log := log.GetInstance()
-	y, err := ioutil.ReadFile(path)
+	y, err := os.ReadFile(path)
 	if err != nil {
 		log.Errorf("read config file %s failed %v", path, err)
 		return fmt.Errorf("read config file %s failed %v", path, err)
@@ -103,7 +102,7 @@ func Load(path string, content interface{}) error {
 
 func LoadYaml(path string) (*ErGoConfig, error) {
 	log := log.GetInstance()
-	y, err := ioutil.ReadFile(path)
+	y, err := os.ReadFile(path)
 	if err != nil {
 		log.Debugf("read config file %s failed %v", path, err)
 		return &ErGoConfig{}, nil

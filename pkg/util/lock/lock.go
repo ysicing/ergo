@@ -5,7 +5,6 @@ package lock
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -72,14 +71,14 @@ func (r *File) WriteFile(path string) error {
 	if err := os.MkdirAll(filepath.Dir(path), common.FileMode0755); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path, data, common.FileMode0600)
+	return os.WriteFile(path, data, common.FileMode0600)
 }
 
 func LoadFile(path string) (*File, error) {
 	f := log.GetInstance()
 	f.Debugf("path: %v", path)
 	r := new(File)
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		f.Debugf("couldn't load install lockfile (%s), err: %v", path, err)
 		return r, fmt.Errorf("couldn't load install lockfile (%s)", path)
