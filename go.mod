@@ -8,7 +8,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/containerd/continuity v0.3.0
 	github.com/ergoapi/log v0.0.3
-	github.com/ergoapi/util v0.2.21
+	github.com/ergoapi/util v0.2.23
 	github.com/gofrs/flock v0.8.1
 	github.com/google/go-github/v45 v45.2.0
 	github.com/gosuri/uitable v0.0.4

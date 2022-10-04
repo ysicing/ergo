@@ -102,8 +102,8 @@ github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1m
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/ergoapi/log v0.0.3 h1:yoVOB0Me/R+rKd2Rwx5sHgUZCOfopJb+ditOePuJ0Zc=
 github.com/ergoapi/log v0.0.3/go.mod h1:DJCQ4rwZlPZqcpQnGTfb2c7KBBZWD2p1KOWkZFd9XuQ=
-github.com/ergoapi/util v0.2.21 h1:KkGeXhwitDX2UAtV+4hnSM3yaATHj2NgiTdiD+/UsGg=
-github.com/ergoapi/util v0.2.21/go.mod h1:KQEqBpLrNPyDPKfU+6c4tFRZNr/hvLiYCXgqExOcWnI=
+github.com/ergoapi/util v0.2.23 h1:JGWv/7hRpQVF5OsNhbFZRM5sEWATzLZcQHTb50LYlbo=
+github.com/ergoapi/util v0.2.23/go.mod h1:AOjgjb+Yc6ieykNVujb318Qh9VZL/PI10dQdXBgc4Oc=
 github.com/evanphx/json-patch v5.6.0+incompatible h1:jBYDEEiFBPxA0v50tFdvOzQQTCvpL6mnFh5mB2/l16U=
 github.com/evanphx/json-patch v5.6.0+incompatible/go.mod h1:50XU6AFN0ol/bzJsmQLiYLvXMP4fmwYFNcr97nuDLSk=
 github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d h1:105gxyaGwCFad8crR9dcMQWvV9Hvulu6hwUh4tWPJnM=
