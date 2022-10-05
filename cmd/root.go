@@ -59,10 +59,11 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newVersionCmd())
 	rootCmd.AddCommand(newUpgradeCmd())
 	rootCmd.AddCommand(newDebianCmd(f))
-	rootCmd.AddCommand(newRepoCmd(f))
 	rootCmd.AddCommand(newAddOnsCmd(f))
 	// rootCmd.AddCommand(newSecCmd(f))
 	rootCmd.AddCommand(newExtCmd(f))
+	rootCmd.AddCommand(spotCommand())
+	rootCmd.AddCommand(toolsCmd(f))
 	// Add plugin commands
 	rootCmd.AddCommand(KubectlCommand())
 	rootCmd.AddCommand(newManCmd())

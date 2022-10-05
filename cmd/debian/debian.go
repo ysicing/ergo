@@ -4,97 +4,51 @@
 package debian
 
 import (
-	"sync"
-
 	"github.com/ergoapi/log"
-	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/pkg/ergo/debian"
 	"github.com/ysicing/ergo/pkg/util/factory"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 
 type Option struct {
 	*flags.GlobalFlags
-	log    log.Logger
-	SSHCfg sshutil.SSH
-	IPs    []string
+	log log.Logger
+	IPs []string
 }
 
 func (cmd *Option) prepare(f factory.Factory) {
 	cmd.log = f.GetLog()
-	address, _ := exnet.IsLocalHostAddrs()
-	cmd.SSHCfg.LocalAddress = address
-	if len(cmd.IPs) == 0 {
-		cmd.IPs = append(cmd.IPs, "127.0.0.1")
-	}
 }
 
 func (cmd *Option) Init(f factory.Factory) error {
 	cmd.prepare(f)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.IPs {
-		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			debian.RunLocalShell("init", cmd.log)
-		} else {
-			wg.Add(1)
-			go debian.RunInit(cmd.SSHCfg, ip, cmd.log, &wg)
-		}
-	}
-	wg.Wait()
+	debian.RunLocalShell("init", cmd.log)
 	return nil
 }
 
 func (cmd *Option) UpCore(f factory.Factory) error {
 	cmd.prepare(f)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.IPs {
-		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			debian.RunLocalShell("upcore", cmd.log)
-		} else {
-			wg.Add(1)
-			go debian.RunUpgradeCore(cmd.SSHCfg, ip, cmd.log, &wg)
-		}
-	}
-	wg.Wait()
+	debian.RunLocalShell("upcore", cmd.log)
 	return nil
 }
 
 func (cmd *Option) Apt(f factory.Factory) error {
 	cmd.prepare(f)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.IPs {
-		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			if file.CheckFileExists("/etc/apt/sources.list") {
-				debian.RunLocalShell("apt", cmd.log)
-			} else {
-				cmd.log.Warn("仅支持Debian系")
-			}
-		} else {
-			wg.Add(1)
-			go debian.RunAddDebSource(cmd.SSHCfg, ip, cmd.log, &wg)
-		}
+	if file.CheckFileExists("/etc/apt/sources.list") {
+		debian.RunLocalShell("apt", cmd.log)
+	} else {
+		cmd.log.Warn("仅支持Debian系")
 	}
-	wg.Wait()
 	return nil
 }
 
 func (cmd *Option) Swap(f factory.Factory) error {
 	cmd.prepare(f)
-	var wg sync.WaitGroup
-	for _, ip := range cmd.IPs {
-		if exnet.IsLocalIP(ip, cmd.SSHCfg.LocalAddress) || cmd.IPs[0] == "127.0.0.1" {
-			if file.CheckFileExists("/etc/apt/sources.list") {
-				debian.RunLocalShell("swap", cmd.log)
-			} else {
-				cmd.log.Warn("仅支持Debian系")
-			}
-		} else {
-			wg.Add(1)
-			go debian.RunAddDebSwap(cmd.SSHCfg, ip, cmd.log, &wg)
-		}
+	if file.CheckFileExists("/etc/apt/sources.list") {
+		debian.RunLocalShell("swap", cmd.log)
+	} else {
+		cmd.log.Warn("仅支持Debian系")
 	}
-	wg.Wait()
 	return nil
 }

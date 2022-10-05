@@ -100,22 +100,6 @@ doc: ## gen docs
 snapshot: ## local test goreleaser
 	goreleaser release --snapshot --rm-dist --skip-publish
 
-# cleanvm: ## clem lima vm
-# 	limactl ls | grep debian && (limactl stop debian || echo "skip stop") &&limactl rm debian || echo "not found"
-
-# vm: cleanvm ## start lima vm
-# 	limactl start common/debian.yml
-
-# shell: ## shell debian
-# 	limactl shell debian
-
-# local-test: build ## 本地测试
-# 	limactl cp ./dist/ergo_linux_amd64 lima-ergo:/home/ysicing.linux/.ergo/bin/ergo-ergo
-
-local: build ## local test
-	upx -1 ./dist/ergo_linux_amd64
-	scp ./dist/ergo_linux_amd64 192.168.0.104:/root/
-
 .PHONY : build release clean install
 
 .EXPORT_ALL_VARIABLES:

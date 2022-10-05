@@ -58,10 +58,5 @@ func newDebianCmd(f factory.Factory) *cobra.Command {
 	debian.AddCommand(upcore)
 	debian.AddCommand(apt)
 	debian.AddCommand(swap)
-	debian.PersistentFlags().StringVar(&opt.SSHCfg.User, "user", "root", "用户")
-	debian.PersistentFlags().StringVar(&opt.SSHCfg.Pass, "pass", "", "密码")
-	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkFile, "pk", "", "私钥")
-	debian.PersistentFlags().StringVar(&opt.SSHCfg.PkPass, "pkpass", "", "私钥密码")
-	debian.PersistentFlags().StringSliceVar(&opt.IPs, "ip", nil, "机器IP")
 	return debian
 }

@@ -15,42 +15,7 @@ import (
 	"github.com/ysicing/ergo/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/output"
-	"helm.sh/helm/v3/cmd/helm/require"
 )
-
-func AddCmd(f factory.Factory) *cobra.Command {
-	o := &repo.AddOption{
-		RepoCfg: common.GetDefaultRepoCfg(),
-	}
-	cmd := &cobra.Command{
-		Use:   "add [NAME] [URL]",
-		Short: "add new repo",
-		Args:  require.ExactArgs(2),
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			o.Name = args[0]
-			o.URL = args[1]
-			return o.Run()
-		},
-	}
-	return cmd
-}
-
-func DelCmd(f factory.Factory) *cobra.Command {
-	o := &repo.DelOption{
-		RepoCfg: common.GetDefaultRepoCfg(),
-	}
-	cmd := &cobra.Command{
-		Use:     "del [REPO1 [REPO2 ...]]",
-		Short:   "remove old repo",
-		Aliases: []string{"rm", "delete", "remove"},
-		Args:    require.MinimumNArgs(1),
-		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			o.Names = args
-			return o.Run()
-		},
-	}
-	return cmd
-}
 
 func UpdateCmd(f factory.Factory) *cobra.Command {
 	o := &repo.UpdateOption{
