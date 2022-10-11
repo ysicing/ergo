@@ -41,4 +41,5 @@ const (
 	PluginKind         = "Plugin"
 	DefaultRepoURL     = "https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml"
 	DefaultChartRepo   = "https://helm.ysicing.me"
+	DefaultCidrBlock   = "0.0.0.0/0"
 )

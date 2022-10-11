@@ -12,3 +12,23 @@ var (
 	PluginRunTypeKube    = "kube"
 	PluginRunTypeBin     = "bin"
 )
+
+type Protocol string
+
+func (p Protocol) String() string {
+	return string(p)
+}
+
+var TCPProtocol Protocol = "TCP"
+var UDPProtocol Protocol = "UDP"
+var ICMPProtocol Protocol = "ICMP"
+var ALLProtocol Protocol = "ALL"
+
+type FirewallRuleAction string
+
+func (f FirewallRuleAction) String() string {
+	return string(f)
+}
+
+var ACCEPTFirewallRuleAction FirewallRuleAction = "ACCEPT"
+var DROPFirewallRuleAction FirewallRuleAction = "DROP"

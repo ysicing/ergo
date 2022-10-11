@@ -20,6 +20,14 @@ func newProvider() *Alibaba {
 }
 
 // GetProviderName returns provider name.
-func (p *Alibaba) GetProviderName() string {
+func (a *Alibaba) GetProviderName() string {
 	return providerName
+}
+
+func (a *Alibaba) ListLighthouse() string {
+	return ""
+}
+
+func (a *Alibaba) RebootLighthouse(region string, ids []string) error {
+	return nil
 }
