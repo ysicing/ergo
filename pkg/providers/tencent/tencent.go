@@ -80,7 +80,7 @@ func (t *Tencent) ListLighthouseTrafficPackages(region string, ids []string) ([]
 	request := lighthouse.NewDescribeInstancesTrafficPackagesRequest()
 	request.Offset = common.Int64Ptr(0)
 	request.Limit = common.Int64Ptr(100)
-	if ids != nil && len(ids) > 0 {
+	if len(ids) > 0 {
 		request.InstanceIds = common.StringPtrs(ids)
 	}
 	lighthouseList := make([]*lighthouse.InstanceTrafficPackage, 0)
@@ -263,7 +263,7 @@ func (t *Tencent) AddLighthouseFirewallRules(region string, id string, protocol 
 		cidr = internalcommon.DefaultCidrBlock
 	}
 	request.FirewallRules = []*lighthouse.FirewallRule{
-		&lighthouse.FirewallRule{
+		{
 			Protocol:                common.StringPtr(protocol.String()),
 			Port:                    common.StringPtr(port),
 			CidrBlock:               common.StringPtr(cidr),
