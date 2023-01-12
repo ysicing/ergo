@@ -25,7 +25,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.573
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.573
 	github.com/wangle201210/githubapi v0.0.0-20200804144924-cde7bbdc36ab
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
