@@ -51,9 +51,9 @@ builds:
     binary: ergo
   - id: macos-build
     ldflags:
-      - -w -s -X github.com/ysicing/ergo/version.Version={{.Summary}}
-      - -X github.com/ysicing/ergo/version.BuildDate={{.CommitDate}}
-      - -X github.com/ysicing/ergo/version.GitCommitHash={{.ShortCommit}}
+      - -w -s -X github.com/ysicing/ergo/common.Version={{.Summary}}
+      - -X github.com/ysicing/ergo/common.BuildDate={{.CommitDate}}
+      - -X github.com/ysicing/ergo/common.GitCommitHash={{.ShortCommit}}
       - -X k8s.io/client-go/pkg/version.gitVersion={{.Summary}}
       - -X k8s.io/client-go/pkg/version.gitCommit={{.FullCommit}}
       - -X k8s.io/client-go/pkg/version.gitTreeState=dirty

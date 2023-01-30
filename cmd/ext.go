@@ -10,15 +10,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/zos"
 	"github.com/gosuri/uitable"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/op"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/ergo/git/github"
-	"github.com/ysicing/ergo/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 

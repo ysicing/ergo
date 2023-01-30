@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/downloader"
-	"github.com/ysicing/ergo/pkg/util/factory"
 	"helm.sh/helm/v3/cmd/helm/require"
 )
 

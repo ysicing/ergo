@@ -14,12 +14,12 @@ import (
 
 	"github.com/cheggaaa/pb/v3"
 	"github.com/containerd/continuity/fs"
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/validation"
 	"github.com/ergoapi/util/zos"
 	"github.com/mattn/go-isatty"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 )
 
 type Status = string
@@ -141,7 +141,7 @@ func downloadBySystem(localPath, url string, dlog log.Logger) error {
 		}
 		return nil
 	}
-	wgetagent := fmt.Sprintf("--user-agent=ERGO/%v", version.Version)
+	wgetagent := fmt.Sprintf("--user-agent=ERGO/%v", common.Version)
 	wgetargs := []string{"-O", localPath, "-q", "-t=3", "-c", wgetagent, url}
 	dlog.Debugf("wget %v", wgetargs)
 	if _, err := exec.Command(wgetbin, wgetargs...).CombinedOutput(); err != nil {

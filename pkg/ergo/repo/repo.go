@@ -14,7 +14,7 @@ import (
 
 	"github.com/ergoapi/util/exid"
 
-	"github.com/ergoapi/log"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/downloader"
 
 	"github.com/ergoapi/util/file"

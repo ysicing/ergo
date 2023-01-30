@@ -3,7 +3,6 @@ package kube
 import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
-	"k8s.io/kubectl/pkg/metricsutil"
 	metricsapi "k8s.io/metrics/pkg/apis/metrics"
 )
 
@@ -116,21 +115,21 @@ func getNodeMetricsByNodeName(nodeMetricsList *metricsapi.NodeMetricsList) map[s
 	return nodeMetricsByName
 }
 
-func getPodMetrics(m *metricsapi.PodMetrics) v1.ResourceList {
-	podMetrics := make(v1.ResourceList)
-	for _, res := range metricsutil.MeasuredResources {
-		podMetrics[res], _ = resource.ParseQuantity("0")
-	}
+// func getPodMetrics(m *metricsapi.PodMetrics) v1.ResourceList {
+// 	podMetrics := make(v1.ResourceList)
+// 	for _, res := range metricsutil.MeasuredResources {
+// 		podMetrics[res], _ = resource.ParseQuantity("0")
+// 	}
 
-	for _, c := range m.Containers {
-		for _, res := range metricsutil.MeasuredResources {
-			quantity := podMetrics[res]
-			quantity.Add(c.Usage[res])
-			podMetrics[res] = quantity
-		}
-	}
-	return podMetrics
-}
+// 	for _, c := range m.Containers {
+// 		for _, res := range metricsutil.MeasuredResources {
+// 			quantity := podMetrics[res]
+// 			quantity.Add(c.Usage[res])
+// 			podMetrics[res] = quantity
+// 		}
+// 	}
+// 	return podMetrics
+// }
 
 // getNodeAllocatedResources https://github.com/kubernetes/dashboard/blob/d386ff60597b6eab0222f2c3c4aecf8e49b3014e/src/app/backend/resource/node/detail.go\#L171
 func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsList *metricsapi.NodeMetricsList) (NodeAllocatedResources, error) {

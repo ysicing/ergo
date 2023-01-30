@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/ergo/addons"
-	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 func Install(f factory.Factory) *cobra.Command {

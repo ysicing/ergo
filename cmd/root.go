@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
 )
 
 const (

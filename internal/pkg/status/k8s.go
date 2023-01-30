@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/kube"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

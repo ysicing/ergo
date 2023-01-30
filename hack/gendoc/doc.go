@@ -7,7 +7,7 @@ package main
 import (
 	"github.com/spf13/cobra/doc"
 	"github.com/ysicing/ergo/cmd"
-	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
 )
 
 func main() {

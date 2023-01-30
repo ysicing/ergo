@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
-	"github.com/ysicing/ergo/pkg/util/exec"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
+	"github.com/ysicing/ergo/internal/pkg/util/exec"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 

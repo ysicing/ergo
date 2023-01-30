@@ -1,4 +1,4 @@
-# 二狗 ergo
+# 二狗 2Go
 
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
 ![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/tag?style=flat-square)
@@ -17,11 +17,9 @@
 - [x] `100%` 支持 `Debian 11`
 - [ ] 部分功能在macOS系上测试通过
 
-## ergo能干什么
+## 二狗能干什么
 
 - 将常用脚本或者公有云操作抽象成cli命令, 简化工作
-- 灵活的自定义插件管理工具,像使用`helm repo`方式管理插件
-- 与大猫云平台集成
 
 ## 安装
 
@@ -56,12 +54,12 @@ ergo version
 
 ### 源码编译安装
 
-- 支持go v1.18+
+- 支持go v1.19+
 
 ```bash
 # Clone the repo
 # Build and run the executable
-make build && ./dist/ergo_darwin_amd64 
+make build && ./dist/ergo_darwin_amd64
 ```
 
 ### 升级

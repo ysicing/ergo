@@ -1,0 +1,203 @@
+package ssh
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"path"
+	"path/filepath"
+	"strconv"
+	"strings"
+
+	"github.com/pkg/sftp"
+	"github.com/schollz/progressbar/v3"
+	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/util/wait"
+
+	"github.com/ergoapi/util/file"
+)
+
+func (s *SSH) RemoteSha256Sum(host, remoteFilePath string) string {
+	cmd := fmt.Sprintf("sha256sum %s | cut -d\" \" -f1", remoteFilePath)
+	remoteHash, err := s.CmdToString(host, cmd, "")
+	if err != nil {
+		s.log.Errorf("failed to calculate remote sha256 sum %s %s %v", host, remoteFilePath, err)
+	}
+	return remoteHash
+}
+
+func getOnelineResult(output string, sep string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(output, "\r\n", sep), "\n", sep)
+}
+
+// CmdToString execute command on host and replace output with sep to oneline
+func (s *SSH) CmdToString(host, cmd, sep string) (string, error) {
+	output, err := s.Cmd(host, cmd)
+	data := string(output)
+	if err != nil {
+		return data, err
+	}
+	if len(data) == 0 {
+		return "", fmt.Errorf("command %s on %s return nil", cmd, host)
+	}
+	return getOnelineResult(data, sep), nil
+}
+
+func (s *SSH) newClientAndSftpClient(host string) (*ssh.Client, *sftp.Client, error) {
+	sshClient, err := s.connect(host)
+	if err != nil {
+		return nil, nil, err
+	}
+	// create sftp client
+	sftpClient, err := sftp.NewClient(sshClient)
+	return sshClient, sftpClient, err
+}
+
+func (s *SSH) sftpConnect(host string) (sshClient *ssh.Client, sftpClient *sftp.Client, err error) {
+	try := 0
+	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
+		try++
+		s.log.Debugf("the %d/%d time tring to sftp to %s with user %s", try, defaultBackoff.Steps, host, s.User)
+		sshClient, sftpClient, err = s.newClientAndSftpClient(host)
+		if err != nil {
+			return false, nil
+		}
+		return true, nil
+	}); err != nil {
+		return nil, nil, fmt.Errorf("ssh init dialer [%s] error: %w", host, err)
+	}
+	return
+}
+
+// Copy is copy file or dir to remotePath, add md5 validate
+func (s *SSH) Copy(host, localPath, remotePath string) error {
+	if s.isLocalAction(host) {
+		s.log.Debugf("local %s copy files src %s to dst %s", host, localPath, remotePath)
+		return file.Copy(localPath, remotePath, true)
+	}
+	s.log.Infof("remote copy files src %s to dst %s", localPath, remotePath)
+	sshClient, sftpClient, err := s.sftpConnect(host)
+	if err != nil {
+		return fmt.Errorf("failed to connect: %s", err)
+	}
+	defer func() {
+		_ = sftpClient.Close()
+		_ = sshClient.Close()
+	}()
+
+	f, err := os.Stat(localPath)
+	if err != nil {
+		return fmt.Errorf("get file stat failed %s", err)
+	}
+
+	remoteDir := filepath.Dir(remotePath)
+	rfp, err := sftpClient.Stat(remoteDir)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+		if err = sftpClient.MkdirAll(remoteDir); err != nil {
+			return fmt.Errorf("failed to Mkdir remote: %v", err)
+		}
+	} else if !rfp.IsDir() {
+		return fmt.Errorf("dir of remote file %s is not a directory", remotePath)
+	}
+	number := 1
+	if f.IsDir() {
+		number = file.CountDirFiles(localPath)
+		// no files in local dir, but still need to create remote dir
+		if number == 0 {
+			return sftpClient.MkdirAll(remotePath)
+		}
+	}
+	bar := Simple("copying files to "+host, number)
+	// bar := progress.Simple("copying files to "+host, number)
+	defer func() {
+		_ = bar.Close()
+	}()
+
+	return s.doCopy(sftpClient, host, localPath, remotePath, bar)
+}
+
+func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressbar.ProgressBar) error {
+	lfp, err := os.Stat(src)
+	if err != nil {
+		return fmt.Errorf("failed to Stat local: %v", err)
+	}
+	if lfp.IsDir() {
+		entries, err := os.ReadDir(src)
+		if err != nil {
+			return fmt.Errorf("failed to ReadDir: %v", err)
+		}
+		if err = client.MkdirAll(dest); err != nil {
+			return fmt.Errorf("failed to Mkdir remote: %v", err)
+		}
+		for _, entry := range entries {
+			if err = s.doCopy(client, host, path.Join(src, entry.Name()), path.Join(dest, entry.Name()), epu); err != nil {
+				return err
+			}
+		}
+	} else {
+		lf, err := os.Open(filepath.Clean(src))
+		if err != nil {
+			return fmt.Errorf("failed to open: %v", err)
+		}
+		defer lf.Close()
+
+		dstfp, err := client.Create(dest)
+		if err != nil {
+			return fmt.Errorf("failed to create: %v", err)
+		}
+		if err = dstfp.Chmod(lfp.Mode()); err != nil {
+			return fmt.Errorf("failed to Chmod dst: %v", err)
+		}
+		defer dstfp.Close()
+		if _, err = io.Copy(dstfp, lf); err != nil {
+			return fmt.Errorf("failed to Copy: %v", err)
+		}
+		_ = epu.Add(1)
+	}
+	return nil
+}
+
+func checkIfRemoteFileExists(client *sftp.Client, fp string) (bool, error) {
+	_, err := client.Stat(fp)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
+func isEnvTrue(k string) bool {
+	if v, ok := os.LookupEnv(k); ok {
+		boolVal, _ := strconv.ParseBool(v)
+		return boolVal
+	}
+	return false
+}
+
+func Simple(title string, count int) *progressbar.ProgressBar {
+	bar := progressbar.NewOptions(count,
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionShowBytes(false),
+		progressbar.OptionSetWidth(15),
+		progressbar.OptionShowCount(),
+		progressbar.OptionOnCompletion(func() {
+			fmt.Fprint(os.Stdout, "\n")
+		}),
+		// progressbar.OptionShowIts(),
+		progressbar.OptionSetPredictTime(true),
+		progressbar.OptionSetDescription(""),
+		progressbar.OptionShowElapsedTimeOnFinish(),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "[green]=[reset]",
+			SaucerHead:    "[green]>[reset]",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}))
+	return bar
+}

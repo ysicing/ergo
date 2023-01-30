@@ -6,7 +6,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/addons"
-	"github.com/ysicing/ergo/pkg/util/factory"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
 )
 
 func newAddOnsCmd(f factory.Factory) *cobra.Command {

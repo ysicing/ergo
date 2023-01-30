@@ -4,11 +4,12 @@
 package debian
 
 import (
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/file"
+	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
+	"github.com/ysicing/ergo/internal/pkg/util/factory"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/ergo/debian"
-	"github.com/ysicing/ergo/pkg/util/factory"
 )
 
 type Option struct {
@@ -51,4 +52,52 @@ func (cmd *Option) Swap(f factory.Factory) error {
 		cmd.log.Warn("仅支持Debian系")
 	}
 	return nil
+}
+
+func EmbedCommand(f factory.Factory) *cobra.Command {
+	debian := &cobra.Command{
+		Use:     "debian [flags]",
+		Short:   "debian tools",
+		Aliases: []string{"deb"},
+		Args:    cobra.NoArgs,
+		Version: "2.0.0",
+	}
+	init := &cobra.Command{
+		Use:     "init",
+		Short:   "init debian",
+		Version: "2.0.0",
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return opt.Init(f)
+		},
+	}
+	apt := &cobra.Command{
+		Use:     "apt",
+		Short:   "添加ergo apt源",
+		Version: "2.2.1",
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return opt.Apt(f)
+		},
+	}
+	swap := &cobra.Command{
+		Use:     "swap",
+		Short:   "添加swap",
+		Version: "3.0.2",
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return opt.Swap(f)
+		},
+	}
+	upcore := &cobra.Command{
+		Use:     "upcore",
+		Short:   "upgrade debian linux core",
+		Aliases: []string{"uc"},
+		Version: "2.0.0",
+		RunE: func(cobraCmd *cobra.Command, args []string) error {
+			return opt.UpCore(f)
+		},
+	}
+	debian.AddCommand(init)
+	debian.AddCommand(upcore)
+	debian.AddCommand(apt)
+	debian.AddCommand(swap)
+	return debian
 }

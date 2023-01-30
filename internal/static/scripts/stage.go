@@ -4,9 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ergoapi/log"
 	"github.com/pkg/errors"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 )
 
 func Stage(dataDir string) error {

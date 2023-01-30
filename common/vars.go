@@ -32,3 +32,9 @@ func (f FirewallRuleAction) String() string {
 
 var ACCEPTFirewallRuleAction FirewallRuleAction = "ACCEPT"
 var DROPFirewallRuleAction FirewallRuleAction = "DROP"
+
+var (
+	Version       string
+	BuildDate     string
+	GitCommitHash string
+)

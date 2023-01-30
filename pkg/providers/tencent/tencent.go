@@ -118,7 +118,7 @@ func (t *Tencent) ListLighthouseSnapshots(region string, id string) ([]*lighthou
 	client, _ := lighthouse.NewClient(t.credential(), region, cpf)
 	request := lighthouse.NewDescribeSnapshotsRequest()
 	request.Filters = []*lighthouse.Filter{
-		&lighthouse.Filter{
+		{
 			Name:   common.StringPtr("instance-id"),
 			Values: common.StringPtrs([]string{id}),
 		},

@@ -7,9 +7,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/ptr"
 	"github.com/google/go-github/v45/github"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"golang.org/x/oauth2"
 )
 

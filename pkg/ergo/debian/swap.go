@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/ergoapi/log"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
 )
 

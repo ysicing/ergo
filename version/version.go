@@ -10,14 +10,14 @@ import (
 	"strings"
 
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 
 	"github.com/blang/semver"
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/zos"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wangle201210/githubapi/repos"
-	"github.com/ysicing/ergo/pkg/util/exec"
+	"github.com/ysicing/ergo/internal/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/logo"
 )
 
@@ -32,12 +32,6 @@ var versionTpl = `效能工具: ergo
  Experimental:      true
  Repo: https://github.com/ysicing/ergo/releases/tag/%v
 `
-
-var (
-	Version       string
-	BuildDate     string
-	GitCommitHash string
-)
 
 const (
 	defaultVersion       = "0.0.0"
@@ -56,7 +50,7 @@ func PreCheckVersion() (string, error) {
 		return "", err
 	}
 	// 版本判断，不一样
-	if lastag.Name != Version {
+	if lastag.Name != common.Version {
 		return lastag.Name, nil
 	}
 	return "", nil
@@ -65,17 +59,17 @@ func PreCheckVersion() (string, error) {
 func ShowVersion() {
 	log := log.GetInstance()
 	logo.PrintLogo()
-	if Version == "" {
-		Version = defaultVersion
+	if common.Version == "" {
+		common.Version = defaultVersion
 	}
-	if BuildDate == "" {
-		BuildDate = defaultBuildDate
+	if common.BuildDate == "" {
+		common.BuildDate = defaultBuildDate
 	}
-	if GitCommitHash == "" {
-		GitCommitHash = defaultGitCommitHash
+	if common.GitCommitHash == "" {
+		common.GitCommitHash = defaultGitCommitHash
 	}
 	osarch := fmt.Sprintf("%v/%v", runtime.GOOS, runtime.GOARCH)
-	fmt.Printf(versionTpl, Version, runtime.Version(), GitCommitHash, BuildDate, osarch, Version)
+	fmt.Printf(versionTpl, common.Version, runtime.Version(), common.GitCommitHash, common.BuildDate, osarch, common.Version)
 	log.StartWait("从github获取最新版本 ...")
 	lastversion, err := PreCheckVersion()
 	log.StopWait()
@@ -104,7 +98,7 @@ func Upgrade() {
 		return
 	}
 	if lastversion == "" {
-		log.Infof("当前已经是最新版本了: %v", Version)
+		log.Infof("当前已经是最新版本了: %v", common.Version)
 		return
 	}
 	// TODO linux brew
@@ -145,5 +139,5 @@ func Upgrade() {
 }
 
 func GetUG() string {
-	return fmt.Sprintf("%v ErGo/%v", common.DownloadAgent, Version)
+	return fmt.Sprintf("%v ErGo/%v", common.DownloadAgent, common.Version)
 }
