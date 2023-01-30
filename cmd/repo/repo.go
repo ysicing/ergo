@@ -11,9 +11,9 @@ import (
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/exec"
 	"github.com/ysicing/ergo/internal/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
-	"github.com/ysicing/ergo/internal/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 

@@ -3,14 +3,6 @@
 
 package debian
 
-import (
-	"fmt"
-	"sync"
-
-	"github.com/ysicing/ergo/internal/pkg/util/log"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-)
-
 const InitSH = `
 
 [ -f "/.initdone" ] && exit 0
@@ -193,14 +185,14 @@ touch /.initdone
 exit 0
 `
 
-func RunInit(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
-	defer func() {
-		log.StopWait()
-		wg.Done()
-	}()
-	log.StartWait(fmt.Sprintf("start init %v", ip))
-	if err := ssh.CmdAsync(ip, InitSH); err != nil {
-		log.Errorf("ip %v, err: %v", ip, err)
-		return
-	}
-}
+// func RunInit(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
+// 	defer func() {
+// 		log.StopWait()
+// 		wg.Done()
+// 	}()
+// 	log.StartWait(fmt.Sprintf("start init %v", ip))
+// 	if err := ssh.CmdAsync(ip, InitSH); err != nil {
+// 		log.Errorf("ip %v, err: %v", ip, err)
+// 		return
+// 	}
+// }

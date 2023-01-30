@@ -3,32 +3,24 @@
 
 package debian
 
-import (
-	"fmt"
-	"sync"
-
-	"github.com/ysicing/ergo/internal/pkg/util/log"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
-)
-
 // RunAddDebSwap 添加swap space
-func RunAddDebSwap(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
-	defer func() {
-		log.StopWait()
-		wg.Done()
-	}()
-	log.StartWait(fmt.Sprintf("%s add swap space on debian", ip))
-	err := ssh.CmdAsync(ip, AddDebSource)
-	if err != nil {
-		log.Fatal(ip, err.Error())
-		return
-	}
-	for i := 0; i <= 10; i++ {
-		if RunWait(ssh, ip, log) {
-			break
-		}
-	}
-}
+// func RunAddDebSwap(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
+// 	defer func() {
+// 		log.StopWait()
+// 		wg.Done()
+// 	}()
+// 	log.StartWait(fmt.Sprintf("%s add swap space on debian", ip))
+// 	err := ssh.CmdAsync(ip, AddDebSource)
+// 	if err != nil {
+// 		log.Fatal(ip, err.Error())
+// 		return
+// 	}
+// 	for i := 0; i <= 10; i++ {
+// 		if RunWait(ssh, ip, log) {
+// 			break
+// 		}
+// 	}
+// }
 
 const AddSwap = `#!/bin/bash
 

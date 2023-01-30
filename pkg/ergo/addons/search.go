@@ -11,9 +11,9 @@ import (
 	"github.com/ergoapi/util/file"
 	"github.com/gosuri/uitable"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/exec"
 	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/ergo/repo"
-	"github.com/ysicing/ergo/internal/pkg/util/exec"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 

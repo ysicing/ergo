@@ -35,7 +35,7 @@ build: clean generate ## 构建二进制
         -ldflags   "-w -s \
                        -X 'github.com/ysicing/ergo/common.Version=${BUILD_VERSION}' \
                        -X 'github.com/ysicing/ergo/common.BuildDate=${BUILD_DATE}' \
-                       -X 'github.com/ysicing/ergo/common.GitCommitHash=${GIT_COMMIT}'
+                       -X 'github.com/ysicing/ergo/common.GitCommitHash=${GIT_COMMIT}' \
                        -X 'k8s.io/client-go/pkg/version.gitVersion=${BUILD_VERSION}' \
                        -X 'k8s.io/client-go/pkg/version.gitCommit=${GIT_COMMIT}' \
                        -X 'k8s.io/client-go/pkg/version.gitTreeState=dirty' \

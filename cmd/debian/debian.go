@@ -6,50 +6,36 @@ package debian
 import (
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
-	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/internal/pkg/util/factory"
-	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/ergo/debian"
 )
 
-type Option struct {
-	*flags.GlobalFlags
-	log log.Logger
-	IPs []string
-}
-
-func (cmd *Option) prepare(f factory.Factory) {
-	cmd.log = f.GetLog()
-}
-
-func (cmd *Option) Init(f factory.Factory) error {
-	cmd.prepare(f)
-	debian.RunLocalShell("init", cmd.log)
+func Init(f factory.Factory) error {
+	debian.RunLocalShell("init", f.GetLog())
 	return nil
 }
 
-func (cmd *Option) UpCore(f factory.Factory) error {
-	cmd.prepare(f)
-	debian.RunLocalShell("upcore", cmd.log)
+func UpCore(f factory.Factory) error {
+	debian.RunLocalShell("upcore", f.GetLog())
 	return nil
 }
 
-func (cmd *Option) Apt(f factory.Factory) error {
-	cmd.prepare(f)
+func Apt(f factory.Factory) error {
+	log := f.GetLog()
 	if file.CheckFileExists("/etc/apt/sources.list") {
-		debian.RunLocalShell("apt", cmd.log)
+		debian.RunLocalShell("apt", log)
 	} else {
-		cmd.log.Warn("仅支持Debian系")
+		log.Warn("仅支持Debian系")
 	}
 	return nil
 }
 
-func (cmd *Option) Swap(f factory.Factory) error {
-	cmd.prepare(f)
+func Swap(f factory.Factory) error {
+	log := f.GetLog()
 	if file.CheckFileExists("/etc/apt/sources.list") {
-		debian.RunLocalShell("swap", cmd.log)
+		debian.RunLocalShell("swap", log)
 	} else {
-		cmd.log.Warn("仅支持Debian系")
+		log.Warn("仅支持Debian系")
 	}
 	return nil
 }
@@ -67,7 +53,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 		Short:   "init debian",
 		Version: "2.0.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return opt.Init(f)
+			return Init(f)
 		},
 	}
 	apt := &cobra.Command{
@@ -75,7 +61,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 		Short:   "添加ergo apt源",
 		Version: "2.2.1",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return opt.Apt(f)
+			return Apt(f)
 		},
 	}
 	swap := &cobra.Command{
@@ -83,7 +69,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 		Short:   "添加swap",
 		Version: "3.0.2",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return opt.Swap(f)
+			return Swap(f)
 		},
 	}
 	upcore := &cobra.Command{
@@ -92,7 +78,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 		Aliases: []string{"uc"},
 		Version: "2.0.0",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
-			return opt.UpCore(f)
+			return UpCore(f)
 		},
 	}
 	debian.AddCommand(init)

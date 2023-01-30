@@ -5,14 +5,11 @@ package debian
 
 import (
 	"fmt"
-	"sync"
-	"time"
 
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
-	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/internal/pkg/util/exec"
-	sshutil "github.com/ysicing/ergo/pkg/util/ssh"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 )
 
 const UpgradeCore = `
@@ -52,52 +49,52 @@ reboot
 `
 
 // RunUpgradeCore 升级内核
-func RunUpgradeCore(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
-	defer func() {
-		log.StopWait()
-		wg.Done()
-	}()
-	log.StartWait(fmt.Sprintf("%s start upcore", ip))
-	err := ssh.CmdAsync(ip, UpgradeCore)
-	if err != nil {
-		log.Fatal(ip, err.Error())
-		return
-	}
-	for i := 0; i <= 10; i++ {
-		if RunWait(ssh, ip, log) {
-			break
-		}
-	}
-}
+// func RunUpgradeCore(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
+// 	defer func() {
+// 		log.StopWait()
+// 		wg.Done()
+// 	}()
+// 	log.StartWait(fmt.Sprintf("%s start upcore", ip))
+// 	err := ssh.CmdAsync(ip, UpgradeCore)
+// 	if err != nil {
+// 		log.Fatal(ip, err.Error())
+// 		return
+// 	}
+// 	for i := 0; i <= 10; i++ {
+// 		if RunWait(ssh, ip, log) {
+// 			break
+// 		}
+// 	}
+// }
 
 // RunAddDebSource 添加ergo deb源
-func RunAddDebSource(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
-	defer func() {
-		log.StopWait()
-		wg.Done()
-	}()
-	log.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
-	err := ssh.CmdAsync(ip, AddDebSource)
-	if err != nil {
-		log.Fatal(ip, err.Error())
-		return
-	}
-	for i := 0; i <= 10; i++ {
-		if RunWait(ssh, ip, log) {
-			break
-		}
-	}
-}
+// func RunAddDebSource(ssh sshutil.SSH, ip string, log log.Logger, wg *sync.WaitGroup) {
+// 	defer func() {
+// 		log.StopWait()
+// 		wg.Done()
+// 	}()
+// 	log.StartWait(fmt.Sprintf("%s 添加ergo源", ip))
+// 	err := ssh.CmdAsync(ip, AddDebSource)
+// 	if err != nil {
+// 		log.Fatal(ip, err.Error())
+// 		return
+// 	}
+// 	for i := 0; i <= 10; i++ {
+// 		if RunWait(ssh, ip, log) {
+// 			break
+// 		}
+// 	}
+// }
 
-func RunWait(ssh sshutil.SSH, ip string, log log.Logger) bool {
-	err := ssh.CmdAsync(ip, "uname -a")
-	if err != nil {
-		log.Debugf("%v waiting for reboot", ip)
-		time.Sleep(10 * time.Second)
-		return false
-	}
-	return true
-}
+// func RunWait(ssh sshutil.SSH, ip string, log log.Logger) bool {
+// 	err := ssh.CmdAsync(ip, "uname -a")
+// 	if err != nil {
+// 		log.Debugf("%v waiting for reboot", ip)
+// 		time.Sleep(10 * time.Second)
+// 		return false
+// 	}
+// 	return true
+// }
 
 func RunLocalShell(runtype string, log log.Logger) {
 	var shelldata string

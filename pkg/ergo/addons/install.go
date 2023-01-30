@@ -13,8 +13,8 @@ import (
 
 	"github.com/ergoapi/util/file"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/internal/pkg/util/exec"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/lock"
 )
 
