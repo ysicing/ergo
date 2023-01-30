@@ -1,39 +1,50 @@
-## ergo kubectl create service nodeport
+## ergo kubectl events
 
-Create a NodePort service
+List events
 
 ### Synopsis
 
-Create a NodePort service with the specified name.
+Display events
+
+ Prints a table of the most important information about events. You can request events for a namespace, for all namespace, or filtered to only those pertaining to a specified resource.
 
 ```
-ergo kubectl create service nodeport NAME [--tcp=port:targetPort] [--dry-run=server|client|none]
+ergo kubectl events [(-o|--output=)json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file] [--for TYPE/NAME] [--watch] [--event=Normal,Warning]
 ```
 
 ### Examples
 
 ```
-  # Create a new NodePort service named my-ns
-  kubectl create service nodeport my-ns --tcp=5678:8080
+  # List recent events in the default namespace.
+  kubectl events
+  
+  # List recent events in all namespaces.
+  kubectl events --all-namespaces
+  
+  # List recent events for the specified pod, then wait for more events and list them as they arrive.
+  kubectl events --for pod/web-pod-13je7 --watch
+  
+  # List recent events in given format. Supported ones, apart from default, are json and yaml.
+  kubectl events -oyaml
+  
+  # List recent only events in given event types
+  kubectl events --types=Warning,Normal
 ```
 
 ### Options
 
 ```
-      --allow-missing-template-keys    If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats. (default true)
-      --dry-run string[="unchanged"]   Must be "none", "server", or "client". If client strategy, only print the object that would be sent, without sending it. If server strategy, submit server-side request without persisting the resource. (default "none")
-      --field-manager string           Name of the manager used to track field ownership. (default "kubectl-create")
-  -h, --help                           help for nodeport
-      --node-port int                  Port used to expose the service on each node in a cluster.
-  -o, --output string                  Output format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file).
-      --save-config                    If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform kubectl apply on this object in the future.
-      --show-managed-fields            If true, keep the managedFields when printing objects in JSON or YAML format.
-      --tcp strings                    Port pairs can be specified as '<port>:<targetPort>'.
-      --template string                Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
-      --validate string[="strict"]     Must be one of: strict (or true), warn, ignore (or false).
-                                       		"true" or "strict" will use a schema to validate the input and fail the request if invalid. It will perform server side validation if ServerSideFieldValidation is enabled on the api-server, but will fall back to less reliable client-side validation if not.
-                                       		"warn" will warn about unknown or duplicate fields without blocking the request if server-side field validation is enabled on the API server, and behave as "ignore" otherwise.
-                                       		"false" or "ignore" will not perform any schema validation, silently dropping any unknown or duplicate fields. (default "strict")
+  -A, --all-namespaces                If present, list the requested object(s) across all namespaces. Namespace in current context is ignored even if specified with --namespace.
+      --allow-missing-template-keys   If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats. (default true)
+      --chunk-size int                Return large lists in chunks rather than all at once. Pass 0 to disable. This flag is beta and may change in the future. (default 500)
+      --for string                    Filter events to only those pertaining to the specified resource.
+  -h, --help                          help for events
+      --no-headers                    When using the default output format, don't print headers.
+  -o, --output string                 Output format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file).
+      --show-managed-fields           If true, keep the managedFields when printing objects in JSON or YAML format.
+      --template string               Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
+      --types strings                 Output only events of given types.
+  -w, --watch                         After listing the requested events, watch for more events.
 ```
 
 ### Options inherited from parent commands
@@ -70,6 +81,6 @@ ergo kubectl create service nodeport NAME [--tcp=port:targetPort] [--dry-run=ser
 
 ### SEE ALSO
 
-* [ergo kubectl create service](ergo_kubectl_create_service.md)	 - Create a service using a specified subcommand
+* [ergo kubectl](ergo_kubectl.md)	 - Kubectl controls the Kubernetes cluster manager
 
 ###### Auto generated by spf13/cobra on 30-Jan-2023

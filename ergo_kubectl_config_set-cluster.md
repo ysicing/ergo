@@ -34,44 +34,45 @@ ergo kubectl config set-cluster NAME [--server=server] [--certificate-authority=
 ### Options
 
 ```
-      --embed-certs tristate[=true]   embed-certs for the cluster entry in kubeconfig
-  -h, --help                          help for set-cluster
-      --proxy-url string              proxy-url for the cluster entry in kubeconfig
+      --certificate-authority string               Path to certificate-authority file for the cluster entry in kubeconfig
+      --embed-certs tristate[=true]                embed-certs for the cluster entry in kubeconfig
+  -h, --help                                       help for set-cluster
+      --insecure-skip-tls-verify tristate[=true]   insecure-skip-tls-verify for the cluster entry in kubeconfig
+      --proxy-url string                           proxy-url for the cluster entry in kubeconfig
+      --server string                              server for the cluster entry in kubeconfig
+      --tls-server-name string                     tls-server-name for the cluster entry in kubeconfig
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --as string                      Username to impersonate for the operation. User could be a regular user or a service account in a namespace.
-      --as-group stringArray           Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
-      --as-uid string                  UID to impersonate for the operation.
-      --cache-dir string               Default cache directory (default "/home/runner/.kube/cache")
-      --certificate-authority string   Path to a cert file for the certificate authority
-      --client-certificate string      Path to a client certificate file for TLS
-      --client-key string              Path to a client key file for TLS
-      --cluster string                 The name of the kubeconfig cluster to use
-      --config string                  The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
-      --context string                 The name of the kubeconfig context to use
-      --debug                          Prints the stack trace if an error occurs
-      --insecure-skip-tls-verify       If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
-      --kubeconfig string              use a particular kubeconfig file
-      --match-server-version           Require server version to match client version
-  -n, --namespace string               If present, the namespace scope for this CLI request
-      --password string                Password for basic authentication to the API server
-      --profile string                 Name of profile to capture. One of (none|cpu|heap|goroutine|threadcreate|block|mutex) (default "none")
-      --profile-output string          Name of the file to write the profile to (default "profile.pprof")
-      --request-timeout string         The length of time to wait before giving up on a single server request. Non-zero values should contain a corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means don't timeout requests. (default "0")
-  -s, --server string                  The address and port of the Kubernetes API server
-      --silent                         Run in silent mode and prevents any ergo log output except panics & fatals
-      --tls-server-name string         Server name to use for server certificate validation. If it is not provided, the hostname used to contact the server is used
-      --token string                   Bearer token for authentication to the API server
-      --user string                    The name of the kubeconfig user to use
-      --username string                Username for basic authentication to the API server
-      --warnings-as-errors             Treat warnings received from the server as errors and exit with a non-zero exit code
+      --as string                   Username to impersonate for the operation. User could be a regular user or a service account in a namespace.
+      --as-group stringArray        Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
+      --as-uid string               UID to impersonate for the operation.
+      --cache-dir string            Default cache directory (default "/home/runner/.kube/cache")
+      --client-certificate string   Path to a client certificate file for TLS
+      --client-key string           Path to a client key file for TLS
+      --cluster string              The name of the kubeconfig cluster to use
+      --config string               The ergo config file to use (default "/home/runner/.ergo/config/ergo.yml")
+      --context string              The name of the kubeconfig context to use
+      --debug                       Prints the stack trace if an error occurs
+      --disable-compression         If true, opt-out of response compression for all requests to the server
+      --kubeconfig string           use a particular kubeconfig file
+      --match-server-version        Require server version to match client version
+  -n, --namespace string            If present, the namespace scope for this CLI request
+      --password string             Password for basic authentication to the API server
+      --profile string              Name of profile to capture. One of (none|cpu|heap|goroutine|threadcreate|block|mutex) (default "none")
+      --profile-output string       Name of the file to write the profile to (default "profile.pprof")
+      --request-timeout string      The length of time to wait before giving up on a single server request. Non-zero values should contain a corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means don't timeout requests. (default "0")
+      --silent                      Run in silent mode and prevents any ergo log output except panics & fatals
+      --token string                Bearer token for authentication to the API server
+      --user string                 The name of the kubeconfig user to use
+      --username string             Username for basic authentication to the API server
+      --warnings-as-errors          Treat warnings received from the server as errors and exit with a non-zero exit code
 ```
 
 ### SEE ALSO
 
 * [ergo kubectl config](ergo_kubectl_config.md)	 - Modify kubeconfig files
 
-###### Auto generated by spf13/cobra on 12-Oct-2022
+###### Auto generated by spf13/cobra on 30-Jan-2023
