@@ -7,8 +7,5 @@ import (
 
 func StageFiles() error {
 	dataDir := common.GetDefaultDataDir()
-	if err := scripts.Stage(dataDir); err != nil {
-		return err
-	}
-	return nil
+	return scripts.Stage(dataDir)
 }

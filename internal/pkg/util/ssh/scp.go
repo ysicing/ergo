@@ -6,7 +6,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/pkg/sftp"
@@ -53,6 +52,7 @@ func (s *SSH) newClientAndSftpClient(host string) (*ssh.Client, *sftp.Client, er
 	return sshClient, sftpClient, err
 }
 
+//nolint:dupl
 func (s *SSH) sftpConnect(host string) (sshClient *ssh.Client, sftpClient *sftp.Client, err error) {
 	try := 0
 	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
@@ -64,7 +64,7 @@ func (s *SSH) sftpConnect(host string) (sshClient *ssh.Client, sftpClient *sftp.
 		}
 		return true, nil
 	}); err != nil {
-		return nil, nil, fmt.Errorf("ssh init dialer [%s] error: %w", host, err)
+		return nil, nil, fmt.Errorf("sftp init dialer [%s] error: %w", host, err)
 	}
 	return
 }
@@ -116,10 +116,10 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 		_ = bar.Close()
 	}()
 
-	return s.doCopy(sftpClient, host, localPath, remotePath, bar)
+	return s.doCopy(sftpClient, localPath, remotePath, bar)
 }
 
-func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressbar.ProgressBar) error {
+func (s *SSH) doCopy(client *sftp.Client, src, dest string, epu *progressbar.ProgressBar) error {
 	lfp, err := os.Stat(src)
 	if err != nil {
 		return fmt.Errorf("failed to Stat local: %v", err)
@@ -133,7 +133,7 @@ func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressb
 			return fmt.Errorf("failed to Mkdir remote: %v", err)
 		}
 		for _, entry := range entries {
-			if err = s.doCopy(client, host, path.Join(src, entry.Name()), path.Join(dest, entry.Name()), epu); err != nil {
+			if err = s.doCopy(client, path.Join(src, entry.Name()), path.Join(dest, entry.Name()), epu); err != nil {
 				return err
 			}
 		}
@@ -158,25 +158,6 @@ func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressb
 		_ = epu.Add(1)
 	}
 	return nil
-}
-
-func checkIfRemoteFileExists(client *sftp.Client, fp string) (bool, error) {
-	_, err := client.Stat(fp)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false, nil
-		}
-		return false, err
-	}
-	return true, nil
-}
-
-func isEnvTrue(k string) bool {
-	if v, ok := os.LookupEnv(k); ok {
-		boolVal, _ := strconv.ParseBool(v)
-		return boolVal
-	}
-	return false
 }
 
 func Simple(title string, count int) *progressbar.ProgressBar {

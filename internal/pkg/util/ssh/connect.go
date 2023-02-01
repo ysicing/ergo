@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"path"
-	"strconv"
 	"strings"
 	"time"
 
@@ -65,6 +63,7 @@ func newSession(client *ssh.Client) (*ssh.Session, error) {
 	return session, nil
 }
 
+//nolint:dupl
 func (s *SSH) Connect(host string) (sshClient *ssh.Client, session *ssh.Session, err error) {
 	try := 0
 	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
@@ -133,24 +132,4 @@ func (s *SSH) addrReformat(host, port string) string {
 		host = fmt.Sprintf("%s:%s", host, port)
 	}
 	return host
-}
-
-func (s *SSH) remoteFileExist(host, remoteFilePath string) bool {
-	// if remote file is
-	// ls -l | grep aa | wc -l
-	remoteFileName := path.Base(remoteFilePath) // aa
-	remoteFileDirName := path.Dir(remoteFilePath)
-	//it's bug: if file is aa.bak, `ls -l | grep aa | wc -l` is 1 ,should use `ll aa 2>/dev/null |wc -l`
-	//remoteFileCommand := fmt.Sprintf("ls -l %s| grep %s | grep -v grep |wc -l", remoteFileDirName, remoteFileName)
-	remoteFileCommand := fmt.Sprintf("ls -l %s/%s 2>/dev/null |wc -l", remoteFileDirName, remoteFileName)
-
-	data, err := s.CmdToString(host, remoteFileCommand, " ")
-	if err != nil {
-		s.log.Errorf("[ssh][%s]remoteFileCommand err:%s", host, err)
-	}
-	count, err := strconv.Atoi(strings.TrimSpace(data))
-	if err != nil {
-		s.log.Errorf("[ssh][%s]RemoteFileExist:%s", host, err)
-	}
-	return count != 0
 }

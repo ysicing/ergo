@@ -65,7 +65,7 @@ func GetK3SURL() string {
 
 func GetDefaultKubeConfig() string {
 	d := fmt.Sprintf("%v/.kube", zos.GetHomeDir())
-	os.MkdirAll(d, FileMode0644)
+	_ = os.MkdirAll(d, FileMode0644)
 	return fmt.Sprintf("%v/config", d)
 }
 

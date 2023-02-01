@@ -10,15 +10,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ergoapi/util/environ"
-	"github.com/ergoapi/util/zos"
 	"github.com/gosuri/uitable"
-	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/op"
 	"github.com/ysicing/ergo/internal/pkg/util/factory"
 	"github.com/ysicing/ergo/internal/pkg/util/log"
-	"github.com/ysicing/ergo/pkg/ergo/git/github"
 	"github.com/ysicing/ergo/pkg/util/output"
 )
 
@@ -32,28 +28,12 @@ func newExtCmd(f factory.Factory) *cobra.Command {
 		Short:   "ext tools",
 		Version: "2.1.0",
 	}
-	cmd.AddCommand(ghClean(f))
-	cmd.AddCommand(syncImage(f))
+	cmd.AddCommand(syncImage())
 	cmd.AddCommand(op.WgetCmd(f))
 	return cmd
 }
 
-func ghClean(f factory.Factory) *cobra.Command {
-	ext := ExtOptions{
-		Log: f.GetLog(),
-	}
-	cmd := &cobra.Command{
-		Use:     "gh [flags]",
-		Short:   "gh清理package",
-		Version: "2.1.0",
-		Run: func(cobraCmd *cobra.Command, args []string) {
-			ext.githubClean()
-		},
-	}
-	return cmd
-}
-
-func syncImage(f factory.Factory) *cobra.Command {
+func syncImage() *cobra.Command {
 	ext := ExtOptions{}
 	cmd := &cobra.Command{
 		Use:     "sync [flags]",
@@ -65,21 +45,6 @@ func syncImage(f factory.Factory) *cobra.Command {
 		},
 	}
 	return cmd
-}
-
-func (ext *ExtOptions) githubClean() {
-	user := zos.GetUserName()
-	ext.Log.Infof("user: %v", user)
-	token := environ.GetEnv("GHCRIO", "")
-	if token != "" {
-		ext.Log.Info("load user token from env GHCRIO")
-	} else {
-		p := promptui.Prompt{
-			Label: "token",
-		}
-		token, _ = p.Run()
-	}
-	github.CleanPackage(user, token)
 }
 
 func (ext *ExtOptions) syncImage(args []string) {
@@ -108,7 +73,7 @@ func (ext *ExtOptions) syncImage(args []string) {
 				fmt.Sprintf("ccr.ccs.tencentyun.com/k7scn/%v", s[len(s)-1]))
 		}
 		ext.Log.Donef("同步任务已触发, 请稍后重试")
-		output.EncodeTable(os.Stdout, table)
+		_ = output.EncodeTable(os.Stdout, table)
 	}
 }
 
@@ -117,8 +82,7 @@ func (ext *ExtOptions) doCR(image string) error {
 	u, _ := url.Parse("https://cr.hk1.godu.dev/pull")
 	params.Set("image", image)
 	u.RawQuery = params.Encode()
-	resp, err := http.Get(u.String())
-	if err != nil || resp.StatusCode != 200 {
+	if _, err := http.Get(u.String()); err != nil {
 		return fmt.Errorf("同步失败")
 	}
 	ext.Log.Infof("check sync log: https://cr.hk1.godu.dev?image=%v", image)

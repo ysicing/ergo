@@ -59,11 +59,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newVersionCmd())
 	rootCmd.AddCommand(newUpgradeCmd())
 	rootCmd.AddCommand(newDebianCmd(f))
-	rootCmd.AddCommand(newAddOnsCmd(f))
-	// rootCmd.AddCommand(newSecCmd(f))
 	rootCmd.AddCommand(newExtCmd(f))
-	rootCmd.AddCommand(spotCommand())
-	rootCmd.AddCommand(toolsCmd(f))
 	// Add plugin commands
 	rootCmd.AddCommand(KubectlCommand())
 	rootCmd.AddCommand(newManCmd())
@@ -204,11 +200,8 @@ func HandlePluginCommand(pluginHandler PluginHandler, cmdArgs []string) error {
 	}
 
 	// invoke cmd binary relaying the current environment and args given
-	if err := pluginHandler.Execute(foundBinaryPath, cmdArgs[len(remainingArgs):], os.Environ()); err != nil {
-		return err
-	}
-
-	return nil
+	err := pluginHandler.Execute(foundBinaryPath, cmdArgs[len(remainingArgs):], os.Environ())
+	return err
 }
 
 // NewRootCmd returns a new root command
