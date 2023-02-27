@@ -35,6 +35,8 @@ linters:
     - gosimple
     - goimports
     - govet
+    - godox
+    - goheader
     # - gosec
     # - gofumpt
     # - goconst
@@ -138,3 +140,9 @@ linters-settings:
     check-exported: false
   unparam:
     check-exported: false
+  godox:
+    keywords:
+      - BUG
+      - FIXME
+      - TODO
+      - HACK

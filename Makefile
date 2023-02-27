@@ -63,7 +63,7 @@ docker: ## 构建镜像
 
 dpush: docker
 	@docker push ysicing/ergo
-    @docker push ysicing/ergo:${BUILD_VERSION}
+  @docker push ysicing/ergo:${BUILD_VERSION}
 
 release:  ## github release
 	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -b "release ${BUILD_VERSION}" -n "release ${BUILD_VERSION}" -soft --debug ${BUILD_VERSION} dist

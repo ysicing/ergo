@@ -1,8 +1,6 @@
 // AGPL License
 // Copyright (c) 2020 ysicing <i@ysicing.me>
 
-//go:generate go run internal/cmd/codegen/main.go
-
 package main
 
 import (
