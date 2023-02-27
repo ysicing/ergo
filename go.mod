@@ -36,7 +36,7 @@ require (
 	k8s.io/client-go v0.26.1
 	k8s.io/component-base v0.26.0
 	k8s.io/kubectl v0.26.0
-	k8s.io/metrics v0.26.0
+	k8s.io/metrics v0.26.1
 	sigs.k8s.io/yaml v1.3.0
 )
 
