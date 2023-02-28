@@ -6,7 +6,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/cheggaaa/pb/v3 v3.1.0
+	github.com/cheggaaa/pb/v3 v3.1.2
 	github.com/cockroachdb/errors v1.9.1
 	github.com/containerd/continuity v0.3.0
 	github.com/ergoapi/util v0.3.12
@@ -58,7 +58,7 @@ require (
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/fatih/camelcase v1.0.0 // indirect
-	github.com/fatih/color v1.13.0 // indirect
+	github.com/fatih/color v1.14.1 // indirect
 	github.com/fvbommel/sortorder v1.0.1 // indirect
 	github.com/getsentry/sentry-go v0.14.0 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
