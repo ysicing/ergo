@@ -30,8 +30,8 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.11.1
-	k8s.io/api v0.26.1
-	k8s.io/apimachinery v0.26.1
+	k8s.io/api v0.26.2
+	k8s.io/apimachinery v0.26.2
 	k8s.io/cli-runtime v0.26.0
 	k8s.io/client-go v0.26.1
 	k8s.io/component-base v0.26.0
