@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/ergoapi/log/factory"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/repo"
-	"github.com/ysicing/ergo/internal/pkg/util/factory"
 )
 
 func newRepoCmd(f factory.Factory) *cobra.Command {

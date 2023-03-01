@@ -11,13 +11,13 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/ergoapi/log/factory"
 	mcobra "github.com/muesli/mango-cobra"
 	"github.com/muesli/roff"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/cmd/flags"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/util/factory"
 )
 
 const (

@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ergoapi/log"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/util/log"
 
 	"github.com/blang/semver"
 	"github.com/ergoapi/util/color"

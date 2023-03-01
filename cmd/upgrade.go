@@ -6,7 +6,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/ysicing/ergo/internal/pkg/util/log"
+	"github.com/ergoapi/log"
 
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"

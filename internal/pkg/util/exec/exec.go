@@ -10,9 +10,9 @@ import (
 	sysexec "os/exec"
 	"strings"
 
+	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
 	"github.com/ysicing/ergo/common"
-	"github.com/ysicing/ergo/internal/pkg/util/log"
 )
 
 type LogWriter struct {

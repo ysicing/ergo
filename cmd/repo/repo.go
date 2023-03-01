@@ -5,13 +5,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ergoapi/log/factory"
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ergo/common"
 	"github.com/ysicing/ergo/internal/pkg/util/exec"
-	"github.com/ysicing/ergo/internal/pkg/util/factory"
 	"github.com/ysicing/ergo/pkg/repo"
-	"github.com/ysicing/ergo/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/util/output"
 	"helm.sh/helm/v3/cmd/helm/require"
 )
@@ -19,6 +18,7 @@ import (
 func AddCmd(f factory.Factory) *cobra.Command {
 	o := &repo.AddOption{
 		RepoCfg: common.GetDefaultRepoCfg(),
+		Flog:    f.GetLog(),
 	}
 	cmd := &cobra.Command{
 		Use:   "add [NAME] [URL]",
@@ -36,6 +36,7 @@ func AddCmd(f factory.Factory) *cobra.Command {
 func DelCmd(f factory.Factory) *cobra.Command {
 	o := &repo.DelOption{
 		RepoCfg: common.GetDefaultRepoCfg(),
+		Flog:    f.GetLog(),
 	}
 	cmd := &cobra.Command{
 		Use:     "del [REPO1 [REPO2 ...]]",
@@ -53,6 +54,7 @@ func DelCmd(f factory.Factory) *cobra.Command {
 func UpdateCmd(f factory.Factory) *cobra.Command {
 	o := &repo.UpdateOption{
 		RepoCfg: common.GetDefaultRepoCfg(),
+		Flog:    f.GetLog(),
 	}
 	cmd := &cobra.Command{
 		Use:     "update [REPO1 [REPO2 ...]]",
@@ -67,6 +69,7 @@ func UpdateCmd(f factory.Factory) *cobra.Command {
 }
 
 func ListCmd(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "list repo",
@@ -74,7 +77,7 @@ func ListCmd(f factory.Factory) *cobra.Command {
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			f, err := repo.LoadFile(common.GetDefaultRepoCfg())
 			if err != nil || len(f.Repos) == 0 {
-				log.Flog.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
+				log.Warnf("不存在相关repo, 可以使用ergo repo init添加ergo默认库")
 				return nil
 			}
 			switch strings.ToLower(common.ListOutput) {
@@ -83,7 +86,7 @@ func ListCmd(f factory.Factory) *cobra.Command {
 			case "yaml":
 				return output.EncodeYAML(os.Stdout, f.Repos)
 			default:
-				log.Flog.Infof("上次变更时间: %v", f.Generated)
+				log.Infof("上次变更时间: %v", f.Generated)
 				table := uitable.New()
 				table.AddRow("name", "path", "source")
 				for _, re := range f.Repos {
@@ -101,13 +104,14 @@ func ListCmd(f factory.Factory) *cobra.Command {
 }
 
 func InitCmd(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "add default repo",
 		RunE: func(cobraCmd *cobra.Command, args []string) error {
 			cmdArgs := os.Args
 			if err := exec.RunCmd(cmdArgs[0], "repo", "add", common.ErgoOwner, common.DefaultRepoURL); err != nil {
-				log.Flog.Debugf("添加默认库失败: %v", err)
+				log.Debugf("添加默认库失败: %v", err)
 				return fmt.Errorf("添加默认库失败")
 			}
 			return exec.RunCmd(cmdArgs[0], "repo", "update")
