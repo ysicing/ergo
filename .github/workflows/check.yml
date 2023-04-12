@@ -1,0 +1,76 @@
+name: check
+
+env:
+  # Common versions
+  GO_VERSION: '1.20'
+  TZ: Asia/Shanghai
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - '*'
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - '.github/workflows/go.yml'
+  pull_request:
+    branches:
+      - "*"
+    paths:
+      - '**.go'
+    # paths-ignore:
+    #   - 'docs/**'
+    #   - '*.md'
+    #   - '*.yml'
+
+jobs:
+  check-license:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Cache Go Dependencies
+        uses: magnetikonline/action-golang-cache@v4
+        with:
+          go-version-file: go.mod
+      - name: install addlicense
+        run: |
+          echo "install addlicense"
+          go install github.com/google/addlicense@latest
+#      - name: Run Check License
+#        run: |
+#          export TZ='Asia/Shanghai'
+#          export PATH=$PATH:$(go env GOPATH)/bin
+#          make gencopyright
+#          modifyCode=$(git status  -s | grep M | wc -l)
+#          git status  -s
+#          if [ $modifyCode -eq 0 ] ; then
+#             echo "Lic check ok"
+#          else
+#             echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'make gencopyright' in your code "
+#             exit -1
+#          fi
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Cache Go Dependencies
+        uses: magnetikonline/action-golang-cache@v4
+        with:
+          go-version-file: go.mod
+      - name: Run Linter
+        run: make lint

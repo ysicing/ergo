@@ -1,4 +1,4 @@
-# 二狗 ergo
+# 二狗 2Go
 
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ysicing_ergo&metric=ncloc)](https://sonarcloud.io/dashboard?id=ysicing_ergo)
 ![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/ysicing/ergo/tag?style=flat-square)
@@ -14,20 +14,20 @@
 
 兼容性:
 
-- [x] 100% 支持 `Debian 11`
-- [ ] 绝大数功能在Debian上测试通过
+- [x] `100%` 支持 `Debian 11`
+- [x] `100%` 支持 `Ubuntu 16+`
 - [ ] 部分功能在macOS系上测试通过
 
-## ergo能干什么
+## 二狗能干什么
 
 - 将常用脚本或者公有云操作抽象成cli命令, 简化工作
-- 灵活的自定义插件管理工具,像使用`helm repo`方式管理插件
+- 插件化管理
 
 ## 安装
 
 ### 二进制安装
 
-从 [Github Release](https://github.com/ysicing/ergo/releases) 下载已经编译好的二进制文件: 
+从 [Github Release](https://github.com/ysicing/ergo/releases) 下载已经编译好的二进制文件:
 
 ### macOS安装
 
@@ -56,12 +56,12 @@ ergo version
 
 ### 源码编译安装
 
-- 支持go v1.18+
+- 支持go v1.19+
 
 ```bash
 # Clone the repo
 # Build and run the executable
-make build && ./dist/ergo_darwin_amd64 
+make build && ./dist/ergo_darwin_amd64
 ```
 
 ### 升级
@@ -94,35 +94,35 @@ ergo ops wget https://github.com/ysicing/ergo/releases/latest/download/ergo_linu
 ```bash
 # 列出已安装插件
 ergo addons list
-repo   	name      	version
-ysicing	docker    	latest
-ysicing	dockercfg 	latest
-ysicing	go        	1.18.1
-ysicing	etcd      	3.5
-ysicing	etcdctl   	3.5.3
-ysicing	mysql     	5.7
-ysicing	postgresql	14
+repo    name       version
+ysicing docker     latest
+ysicing dockercfg  latest
+ysicing go         1.18.1
+ysicing etcd       3.5
+ysicing etcdctl    3.5.3
+ysicing mysql      5.7
+ysicing postgresql 14
 
 # ergo-doge插件
-cat /usr/local/bin/ergo-doge                                   
+cat /usr/local/bin/ergo-doge
 #!/bin/bash
 echo $@
 
 # 使用
-ergo doge haha  
+ergo doge haha
 haha
 
 # 插件仓库列表
 ergo repo list
 [info]   上次变更时间: 2022-04-26 00:03:13.617004838 +0800 CST
-name   	path                                                                       	source
-ysicing	https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml	remote
+name    path                                                                        source
+ysicing https://github.com/ysicing/ergo-index/releases/latest/download/default.yaml remote
 
 # 列出远程插件
 ergo addons search
-Repo   	Name
-ysicing	autok3s
-ysicing	cilium
+Repo    Name
+ysicing autok3s
+ysicing cilium
 ```
 
 #### 其他开源项目
@@ -130,11 +130,9 @@ ysicing	cilium
 > 感谢以下项目
 
 - [loft-sh/devspace](https://github.com/loft-sh/devspace)
-- [cdk-team/CDK](https://github.com/cdk-team/CDK)
 - [kubernetes/kubernetes](https://github.com/kubernetes/kubernetes)
 - [helm/helm](https://github.com/helm/helm)
 - [cilium/cilium-cli](https://github.com/cilium/cilium-cli)
-- [cnrancher/autok3s](https://github.com/cnrancher/autok3s)
 
 ## 🎉🎉 赞助商
 

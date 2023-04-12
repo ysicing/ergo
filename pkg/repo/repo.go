@@ -1,3 +1,9 @@
+// Copyright (c) 2020-2023 ysicing(ysicing@ysicing.cloud) All rights reserved.
+// Use of this source code is covered by the following dual licenses:
+// (1) Y PUBLIC LICENSE 1.0 (YPL 1.0)
+// (2) Affero General Public License 3.0 (AGPL 3.0)
+// license that can be found in the LICENSE file.
+
 package repo
 
 import (
@@ -9,11 +15,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/exid"
 	"github.com/ergoapi/util/file"
 	"github.com/gofrs/flock"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 	"github.com/ysicing/ergo/pkg/downloader"
 	"sigs.k8s.io/yaml"
 )

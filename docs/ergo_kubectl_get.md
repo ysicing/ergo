@@ -1,6 +1,6 @@
 ## ergo kubectl get
 
-显示一个或更多 resources
+Display one or many resources
 
 ### Synopsis
 
@@ -13,7 +13,7 @@ Display one or many resources.
 Use "kubectl api-resources" for a complete list of supported resources.
 
 ```
-ergo kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file|custom-columns-file|custom-columns|wide] (TYPE[.VERSION][.GROUP] [NAME | -l label] | TYPE[.VERSION][.GROUP]/NAME ...) [flags]
+ergo kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file|custom-columns|custom-columns-file|wide] (TYPE[.VERSION][.GROUP] [NAME | -l label] | TYPE[.VERSION][.GROUP]/NAME ...) [flags]
 ```
 
 ### Examples
@@ -51,6 +51,9 @@ ergo kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|temp
   
   # List one or more resources by their type and names
   kubectl get rc/web service/frontend pods/web-pod-13je7
+  
+  # List status subresource for a single pod.
+  kubectl get pod web-pod-13je7 --subresource status
 ```
 
 ### Options
@@ -66,16 +69,17 @@ ergo kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|temp
   -k, --kustomize string              Process the kustomization directory. This flag can't be used together with -f or -R.
   -L, --label-columns strings         Accepts a comma separated list of labels that are going to be presented as columns. Names are case-sensitive. You can also use multiple flag options like -L label1 -L label2...
       --no-headers                    When using the default or custom-column output format, don't print headers (default print headers).
-  -o, --output string                 Output format. One of: json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file|custom-columns-file|custom-columns|wide See custom columns [https://kubernetes.io/docs/reference/kubectl/overview/#custom-columns], golang template [http://golang.org/pkg/text/template/#pkg-overview] and jsonpath template [https://kubernetes.io/docs/reference/kubectl/jsonpath/].
+  -o, --output string                 Output format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file, custom-columns, custom-columns-file, wide). See custom columns [https://kubernetes.io/docs/reference/kubectl/#custom-columns], golang template [http://golang.org/pkg/text/template/#pkg-overview] and jsonpath template [https://kubernetes.io/docs/reference/kubectl/jsonpath/].
       --output-watch-events           Output watch event objects when --watch or --watch-only is used. Existing objects are output as initial ADDED events.
       --raw string                    Raw URI to request from the server.  Uses the transport specified by the kubeconfig file.
   -R, --recursive                     Process the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.
-  -l, --selector string               Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2)
+  -l, --selector string               Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints.
       --server-print                  If true, have the server return the appropriate table output. Supports extension APIs and CRDs. (default true)
       --show-kind                     If present, list the resource type for the requested object(s).
       --show-labels                   When printing, show all labels as the last column (default hide labels column)
       --show-managed-fields           If true, keep the managedFields when printing objects in JSON or YAML format.
       --sort-by string                If non-empty, sort list types using this field specification.  The field specification is expressed as a JSONPath expression (e.g. '{.metadata.name}'). The field in the API resource specified by this JSONPath expression must be an integer or a string.
+      --subresource string            If specified, gets the subresource of the requested object. Must be one of [status scale]. This flag is alpha and may change in the future.
       --template string               Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
   -w, --watch                         After listing/getting the requested object, watch for changes.
       --watch-only                    Watch for changes to the requested object(s), without listing/getting first.
@@ -95,6 +99,7 @@ ergo kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|temp
       --config string                  The ergo config file to use (default "/Users/ysicing/.ergo/config/ergo.yml")
       --context string                 The name of the kubeconfig context to use
       --debug                          Prints the stack trace if an error occurs
+      --disable-compression            If true, opt-out of response compression for all requests to the server
       --insecure-skip-tls-verify       If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
       --kubeconfig string              Path to the kubeconfig file to use for CLI requests.
       --match-server-version           Require server version to match client version
@@ -116,4 +121,4 @@ ergo kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|temp
 
 * [ergo kubectl](ergo_kubectl.md)	 - Kubectl controls the Kubernetes cluster manager
 
-###### Auto generated by spf13/cobra on 30-Apr-2022
+###### Auto generated by spf13/cobra on 12-Apr-2023

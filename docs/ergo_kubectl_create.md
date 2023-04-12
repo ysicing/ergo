@@ -21,8 +21,8 @@ ergo kubectl create -f FILENAME
   # Create a pod based on the JSON passed into stdin
   cat pod.json | kubectl create -f -
   
-  # Edit the data in docker-registry.yaml in JSON then create the resource using the edited data
-  kubectl create -f docker-registry.yaml --edit -o json
+  # Edit the data in registry.yaml in JSON then create the resource using the edited data
+  kubectl create -f registry.yaml --edit -o json
 ```
 
 ### Options
@@ -35,14 +35,17 @@ ergo kubectl create -f FILENAME
   -f, --filename strings               Filename, directory, or URL to files to use to create the resource
   -h, --help                           help for create
   -k, --kustomize string               Process the kustomization directory. This flag can't be used together with -f or -R.
-  -o, --output string                  Output format. One of: json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file.
+  -o, --output string                  Output format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file).
       --raw string                     Raw URI to POST to the server.  Uses the transport specified by the kubeconfig file.
   -R, --recursive                      Process the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.
       --save-config                    If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform kubectl apply on this object in the future.
-  -l, --selector string                Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2)
+  -l, --selector string                Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints.
       --show-managed-fields            If true, keep the managedFields when printing objects in JSON or YAML format.
       --template string                Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
-      --validate                       If true, use a schema to validate the input before sending it (default true)
+      --validate string[="strict"]     Must be one of: strict (or true), warn, ignore (or false).
+                                       		"true" or "strict" will use a schema to validate the input and fail the request if invalid. It will perform server side validation if ServerSideFieldValidation is enabled on the api-server, but will fall back to less reliable client-side validation if not.
+                                       		"warn" will warn about unknown or duplicate fields without blocking the request if server-side field validation is enabled on the API server, and behave as "ignore" otherwise.
+                                       		"false" or "ignore" will not perform any schema validation, silently dropping any unknown or duplicate fields. (default "strict")
       --windows-line-endings           Only relevant if --edit=true. Defaults to the line ending native to your platform.
 ```
 
@@ -60,6 +63,7 @@ ergo kubectl create -f FILENAME
       --config string                  The ergo config file to use (default "/Users/ysicing/.ergo/config/ergo.yml")
       --context string                 The name of the kubeconfig context to use
       --debug                          Prints the stack trace if an error occurs
+      --disable-compression            If true, opt-out of response compression for all requests to the server
       --insecure-skip-tls-verify       If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
       --kubeconfig string              Path to the kubeconfig file to use for CLI requests.
       --match-server-version           Require server version to match client version
@@ -87,14 +91,15 @@ ergo kubectl create -f FILENAME
 * [ergo kubectl create deployment](ergo_kubectl_create_deployment.md)	 - Create a deployment with the specified name
 * [ergo kubectl create ingress](ergo_kubectl_create_ingress.md)	 - Create an ingress with the specified name
 * [ergo kubectl create job](ergo_kubectl_create_job.md)	 - Create a job with the specified name
-* [ergo kubectl create namespace](ergo_kubectl_create_namespace.md)	 - 创建一个指定名称的 namespace
+* [ergo kubectl create namespace](ergo_kubectl_create_namespace.md)	 - Create a namespace with the specified name
 * [ergo kubectl create poddisruptionbudget](ergo_kubectl_create_poddisruptionbudget.md)	 - Create a pod disruption budget with the specified name
 * [ergo kubectl create priorityclass](ergo_kubectl_create_priorityclass.md)	 - Create a priority class with the specified name
 * [ergo kubectl create quota](ergo_kubectl_create_quota.md)	 - Create a quota with the specified name
 * [ergo kubectl create role](ergo_kubectl_create_role.md)	 - Create a role with single rule
 * [ergo kubectl create rolebinding](ergo_kubectl_create_rolebinding.md)	 - Create a role binding for a particular role or cluster role
-* [ergo kubectl create secret](ergo_kubectl_create_secret.md)	 - 使用指定的 subcommand 创建一个 secret
+* [ergo kubectl create secret](ergo_kubectl_create_secret.md)	 - Create a secret using specified subcommand
 * [ergo kubectl create service](ergo_kubectl_create_service.md)	 - Create a service using a specified subcommand
-* [ergo kubectl create serviceaccount](ergo_kubectl_create_serviceaccount.md)	 - 创建一个指定名称的 service account
+* [ergo kubectl create serviceaccount](ergo_kubectl_create_serviceaccount.md)	 - Create a service account with the specified name
+* [ergo kubectl create token](ergo_kubectl_create_token.md)	 - Request a service account token
 
-###### Auto generated by spf13/cobra on 30-Apr-2022
+###### Auto generated by spf13/cobra on 12-Apr-2023

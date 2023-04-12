@@ -1,27 +1,20 @@
 run:
   timeout: 10m
   issue-exit-code: 1
-  tests: true
+  skip-dirs-use-default: true
   skip-dirs:
     - docs
     - hack
     - internal/pkg/static
+  modules-download-mode: readonly
+  allow-parallel-runners: true
 
 output:
   # colored-line-number|line-number|json|tab|checkstyle|code-climate|junit-xml|github-actions
   # default is "colored-line-number"
   format: tab
-  # print lines of code with issue, default is true
-  print-issued-lines: true
-
-  # print linter name in the end of issue text, default is true
-  print-linter-name: true
 
 linters:
-  # TODO: fix errors so that all of the linters below pass.
-  # The linters that are commented out, as well as those explicitly disabled,
-  # are currently failing.  We should fix those failures or define exclusion
-  # rules, and then enable those linters.
   disable-all: true
   enable:
     - bodyclose
@@ -36,17 +29,13 @@ linters:
     - goimports
     - govet
     - godox
+    - gosec
     - goheader
-    # - gosec
-    # - gofumpt
-    # - goconst
-    # - gocritic
-    # - gomnd
     - ineffassign
     - nakedret
     - nolintlint
     - misspell
-    # - prealloc
+    - lll
     - predeclared
     - revive
     - staticcheck
@@ -58,9 +47,10 @@ linters:
     - unconvert
     - unparam
     - whitespace
-    # - wsl
 
 issues:
+  exclude:
+    - G101 # Potential hardcoded credentials
   max-same-issues: 20
   exclude-rules:
     - linters:
@@ -73,12 +63,29 @@ issues:
     - linters:
         - golint
       text: "should not use dot imports|don't use an underscore in package name"
+    - linters:
+        - goheader
+      source: "^//go:build"
+    - linters:
+        - goheader
+      text: "Helm"
+    - linters:
+        - goheader
+      text: "Kubernetes"
+    - linters:
+        - goheader
+      text: "SPDX-License-Identifier"
+    - linters:
+        - goheader
+      text: "Authors"
 
 linters-settings:
   gofmt:
     simplify: true
   gocyclo:
     min-complexity: 10
+  golint:
+    min-confidence: 0.8
   maligned:
     # print struct with more effective memory layout or not, false by default
     suggest-new: true
@@ -97,8 +104,10 @@ linters-settings:
     extra-rules: false
     lang-version: "1.19"
   govet:
-    check-shadowing: false
-    use-installed-packages: false
+    enable-all: true
+    disable:
+      - shadow
+      - fieldalignment
   revive:
     confidence: 0.8
     severity: warning
@@ -132,17 +141,14 @@ linters-settings:
   nakedret:
     # make an issue if func has more lines of code than this setting and it has naked returns; default is 30
     max-func-lines: 30
-  unused:
-    # treat code as a program (not a library) and report unused exported identifiers; default is false.
-    # XXX: if you enable this setting, unused will report a lot of false-positives in text editors:
-    # if it's called for subdir of a project it can't find funcs usages. All text editor integrations
-    # with golangci-lint call it on a directory with the changed file.
-    check-exported: false
-  unparam:
-    check-exported: false
   godox:
     keywords:
       - BUG
       - FIXME
       - TODO
       - HACK
+  stylecheck:
+    dot-import-whitelist:
+      - fmt
+  goheader:
+    template-path: .go-header.txt

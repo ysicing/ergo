@@ -5,6 +5,9 @@ on:
     tags:
       - "*"
 
+env:
+  TZ: Asia/Shanghai
+
 jobs:
   generate_changelog:
     runs-on: ubuntu-latest
@@ -14,12 +17,29 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20.x
+      - name: Cache Go Dependencies
+        uses: magnetikonline/action-golang-cache@v4
+        with:
+          go-version-file: go.mod
+      - name: Build docs
+        run: |
+          make doc
+      - name: Publish docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./docs
       - run: git fetch --prune --prune-tags
       - run: git tag -l 'v*'
       - run: ./hack/build/changelog.sh > CHANGELOG.md
-      - uses: peter-evans/create-pull-request@v4
+      - uses: peter-evans/create-pull-request@v5
         with:
-          title: 'docs: updated CHANGELOG.md'
-          commit-message: 'docs: updated CHANGELOG.md'
+          title: 'docs: updated CHANGELOG.md & docs'
+          commit-message: 'docs: updated CHANGELOG.md & docs'
           branch: create-pull-request/changelog
           signoff: true
+          delete-branch: true

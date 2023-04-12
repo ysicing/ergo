@@ -1,4 +1,10 @@
 name: ci
+
+env:
+  # Common versions
+  GO_VERSION: '1.20'
+  TZ: Asia/Shanghai
+
 on:
   push:
     branches:
@@ -14,10 +20,10 @@ jobs:
     name: build ergo tools
     runs-on: ubuntu-latest
     steps:
-    - name: Install Go
-      uses: actions/setup-go@v3
+    - name: Setup Go
+      uses: actions/setup-go@v4
       with:
-        go-version: 1.19.x
+        go-version: ${{ env.GO_VERSION }}
     - name: install gox
       run: |
           echo "install gox"
@@ -40,11 +46,6 @@ jobs:
       run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
-          make snapshot
-          ./dist/opsergo_linux_amd64_v1/ergo version
-          make doc
-    - name: docs
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+          make build
+          ./dist/ergo_linux_amd64 version
+

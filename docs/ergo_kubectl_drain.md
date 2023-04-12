@@ -6,13 +6,13 @@ Drain node in preparation for maintenance
 
 Drain node in preparation for maintenance.
 
- The given node will be marked unschedulable to prevent new pods from arriving. 'drain' evicts the pods if the API server supports https://kubernetes.io/docs/concepts/workloads/pods/disruptions/ . Otherwise, it will use normal DELETE to delete the pods. The 'drain' evicts or deletes all pods except mirror pods (which cannot be deleted through the API server).  If there are daemon set-managed pods, drain will not proceed without --ignore-daemonsets, and regardless it will not delete any daemon set-managed pods, because those pods would be immediately replaced by the daemon set controller, which ignores unschedulable markings.  If there are any pods that are neither mirror pods nor managed by a replication controller, replica set, daemon set, stateful set, or job, then drain will not delete any pods unless you use --force.  --force will also allow deletion to proceed if the managing resource of one or more pods is missing.
+ The given node will be marked unschedulable to prevent new pods from arriving. 'drain' evicts the pods if the API server supports https://kubernetes.io/docs/concepts/workloads/pods/disruptions/ eviction https://kubernetes.io/docs/concepts/workloads/pods/disruptions/ . Otherwise, it will use normal DELETE to delete the pods. The 'drain' evicts or deletes all pods except mirror pods (which cannot be deleted through the API server).  If there are daemon set-managed pods, drain will not proceed without --ignore-daemonsets, and regardless it will not delete any daemon set-managed pods, because those pods would be immediately replaced by the daemon set controller, which ignores unschedulable markings.  If there are any pods that are neither mirror pods nor managed by a replication controller, replica set, daemon set, stateful set, or job, then drain will not delete any pods unless you use --force.  --force will also allow deletion to proceed if the managing resource of one or more pods is missing.
 
  'drain' waits for graceful termination. You should not operate on the machine until the command completes.
 
  When you are ready to put the node back into service, use kubectl uncordon, which will make the node schedulable again.
 
- https://kubernetes.io/images/docs/kubectl_drain.svg
+https://kubernetes.io/images/docs/kubectl_drain.svg Workflowhttps://kubernetes.io/images/docs/kubectl_drain.svg
 
 ```
 ergo kubectl drain NODE
@@ -35,12 +35,12 @@ ergo kubectl drain NODE
       --delete-emptydir-data               Continue even if there are pods using emptyDir (local data that will be deleted when the node is drained).
       --disable-eviction                   Force drain to use delete, even if eviction is supported. This will bypass checking PodDisruptionBudgets, use with caution.
       --dry-run string[="unchanged"]       Must be "none", "server", or "client". If client strategy, only print the object that would be sent, without sending it. If server strategy, submit server-side request without persisting the resource. (default "none")
-      --force                              Continue even if there are pods not managed by a ReplicationController, ReplicaSet, Job, DaemonSet or StatefulSet.
+      --force                              Continue even if there are pods that do not declare a controller.
       --grace-period int                   Period of time in seconds given to each pod to terminate gracefully. If negative, the default value specified in the pod will be used. (default -1)
   -h, --help                               help for drain
       --ignore-daemonsets                  Ignore DaemonSet-managed pods.
       --pod-selector string                Label selector to filter pods on the node
-  -l, --selector string                    Selector (label query) to filter on
+  -l, --selector string                    Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints.
       --skip-wait-for-delete-timeout int   If pod DeletionTimestamp older than N seconds, skip waiting for the pod.  Seconds must be greater than 0 to skip.
       --timeout duration                   The length of time to wait before giving up, zero means infinite
 ```
@@ -59,6 +59,7 @@ ergo kubectl drain NODE
       --config string                  The ergo config file to use (default "/Users/ysicing/.ergo/config/ergo.yml")
       --context string                 The name of the kubeconfig context to use
       --debug                          Prints the stack trace if an error occurs
+      --disable-compression            If true, opt-out of response compression for all requests to the server
       --insecure-skip-tls-verify       If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
       --kubeconfig string              Path to the kubeconfig file to use for CLI requests.
       --match-server-version           Require server version to match client version
@@ -80,4 +81,4 @@ ergo kubectl drain NODE
 
 * [ergo kubectl](ergo_kubectl.md)	 - Kubectl controls the Kubernetes cluster manager
 
-###### Auto generated by spf13/cobra on 30-Apr-2022
+###### Auto generated by spf13/cobra on 12-Apr-2023

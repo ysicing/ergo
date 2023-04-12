@@ -1,3 +1,9 @@
+// Copyright (c) 2020-2023 ysicing(ysicing@ysicing.cloud) All rights reserved.
+// Use of this source code is covered by the following dual licenses:
+// (1) Y PUBLIC LICENSE 1.0 (YPL 1.0)
+// (2) Affero General Public License 3.0 (AGPL 3.0)
+// license that can be found in the LICENSE file.
+
 package downloader
 
 import (
@@ -14,12 +20,12 @@ import (
 
 	"github.com/cheggaaa/pb/v3"
 	"github.com/containerd/continuity/fs"
-	"github.com/ergoapi/log"
 	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/validation"
 	"github.com/ergoapi/util/zos"
 	"github.com/mattn/go-isatty"
 	"github.com/ysicing/ergo/common"
+	"github.com/ysicing/ergo/internal/pkg/util/log"
 )
 
 type Status = string
