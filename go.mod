@@ -8,7 +8,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.1.2
 	github.com/cockroachdb/errors v1.9.1
-	github.com/containerd/continuity v0.3.0
+	github.com/containerd/continuity v0.4.2
 	github.com/ergoapi/util v0.3.13
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
