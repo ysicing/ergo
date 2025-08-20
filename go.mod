@@ -1,6 +1,6 @@
 module github.com/ysicing/ergo
 
-go 1.20
+go 1.21
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
@@ -10,7 +10,6 @@ require (
 	github.com/cockroachdb/errors v1.9.1
 	github.com/containerd/continuity v0.4.3
 	github.com/ergoapi/util v0.3.13
-	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/mattn/go-isatty v0.0.18
@@ -29,7 +28,6 @@ require (
 	golang.org/x/crypto v0.28.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gotest.tools v2.2.0+incompatible
-	helm.sh/helm/v3 v3.14.3
 	k8s.io/api v0.29.0
 	k8s.io/apimachinery v0.29.0
 	k8s.io/cli-runtime v0.29.0

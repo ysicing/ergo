@@ -19,15 +19,8 @@ var Cfg *ErGoConfig
 
 type ErGoConfig struct {
 	Generated time.Time `json:"generated" yaml:"generated"`
-	Hub       Hub       `json:"hub" yaml:"hub"`
 }
 
-type Hub struct {
-	Repos []Repo `json:"repos" yaml:"repos"`
-}
-
-type Repo struct {
-}
 
 func NewConfig() *ErGoConfig {
 	return &ErGoConfig{

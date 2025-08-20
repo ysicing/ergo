@@ -39,17 +39,9 @@ func GetDefaultCacheDir() string {
 	return home + "/" + DefaultCacheDir
 }
 
-func GetDefaultRepoCfg() string {
-	return fmt.Sprintf("%v/repo.yaml", GetDefaultCfgDir())
-}
-
 // GetDefaultCfgPathByName 配置文件名
 func GetDefaultCfgPathByName(name string) string {
 	return fmt.Sprintf("%v/%v.yml", GetDefaultCfgDir(), name)
-}
-
-func GetRepoIndexFileByName(name string) string {
-	return fmt.Sprintf("%v/%v.repoindex", GetDefaultCacheDir(), name)
 }
 
 func GetLockfile() string {
